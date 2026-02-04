@@ -1,26 +1,29 @@
-// Polyfill for Node.js environment (fixes DOMMatrix is not defined)
-if (typeof Promise.withResolvers === 'undefined') {
-    // @ts-ignore
-    if (typeof window === 'undefined' && !global.DOMMatrix) {
-        // @ts-ignore
-        global.DOMMatrix = class DOMMatrix {
-            constructor() {
-                this.a = 1; this.b = 0; this.c = 0; this.d = 1; this.e = 0; this.f = 0;
-            }
-            toString() { return "matrix(1, 0, 0, 1, 0, 0)"; }
-        }
-    }
-}
-
-// @ts-ignore
-const pdf = require('pdf-parse');
+import PDFParser from 'pdf2json'
 
 export async function extractTextFromPdf(buffer: Buffer): Promise<string> {
-    try {
-        const data = await pdf(buffer)
-        return data.text
-    } catch (error) {
-        console.error('PDF Parse Error:', error)
-        throw new Error('Failed to parse PDF')
-    }
+    const parser = new PDFParser(null, 1); // 1 = text only
+
+    return new Promise((resolve, reject) => {
+        parser.on("pdfParser_dataError", (errData) => reject(errData.parserError));
+
+        parser.on("pdfParser_dataReady", (pdfData) => {
+            // Raw text extraction
+            // pdf2json returns URL-encoded text, so we decode it
+            // It puts text in Pages -> Texts -> R -> T
+
+            try {
+                const rawText = pdfData.Pages.map(page => {
+                    return page.Texts.map(textItem => {
+                        return decodeURIComponent(textItem.R[0].T)
+                    }).join(' ')
+                }).join('\n\n')
+
+                resolve(rawText)
+            } catch (e) {
+                reject(e)
+            }
+        });
+
+        parser.parseBuffer(buffer);
+    })
 }
