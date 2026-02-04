@@ -14,7 +14,12 @@ export async function extractTextFromPdf(buffer: Buffer): Promise<string> {
             try {
                 const rawText = pdfData.Pages.map(page => {
                     return page.Texts.map(textItem => {
-                        return decodeURIComponent(textItem.R[0].T)
+                        const str = textItem.R[0].T;
+                        try {
+                            return decodeURIComponent(str);
+                        } catch (e) {
+                            return str; // Fallback to raw string if decoding fails
+                        }
                     }).join(' ')
                 }).join('\n\n')
 
