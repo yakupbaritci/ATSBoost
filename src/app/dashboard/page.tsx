@@ -1,8 +1,9 @@
-import { FileText, Plus, Upload } from 'lucide-react'
+import { FileText, Plus, Upload, Trash2 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import Link from 'next/link'
 import { createClient } from '@/lib/supabase/server'
 import { redirect } from 'next/navigation'
+import { deleteResume } from '@/app/actions/resume-actions' // You'll create this next
 
 export default async function DashboardPage() {
     const supabase = await createClient()
@@ -84,20 +85,32 @@ export default async function DashboardPage() {
                 ) : (
                     <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
                         {resumes.map((resume) => (
-                            <Link
+                            <div
                                 key={resume.id}
-                                href={`/dashboard/builder/${resume.id}`}
                                 className="group relative flex flex-col justify-between rounded-xl border border-zinc-200 bg-white p-6 shadow-sm transition-all hover:border-zinc-300 hover:shadow-md dark:border-zinc-800 dark:bg-zinc-900 dark:hover:border-zinc-700"
                             >
-                                <div>
-                                    <h3 className="font-semibold group-hover:text-primary transition-colors">
-                                        {resume.title}
-                                    </h3>
-                                    <p className="text-sm text-zinc-500 mt-1">
-                                        Last updated: {new Date(resume.updated_at).toLocaleDateString()}
-                                    </p>
+                                <Link href={`/dashboard/builder/${resume.id}`} className="absolute inset-0 z-0" />
+
+                                <div className="relative z-10 flex justify-between items-start">
+                                    <div>
+                                        <h3 className="font-semibold group-hover:text-primary transition-colors">
+                                            {resume.title}
+                                        </h3>
+                                        <p className="text-sm text-zinc-500 mt-1">
+                                            Last updated: {new Date(resume.updated_at).toLocaleDateString()}
+                                        </p>
+                                    </div>
+                                    <form action={async () => {
+                                        'use server'
+                                        await deleteResume(resume.id)
+                                    }}>
+                                        <Button variant="ghost" size="icon" className="h-8 w-8 text-zinc-400 hover:text-red-500 hover:bg-red-50" type="submit">
+                                            <Trash2 className="h-4 w-4" />
+                                        </Button>
+                                    </form>
                                 </div>
-                                <div className="mt-4 flex items-center gap-2">
+
+                                <div className="mt-4 flex items-center gap-2 relative z-0">
                                     {resume.is_optimized && (
                                         <span className="inline-flex items-center rounded-full bg-green-100 px-2.5 py-0.5 text-xs font-medium text-green-800 dark:bg-green-900/30 dark:text-green-400">
                                             Optimized
@@ -107,9 +120,8 @@ export default async function DashboardPage() {
                                         {resume.language}
                                     </span>
                                 </div>
-                            </Link>
-                        ))}
-                    </div>
+                            </div>
+                        ))}      </div>
                 )}
             </div>
         </div>
