@@ -48,8 +48,8 @@ export async function createResumeFromPdf(formData: FormData) {
         .single()
 
     if (error) {
-        console.error(error)
-        throw new Error('Failed to create resume record')
+        console.error('Supabase Error:', error)
+        throw new Error(`Failed to create resume record: ${error.message} (${error.code})`)
     }
 
     revalidatePath('/dashboard')
