@@ -33,14 +33,34 @@ export async function parseResumeWithAI(rawText: string) {
         })
 
         const textResponse = (msg.content[0] as any).text
-        const jsonStart = textResponse.indexOf('{')
-        const jsonEnd = textResponse.lastIndexOf('}') + 1
-        const jsonString = textResponse.slice(jsonStart, jsonEnd)
 
-        return JSON.parse(jsonString)
-    } catch (error) {
+        // Improved JSON extraction: ensure we capture the full object
+        const jsonMatch = textResponse.match(/\{[\s\S]*\}/);
+        if (!jsonMatch) {
+            throw new Error("No JSON found in AI response")
+        }
+
+        const jsonString = jsonMatch[0];
+
+        try {
+            return JSON.parse(jsonString)
+        } catch (parseError: any) {
+            // Try to fix common JSON errors (newline in string, etc) if simple parsing fails
+            // For now, just throw the details
+            throw new Error(`JSON format error: ${parseError.message}. Response excerpt: ${jsonString.substring(0, 100)}...`)
+        }
+
+    } catch (error: any) {
         console.error('AI Parse Error:', error)
-        return null // Fallback to empty if fails
+        // Return error object to be displayed in the UI instead of silent fail
+        return {
+            error: `AI Error: ${error.message || error}`,
+            contact: {},
+            summary: `AI Processing Failed. \n\nError Details: ${error.message}\n\nPlease edit manually from the raw text below.\n\n${rawText.slice(0, 2000)}...`,
+            experience: [],
+            education: [],
+            skills: []
+        }
     }
 }
 
