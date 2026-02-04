@@ -1,49 +1,118 @@
-import { createClient } from '@/lib/supabase/server'
-import { notFound } from 'next/navigation'
+'use client'
 
-export default async function BuilderPage({ params }: { params: { id: string } }) {
-    const supabase = await createClient()
-    const resolvedParams = await params
+import { createClient } from '@/lib/supabase/client'
+import { useEffect, useState } from 'react'
+import { ResumeForm } from '@/components/builder/ResumeForm'
+import { ResumePreview } from '@/components/builder/ResumePreview'
+import { Button } from '@/components/ui/button'
+import { Save, Loader2, ArrowLeft } from 'lucide-react'
+import Link from 'next/link'
+import { useParams } from 'next/navigation'
+import { toast } from 'sonner' // You might need to install sonner later, or use simple alert for now
 
-    const { data: resume } = await supabase
-        .from('resumes')
-        .select('*')
-        .eq('id', resolvedParams.id)
-        .single()
+export default function BuilderPage() {
+    const params = useParams()
+    const [resume, setResume] = useState<any>(null)
+    const [loading, setLoading] = useState(true)
+    const [saving, setSaving] = useState(false)
 
-    if (!resume) {
-        return notFound()
+    const supabase = createClient()
+
+    useEffect(() => {
+        const fetchResume = async () => {
+            const { data, error } = await supabase
+                .from('resumes')
+                .select('*')
+                .eq('id', params.id)
+                .single()
+
+            if (data) {
+                // Ensure structure exists
+                if (!data.content) data.content = {}
+                if (!data.content.contact) data.content.contact = {}
+                if (!data.content.experience) data.content.experience = []
+                setResume(data)
+            }
+            setLoading(false)
+        }
+        fetchResume()
+    }, [params.id])
+
+    const handleUpdate = (newContent: any) => {
+        setResume((prev: any) => ({ ...prev, content: newContent }))
     }
 
+    const handleSave = async () => {
+        setSaving(true)
+        const { error } = await supabase
+            .from('resumes')
+            .update({
+                content: resume.content,
+                updated_at: new Date().toISOString()
+            })
+            .eq('id', resume.id)
+
+        setSaving(false)
+        if (error) {
+            alert('Failed to save')
+        } else {
+            // console.log('Saved!')
+        }
+    }
+
+    if (loading) {
+        return (
+            <div className="h-screen flex items-center justify-center">
+                <Loader2 className="w-8 h-8 animate-spin text-primary" />
+            </div>
+        )
+    }
+
+    if (!resume) return <div>Resume not found</div>
+
     return (
-        <div className="space-y-6">
-            <div className="flex items-center justify-between border-b pb-4">
-                <div>
-                    <h1 className="text-2xl font-bold">{resume.title || 'Untitled Resume'}</h1>
-                    <p className="text-sm text-zinc-500">
-                        Builder Mode • {resume.is_optimized ? 'Optimized' : 'Draft'}
-                    </p>
+        <div className="flex flex-col h-screen bg-zinc-50 dark:bg-zinc-950 overflow-hidden">
+            {/* Top Bar */}
+            <header className="h-14 border-b border-zinc-200 bg-white dark:border-zinc-800 dark:bg-zinc-900 flex items-center justify-between px-4 shrink-0">
+                <div className="flex items-center gap-4">
+                    <Link href="/dashboard" className="text-zinc-500 hover:text-zinc-900">
+                        <ArrowLeft className="w-4 h-4" />
+                    </Link>
+                    <div>
+                        <input
+                            className="font-semibold bg-transparent focus:outline-none focus:ring-1 focus:ring-primary rounded px-1"
+                            defaultValue={resume.title}
+                            onBlur={async (e) => {
+                                await supabase.from('resumes').update({ title: e.target.value }).eq('id', resume.id)
+                            }}
+                        />
+                        <span className="text-xs text-zinc-400 ml-2">
+                            {resume.is_optimized ? 'Optimized' : 'Draft'}
+                        </span>
+                    </div>
                 </div>
                 <div className="flex gap-2">
-                    <button className="bg-primary text-white px-4 py-2 rounded-md">
-                        Save Changes
-                    </button>
+                    <Button size="sm" onClick={handleSave} disabled={saving}>
+                        {saving ? <Loader2 className="w-4 h-4 animate-spin mr-2" /> : <Save className="w-4 h-4 mr-2" />}
+                        Save
+                    </Button>
+                    <Button size="sm" variant="default" className="bg-gradient-to-r from-blue-600 to-violet-600 hover:from-blue-700 hover:to-violet-700 text-white border-0">
+                        ✨ Auto-Optimize
+                    </Button>
                 </div>
-            </div>
+            </header>
 
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 h-[calc(100vh-200px)]">
-                {/* Left: Editor Form */}
-                <div className="bg-white p-6 rounded-xl border border-zinc-200 overflow-auto dark:bg-zinc-900 dark:border-zinc-800">
-                    <h2 className="font-semibold mb-4">Edit Content</h2>
-                    <pre className="text-xs bg-zinc-100 p-4 rounded overflow-auto h-full">
-                        {JSON.stringify(resume.content, null, 2)}
-                    </pre>
+            {/* Main Workspace */}
+            <div className="flex-1 flex overflow-hidden">
+                {/* Left: Interactive Form */}
+                <div className="w-1/2 p-6 overflow-hidden border-r border-zinc-200 bg-white dark:border-zinc-800 dark:bg-zinc-900">
+                    <ResumeForm initialContent={resume.content} onUpdate={handleUpdate} />
                 </div>
 
-                {/* Right: Preview (Placeholder) */}
-                <div className="bg-zinc-100 p-6 rounded-xl border border-zinc-200 flex items-center justify-center dark:bg-zinc-800 dark:border-zinc-700">
-                    <div className="text-center">
-                        <p className="text-zinc-500">PDF Preview will appear here</p>
+                {/* Right: Live Preview */}
+                <div className="w-1/2 bg-zinc-100 p-8 dark:bg-zinc-950 flex justify-center overflow-hidden">
+                    <div className="w-full max-w-[210mm] shadow-2xl h-full">
+                        <ResumePreview content={resume.content} />
                     </div>
                 </div>
             </div>
