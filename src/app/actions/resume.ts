@@ -2,6 +2,7 @@
 
 import { createClient } from '@/lib/supabase/server'
 import { extractTextFromPdf } from '@/lib/parse-pdf'
+import { parseResumeWithAI } from '@/app/actions/ai'
 import { redirect } from 'next/navigation'
 import { revalidatePath } from 'next/cache'
 
@@ -18,15 +19,23 @@ export async function createResumeFromPdf(formData: FormData) {
     // 1. Extract raw text
     const rawText = await extractTextFromPdf(buffer)
 
-    // 2. Initial Structure (TODO: Use AI here later)
-    // For now, we just dump the raw text into the summary or a raw field
+    // 2. Structure with AI
+    let structuredData = await parseResumeWithAI(rawText)
+
+    // Fallback if AI fails
+    if (!structuredData) {
+        structuredData = {
+            contact: {},
+            summary: rawText.slice(0, 500) + '...',
+            education: [],
+            experience: [],
+            skills: []
+        }
+    }
+
     const initialContent = {
-        contact: {},
-        summary: rawText.slice(0, 500) + '...', // Placeholder
-        raw_text_dump: rawText, // We'll use this for AI processing later
-        education: [],
-        experience: [],
-        skills: []
+        ...structuredData,
+        raw_text_dump: rawText
     }
 
     const supabase = await createClient()

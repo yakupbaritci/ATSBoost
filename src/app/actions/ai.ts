@@ -7,6 +7,43 @@ const anthropic = new Anthropic({
     apiKey: process.env.ANTHROPIC_API_KEY,
 })
 
+export async function parseResumeWithAI(rawText: string) {
+    const systemPrompt = `You are an expert Resume Parser. 
+  Extract structured data from the provided resume text.
+  Return ONLY valid JSON with this exact structure:
+  {
+    "contact": { "fullName": "", "email": "", "phone": "", "location": "", "linkedin": "", "portfolio": "" },
+    "summary": "Full professional summary text...",
+    "experience": [ { "id": "uuid", "title": "", "company": "", "startDate": "", "endDate": "", "description": "Bullet points..." } ],
+    "education": [ { "id": "uuid", "school": "", "degree": "", "startDate": "", "endDate": "" } ],
+    "skills": ["skill1", "skill2"]
+  }
+  If a field is not found, leave it empty or empty array.
+  `
+
+    try {
+        const msg = await anthropic.messages.create({
+            model: "claude-3-5-sonnet-20241022",
+            max_tokens: 4000,
+            temperature: 0,
+            system: systemPrompt,
+            messages: [
+                { role: "user", content: rawText }
+            ]
+        })
+
+        const textResponse = (msg.content[0] as any).text
+        const jsonStart = textResponse.indexOf('{')
+        const jsonEnd = textResponse.lastIndexOf('}') + 1
+        const jsonString = textResponse.slice(jsonStart, jsonEnd)
+
+        return JSON.parse(jsonString)
+    } catch (error) {
+        console.error('AI Parse Error:', error)
+        return null // Fallback to empty if fails
+    }
+}
+
 export async function optimizeResumeContent(currentContent: any, jobDescription: string) {
     if (!jobDescription || jobDescription.length < 50) {
         throw new Error('Please provide a valid Job Description first.')
