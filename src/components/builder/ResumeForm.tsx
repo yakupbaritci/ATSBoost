@@ -40,6 +40,12 @@ type ResumeContent = {
         description?: string
     }>
     skills: Array<string>
+    targetJob?: {
+        title?: string
+        company?: string
+        description?: string
+        url?: string
+    }
 }
 
 interface ResumeFormProps {
@@ -55,6 +61,8 @@ export function ResumeForm({ initialContent, onUpdate }: ResumeFormProps) {
 
         if (section === 'contact') {
             newContent.contact = { ...newContent.contact, [field]: value }
+        } else if (section === 'targetJob') {
+            newContent.targetJob = { ...newContent.targetJob, [field]: value }
         } else if (section === 'summary') {
             newContent.summary = value
         } else if (section === 'experience' && typeof index === 'number') {
@@ -84,12 +92,13 @@ export function ResumeForm({ initialContent, onUpdate }: ResumeFormProps) {
     return (
         <div className="h-full flex flex-col">
             <Tabs defaultValue="contact" className="w-full h-full flex flex-col">
-                <TabsList className="grid w-full grid-cols-5 mb-4">
+                <TabsList className="grid w-full grid-cols-6 mb-4">
                     <TabsTrigger value="contact">Contact</TabsTrigger>
                     <TabsTrigger value="summary">Summary</TabsTrigger>
                     <TabsTrigger value="experience">Exp</TabsTrigger>
                     <TabsTrigger value="education">Edu</TabsTrigger>
                     <TabsTrigger value="skills">Skills</TabsTrigger>
+                    <TabsTrigger value="job">Target Job</TabsTrigger>
                 </TabsList>
 
                 <div className="flex-1 overflow-y-auto pr-2 space-y-4">
@@ -233,6 +242,35 @@ export function ResumeForm({ initialContent, onUpdate }: ResumeFormProps) {
                     </TabsContent>
                     <TabsContent value="skills" className="mt-0">
                         <div className="text-center text-zinc-500 py-8">Skills fields coming soon...</div>
+                    </TabsContent>
+
+                    {/* Target Job Tab */}
+                    <TabsContent value="job" className="mt-0 space-y-4">
+                        <Card>
+                            <CardHeader>
+                                <CardTitle>Target Job Description</CardTitle>
+                            </CardHeader>
+                            <CardContent className="space-y-4">
+                                <div className="space-y-2">
+                                    <Label>Job URL (LinkedIn/Indeed)</Label>
+                                    <Input
+                                        placeholder="https://..."
+                                        value={content.targetJob?.url || ''}
+                                        onChange={(e) => handleChange('targetJob', 'url', e.target.value)}
+                                    />
+                                    <p className="text-xs text-zinc-500">Paste a link to auto-fill (Coming soon) or paste text below.</p>
+                                </div>
+                                <div className="space-y-2">
+                                    <Label>Job Description Text</Label>
+                                    <Textarea
+                                        className="min-h-[300px]"
+                                        placeholder="Paste the full job description here..."
+                                        value={content.targetJob?.description || ''}
+                                        onChange={(e) => handleChange('targetJob', 'description', e.target.value)}
+                                    />
+                                </div>
+                            </CardContent>
+                        </Card>
                     </TabsContent>
 
                 </div>
