@@ -8,13 +8,15 @@ import { Button } from '@/components/ui/button'
 import { Save, Loader2, ArrowLeft } from 'lucide-react'
 import Link from 'next/link'
 import { useParams } from 'next/navigation'
-import { toast } from 'sonner' // You might need to install sonner later, or use simple alert for now
+import { toast } from 'sonner'
+import { optimizeResumeContent } from '@/app/actions/ai'
 
 export default function BuilderPage() {
     const params = useParams()
     const [resume, setResume] = useState<any>(null)
     const [loading, setLoading] = useState(true)
     const [saving, setSaving] = useState(false)
+    const [optimizing, setOptimizing] = useState(false)
 
     const supabase = createClient()
 
@@ -60,6 +62,31 @@ export default function BuilderPage() {
         }
     }
 
+    const handleOptimize = async () => {
+        const jd = resume.content.targetJob?.description
+        if (!jd) {
+            alert('Please add a Job Description in the "Target Job" tab first.')
+            return
+        }
+
+        if (!confirm('This will rewrite your Summary and Experience sections. Continue?')) return
+
+        setOptimizing(true)
+        try {
+            const optimizedContent = await optimizeResumeContent(resume.content, jd)
+            handleUpdate({ ...optimizedContent, targetJob: resume.content.targetJob }) // Keep the JD
+
+            // Mark as optimized in DB
+            await supabase.from('resumes').update({ is_optimized: true }).eq('id', resume.id)
+
+            alert('Optimization Complete! Check your new Summary.')
+        } catch (e: any) {
+            alert(e.message)
+        } finally {
+            setOptimizing(false)
+        }
+    }
+
     if (loading) {
         return (
             <div className="h-screen flex items-center justify-center">
@@ -96,8 +123,20 @@ export default function BuilderPage() {
                         {saving ? <Loader2 className="w-4 h-4 animate-spin mr-2" /> : <Save className="w-4 h-4 mr-2" />}
                         Save
                     </Button>
-                    <Button size="sm" variant="default" className="bg-gradient-to-r from-blue-600 to-violet-600 hover:from-blue-700 hover:to-violet-700 text-white border-0">
-                        ✨ Auto-Optimize
+                    <Button
+                        size="sm"
+                        variant="default"
+                        className="bg-gradient-to-r from-blue-600 to-violet-600 hover:from-blue-700 hover:to-violet-700 text-white border-0"
+                        onClick={handleOptimize}
+                        disabled={optimizing}
+                    >
+                        {optimizing ? (
+                            <>
+                                <Loader2 className="w-4 h-4 animate-spin mr-2" /> Optimizing...
+                            </>
+                        ) : (
+                            <>✨ Auto-Optimize</>
+                        )}
                     </Button>
                 </div>
             </header>
