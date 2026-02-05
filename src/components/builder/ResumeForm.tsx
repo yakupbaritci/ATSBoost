@@ -9,6 +9,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { Button } from '@/components/ui/button'
 import { Plus, Trash2, Calendar as CalendarIcon, X, ChevronDown, ChevronUp, ArrowRight, ArrowLeft, CheckCircle2 } from 'lucide-react'
 import { useEffect, KeyboardEvent } from 'react'
+import { useRouter, useParams } from 'next/navigation' // Add router and params
 import { Badge } from '@/components/ui/badge'
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
@@ -324,6 +325,10 @@ export function ResumeForm({
     const [activeProjectIndex, setActiveProjectIndex] = useState(0)
     const [activeCertificationIndex, setActiveCertificationIndex] = useState(0)
     const [activeLanguageIndex, setActiveLanguageIndex] = useState(0)
+
+    // Router for finish navigation
+    const router = useRouter()
+    const params = useParams()
 
     // Design Settings
     const [designSettings, setDesignSettings] = useState({
@@ -1588,13 +1593,25 @@ export function ResumeForm({
                             <ArrowLeft className="w-4 h-4 mr-2" /> Back
                         </Button>
 
-                        <Button
-                            onClick={handleNext}
-                            disabled={currentStepIndex === steps.length - 1} // Hide next on last step, user interacts with finish tab content
-                            className={cn(currentStepIndex === steps.length - 1 && "invisible")}
-                        >
-                            Next <ArrowRight className="w-4 h-4 ml-2" />
-                        </Button>
+                        {currentStepIndex === steps.length - 1 ? (
+                            <Button
+                                onClick={() => {
+                                    // Navigate to the editor (same ID) but remove query params
+                                    if (params?.id) {
+                                        router.push(`/dashboard/builder/${params.id}`)
+                                    }
+                                }}
+                                className="bg-green-600 hover:bg-green-700 text-white"
+                            >
+                                Finish Wizard <Check className="w-4 h-4 ml-2" />
+                            </Button>
+                        ) : (
+                            <Button
+                                onClick={handleNext}
+                            >
+                                Next <ArrowRight className="w-4 h-4 ml-2" />
+                            </Button>
+                        )}
                     </div>
                 )}
             </Tabs>
