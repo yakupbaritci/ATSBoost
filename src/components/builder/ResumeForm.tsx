@@ -513,7 +513,7 @@ export function ResumeForm({
 
 
     return (
-        <div className="h-full flex flex-col">
+        <div className="h-full flex flex-col overflow-hidden [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]">
             <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full h-full flex flex-col">
 
                 {/* Wizard Progress or Standard Tabs */}
