@@ -918,27 +918,27 @@ export function ResumeForm({
                         </TabsContent>
                     </div> {/* End Centered Container */}
                 </div>
-            </Button>
+                {/* Wizard Nav Buttons (Only in Wizard Mode) */}
+                {isWizardMode && (
+                    <div className="flex items-center justify-between mt-0 p-4 border-t border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-900 sticky bottom-0 z-10 shrink-0">
+                        <Button
+                            variant="outline"
+                            onClick={handleBack}
+                            disabled={currentStepIndex === 0}
+                        >
+                            <ArrowLeft className="w-4 h-4 mr-2" /> Back
+                        </Button>
 
-            <div className="flex gap-2">
-                {/* Optional: Add a 'Skip' button here if needed */}
-            </div>
-
-            <Button
-                onClick={handleNext}
-                className="w-[140px]"
-                disabled={currentStepIndex === steps.length - 1}
-            >
-                {currentStepIndex === steps.length - 1 ? (
-                    <span className="flex items-center">Preview <CheckCircle2 className="w-4 h-4 ml-2" /></span>
-                ) : (
-                    <span className="flex items-center">Next Step <ArrowRight className="w-4 h-4 ml-2" /></span>
+                        <Button
+                            onClick={handleNext}
+                            disabled={currentStepIndex === steps.length - 1} // Hide next on last step, user interacts with finish tab content
+                            className={cn(currentStepIndex === steps.length - 1 && "invisible")}
+                        >
+                            Next <ArrowRight className="w-4 h-4 ml-2" />
+                        </Button>
+                    </div>
                 )}
-            </Button>
+            </Tabs>
         </div>
-    )
-}
-            </Tabs >
-        </div >
     )
 }
