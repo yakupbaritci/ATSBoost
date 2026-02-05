@@ -1357,11 +1357,7 @@ export function ResumeForm({
                                         addItem('projects')
                                         setActiveProjectIndex((content.projects?.length || 0))
                                     }}
-                                    onToggleVisible={(index) => {
-                                        if (!content.projects) return;
-                                        const current = content.projects[index];
-                                        handleChange('projects', 'visible', current.visible === false ? true : false, index);
-                                    }}
+                                    onToggleVisible={(index) => toggleVisibility('projects', index)}
                                     titleKey="title"
                                     subtitleKey="link"
                                 />
@@ -1438,11 +1434,7 @@ export function ResumeForm({
                                         addItem('languages')
                                         setActiveLanguageIndex((content.languages?.length || 0))
                                     }}
-                                    onToggleVisible={(index) => {
-                                        if (!content.languages) return;
-                                        const current = content.languages[index];
-                                        handleChange('languages', 'visible', current.visible === false ? true : false, index);
-                                    }}
+                                    onToggleVisible={(index) => toggleVisibility('languages', index)}
                                     titleKey="language"
                                     subtitleKey="proficiency"
                                 />
