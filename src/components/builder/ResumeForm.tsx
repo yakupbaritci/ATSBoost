@@ -309,14 +309,23 @@ export function ResumeForm({
     const steps = [
         { id: "contact", title: "CONTACT", description: "Basics" },
         { id: "experience", title: "EXPERIENCE", description: "Work History" },
+        { id: "projects", title: "PROJECT", description: "Portfolios" },
         { id: "education", title: "EDUCATION", description: "Academics" },
-        { id: "skills", title: "SKILLS", description: "Competencies" },
-        { id: "projects", title: "PROJECTS", description: "Portfolios" },
         { id: "certifications", title: "CERTIFICATIONS", description: "Credentials" },
+        { id: "skills", title: "SKILLS", description: "Competencies" },
         { id: "summary", title: "SUMMARY", description: "About You" },
         { id: "languages", title: "LANGUAGES", description: "Languages" },
-        { id: "finish", title: "FINISH UP", description: "Review & Download" } // New Final Step
+        { id: "finish", title: "FINISH UP", description: "Review & Download" }
     ]
+
+    // Split steps for the adaptive UI
+    const visibleStepIds = ["contact", "experience", "projects", "education", "certifications", "skills", "summary"]
+    const moreStepIds = ["languages"] // Add other less frequent sections here
+
+    // We filter steps based on these lists for rendering
+    const visibleSteps = steps.filter(s => visibleStepIds.includes(s.id))
+    const moreSteps = steps.filter(s => moreStepIds.includes(s.id))
+    const finishStep = steps.find(s => s.id === "finish")
 
     const currentStepIndex = steps.findIndex(s => s.id === activeTab)
 
@@ -580,19 +589,51 @@ export function ResumeForm({
                             </DropdownMenu>
                         </div>
 
-                        {/* Center/Right: Tabs */}
-                        <div className="overflow-x-auto scrollbar-hide flex-1">
-                            <TabsList className="inline-flex w-auto h-12 p-0 bg-transparent gap-4 lg:gap-8">
-                                {steps.map(step => (
+                        {/* Center: Adaptive Tabs */}
+                        <div className="flex-1 flex items-center">
+                            <TabsList className="inline-flex w-auto h-12 p-0 bg-transparent gap-1">
+                                {visibleSteps.map(step => (
                                     <TabsTrigger
                                         key={step.id}
-                                        className="h-full px-1 rounded-none bg-transparent border-b-2 border-transparent data-[state=active]:border-blue-600 data-[state=active]:text-blue-600 data-[state=active]:shadow-none font-bold text-xs uppercase tracking-wider text-zinc-500 hover:text-zinc-800 transition-all"
+                                        className="h-full px-3 rounded-md data-[state=active]:bg-zinc-100 dark:data-[state=active]:bg-zinc-800 data-[state=active]:text-blue-600 font-bold text-[11px] lg:text-xs uppercase tracking-wider text-zinc-500 hover:text-zinc-800 hover:bg-zinc-50 dark:hover:bg-zinc-800/50 transition-all border-b-2 border-transparent data-[state=active]:border-blue-600 rounded-b-none"
                                         value={step.id}
                                     >
                                         {step.title}
                                     </TabsTrigger>
                                 ))}
+
+                                {/* More Dropdown */}
+                                <DropdownMenu>
+                                    <DropdownMenuTrigger asChild>
+                                        <Button variant="ghost" size="sm" className={cn("h-full px-2 rounded-md hover:bg-zinc-100 data-[state=open]:bg-zinc-100", moreStepIds.includes(activeTab) && "text-blue-600 bg-zinc-50")}>
+                                            <MoreVertical className="w-4 h-4" />
+                                        </Button>
+                                    </DropdownMenuTrigger>
+                                    <DropdownMenuContent align="start">
+                                        {moreSteps.map(step => (
+                                            <DropdownMenuItem key={step.id} onClick={() => setActiveTab(step.id)} className="flex justify-between">
+                                                {step.title}
+                                                {activeTab === step.id && <Check className="w-4 h-4 ml-2 text-blue-600" />}
+                                            </DropdownMenuItem>
+                                        ))}
+                                    </DropdownMenuContent>
+                                </DropdownMenu>
                             </TabsList>
+                        </div>
+
+                        {/* Right: Actions */}
+                        <div className="flex items-center gap-2 ml-auto">
+                            {finishStep && (
+                                <TabsTrigger
+                                    value={finishStep.id}
+                                    className="h-9 px-4 rounded-md bg-zinc-100 dark:bg-zinc-800 hover:bg-zinc-200 dark:hover:bg-zinc-700 font-bold text-xs uppercase tracking-wider text-zinc-700 dark:text-zinc-300 data-[state=active]:bg-zinc-900 data-[state=active]:text-white dark:data-[state=active]:bg-zinc-100 dark:data-[state=active]:text-zinc-900 transition-all"
+                                >
+                                    {finishStep.title} ✨
+                                </TabsTrigger>
+                            )}
+                            <Button variant="outline" size="sm" className="h-9 hidden xl:flex text-xs font-bold uppercase tracking-wider" disabled>
+                                AI Cover Letter
+                            </Button>
                         </div>
                     </div>
                 )}
