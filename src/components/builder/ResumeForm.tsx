@@ -317,7 +317,10 @@ export function ResumeForm({
     const [content, setContent] = useState<ResumeContent>(initialContent)
     const [activeTab, setActiveTab] = useState("contact")
     const [activeExperienceIndex, setActiveExperienceIndex] = useState(0)
-    const [activeEducationIndex, setActiveEducationIndex] = useState(0) // New state for Education
+    const [activeEducationIndex, setActiveEducationIndex] = useState(0)
+    const [activeProjectIndex, setActiveProjectIndex] = useState(0)
+    const [activeCertificationIndex, setActiveCertificationIndex] = useState(0)
+    const [activeLanguageIndex, setActiveLanguageIndex] = useState(0)
 
     // AI Generation State
     const [isGeneratingBullet, setIsGeneratingBullet] = useState(false)
