@@ -476,7 +476,7 @@ const TemplateTech = ({ content }: { content: ResumeContent }) => (
             <View style={styles.section}>
                 <Text style={{ fontSize: 14, fontWeight: 'bold', color: '#111827', marginBottom: 10 }}>Experience</Text>
                 {content.experience.map((exp: any, i: number) => (
-                    <View key={i} style={{ marginBottom: 15 }}>
+                    <View key={i} style={{ marginBottom: 15 }} wrap={false}>
                         <Text style={{ fontSize: 12, fontWeight: 'bold', color: '#0f172a' }}>{exp.title}</Text>
                         <View style={{ flexDirection: 'row', justifyContent: 'space-between', marginBottom: 4 }}>
                             <Text style={{ fontSize: 10, color: '#0d9488', fontWeight: 'bold' }}>@ {exp.company}</Text>
@@ -488,15 +488,60 @@ const TemplateTech = ({ content }: { content: ResumeContent }) => (
             </View>
         )}
 
+        {/* Education (Added) */}
+        {content.education?.length > 0 && (
+            <View style={styles.section}>
+                <Text style={{ fontSize: 14, fontWeight: 'bold', color: '#111827', marginBottom: 10 }}>Education</Text>
+                {content.education.map((edu: any, i: number) => (
+                    <View key={i} style={{ marginBottom: 15 }} wrap={false}>
+                        <Text style={{ fontSize: 12, fontWeight: 'bold', color: '#0f172a' }}>{edu.school}</Text>
+                        <View style={{ flexDirection: 'row', justifyContent: 'space-between', marginBottom: 4 }}>
+                            <Text style={{ fontSize: 10, color: '#0d9488', fontWeight: 'bold' }}>{edu.degree}</Text>
+                            <Text style={{ fontSize: 10, color: '#64748b', fontFamily: 'Courier' }}>[{edu.startDate} :: {edu.endDate}]</Text>
+                        </View>
+                    </View>
+                ))}
+            </View>
+        )}
+
+        {/* Projects (Added) */}
+        {content.projects?.length > 0 && (
+            <View style={styles.section}>
+                <Text style={{ fontSize: 14, fontWeight: 'bold', color: '#111827', marginBottom: 10 }}>Projects</Text>
+                {content.projects.map((proj: any, i: number) => (
+                    <View key={i} style={{ marginBottom: 15 }} wrap={false}>
+                        <Text style={{ fontSize: 12, fontWeight: 'bold', color: '#0f172a' }}>{proj.title}</Text>
+                        {proj.link && <Text style={{ fontSize: 10, color: '#2563eb', marginBottom: 2 }}>{proj.link}</Text>}
+                        {proj.description && <Text style={{ fontSize: 10, lineHeight: 1.5, color: '#334155' }}>{proj.description}</Text>}
+                    </View>
+                ))}
+            </View>
+        )}
+
+        {/* Certifications */}
         {content.certifications?.length > 0 && (
             <View style={styles.section}>
                 <Text style={{ fontSize: 14, fontWeight: 'bold', color: '#111827', marginBottom: 10 }}>Certifications</Text>
                 {content.certifications.map((cert: any, i: number) => (
-                    <View key={i} style={{ marginBottom: 10 }}>
+                    <View key={i} style={{ marginBottom: 10 }} wrap={false}>
                         <Text style={{ fontSize: 11, fontWeight: 'bold', color: '#0f172a' }}>{cert.title}</Text>
                         <Text style={{ fontSize: 10, color: '#0d9488', fontFamily: 'Courier' }}>{cert.issuer} {cert.date ? `// ${cert.date}` : ''}</Text>
                     </View>
                 ))}
+            </View>
+        )}
+
+        {/* Languages (Added) */}
+        {content.languages?.length > 0 && (
+            <View style={styles.section}>
+                <Text style={{ fontSize: 14, fontWeight: 'bold', color: '#111827', marginBottom: 10 }}>Languages</Text>
+                <View style={{ flexDirection: 'row', flexWrap: 'wrap', gap: 6 }}>
+                    {content.languages.map((l: any, i: number) => (
+                        <Text key={i} style={{ fontSize: 9, fontFamily: 'Courier', color: '#111827' }}>
+                            def {l.language} = "{l.proficiency}";
+                        </Text>
+                    ))}
+                </View>
             </View>
         )}
     </Page>
