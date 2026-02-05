@@ -4,26 +4,24 @@ import { Document, Page, Text, View, StyleSheet, PDFViewer, Font } from '@react-
 import { useEffect, useState } from 'react'
 
 // Register Open Sans font which has excellent unicode support including Turkish
-// Register fonts from cdnjs (Stable TTF files)
+// Register fonts from local public/fonts directory (WOFF files copied from @fontsource)
 Font.register({
     family: 'Roboto',
     fonts: [
-        { src: 'https://cdnjs.cloudflare.com/ajax/libs/roboto-fontface/0.10.0/fonts/roboto/Roboto-Regular.ttf' },
-        { src: 'https://cdnjs.cloudflare.com/ajax/libs/roboto-fontface/0.10.0/fonts/roboto/Roboto-Bold.ttf', fontWeight: 'bold' },
-        { src: 'https://cdnjs.cloudflare.com/ajax/libs/roboto-fontface/0.10.0/fonts/roboto/Roboto-Italic.ttf', fontStyle: 'italic' },
-        { src: 'https://cdnjs.cloudflare.com/ajax/libs/roboto-fontface/0.10.0/fonts/roboto/Roboto-BoldItalic.ttf', fontWeight: 'bold', fontStyle: 'italic' }
+        { src: '/fonts/Roboto-Regular.woff' },
+        { src: '/fonts/Roboto-Bold.woff', fontWeight: 'bold' },
+        { src: '/fonts/Roboto-Italic.woff', fontStyle: 'italic' },
+        { src: '/fonts/Roboto-BoldItalic.woff', fontWeight: 'bold', fontStyle: 'italic' }
     ]
 });
 
 Font.register({
     family: 'Merriweather',
     fonts: [
-        // Using bit.ly shortlinks or another stable source because cdnjs structure for Merriweather is inconsistent
-        // Actually, let's try a very standard GitHub raw link from a font repo
-        { src: 'https://raw.githubusercontent.com/google/fonts/main/ofl/merriweather/Merriweather-Regular.ttf' },
-        { src: 'https://raw.githubusercontent.com/google/fonts/main/ofl/merriweather/Merriweather-Bold.ttf', fontWeight: 'bold' },
-        { src: 'https://raw.githubusercontent.com/google/fonts/main/ofl/merriweather/Merriweather-Italic.ttf', fontStyle: 'italic' },
-        { src: 'https://raw.githubusercontent.com/google/fonts/main/ofl/merriweather/Merriweather-BoldItalic.ttf', fontWeight: 'bold', fontStyle: 'italic' }
+        { src: '/fonts/Merriweather-Regular.woff' },
+        { src: '/fonts/Merriweather-Bold.woff', fontWeight: 'bold' },
+        { src: '/fonts/Merriweather-Italic.woff', fontStyle: 'italic' },
+        { src: '/fonts/Merriweather-BoldItalic.woff', fontWeight: 'bold', fontStyle: 'italic' }
     ]
 });
 
