@@ -6,11 +6,12 @@ import { ResumeForm } from '@/components/builder/ResumeForm'
 import { ResumePreview } from '@/components/builder/ResumePreview'
 import { Button } from '@/components/ui/button'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
-import { Save, Loader2, ArrowLeft, FileText, Eye, Wand2, LayoutDashboard } from 'lucide-react'
+import { Save, Loader2, ArrowLeft, FileText, Eye, Wand2, LayoutDashboard, Palette } from 'lucide-react'
 import Link from 'next/link'
 import { useParams, useSearchParams } from 'next/navigation'
 import { toast } from 'sonner'
 import { optimizeResumeContent } from '@/app/actions/ai'
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 
 export default function BuilderPage() {
     const params = useParams()
@@ -21,6 +22,7 @@ export default function BuilderPage() {
     const [optimizing, setOptimizing] = useState(false)
     // Initialize wizard mode if 'new' or if query param present
     const [isWizardMode, setIsWizardMode] = useState(params.id === 'new' || searchParams.get('wizard') === 'true')
+    const [currentTemplate, setCurrentTemplate] = useState('classic')
 
     const supabase = createClient()
 
@@ -223,16 +225,30 @@ export default function BuilderPage() {
                 {/* Right: Live Preview */}
                 <div className="w-1/2 bg-zinc-100 p-8 dark:bg-zinc-950 flex flex-col overflow-hidden">
                     <Tabs defaultValue="preview" className="w-full h-full flex flex-col">
-                        <div className="flex justify-center mb-4">
+                        <div className="flex justify-between mb-4 items-center">
                             <TabsList>
                                 <TabsTrigger value="preview"><Eye className="w-4 h-4 mr-2" /> ATS Preview</TabsTrigger>
                                 <TabsTrigger value="original" disabled={!resume.original_pdf_url}><FileText className="w-4 h-4 mr-2" /> Original PDF</TabsTrigger>
                             </TabsList>
+
+                            {/* Template Selector */}
+                            <div className="flex items-center gap-2">
+                                <Palette className="w-4 h-4 text-zinc-500" />
+                                <Select value={currentTemplate} onValueChange={setCurrentTemplate}>
+                                    <SelectTrigger className="w-[180px] h-9">
+                                        <SelectValue placeholder="Select Template" />
+                                    </SelectTrigger>
+                                    <SelectContent>
+                                        <SelectItem value="classic">Global Standard</SelectItem>
+                                        <SelectItem value="modern">Modern Clean</SelectItem>
+                                    </SelectContent>
+                                </Select>
+                            </div>
                         </div>
 
                         <TabsContent value="preview" className="flex-1 flex justify-center overflow-hidden data-[state=inactive]:hidden">
                             <div className="w-full max-w-[210mm] shadow-2xl h-full overflow-y-auto">
-                                <ResumePreview content={resume.content} />
+                                <ResumePreview content={resume.content} template={currentTemplate} />
                             </div>
                         </TabsContent>
 
