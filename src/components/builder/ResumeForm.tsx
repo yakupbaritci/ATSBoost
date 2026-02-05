@@ -296,7 +296,8 @@ interface ResumeFormProps {
     previewComponent?: React.ReactNode // Pass the live preview component to render in the finish tab
     title?: string
     onGenerateBullet?: (role: string, company: string, currentDesc: string) => Promise<string> // New prop for single bullet generation
-    onGenerateSummary?: (content: any) => Promise<string> // New prop for summary generation
+    onGenerateSummary?: (content: ResumeContent) => Promise<string> // New prop for summary generation
+    onSave?: () => void
 }
 
 export function ResumeForm({
@@ -313,7 +314,8 @@ export function ResumeForm({
     previewComponent,
     title = "Untitled Resume",
     onGenerateBullet,
-    onGenerateSummary
+    onGenerateSummary,
+    onSave
 }: ResumeFormProps) {
     const [content, setContent] = useState<ResumeContent>(initialContent)
     const [activeTab, setActiveTab] = useState("contact")
@@ -669,7 +671,10 @@ export function ResumeForm({
 
                         {/* Right: Actions */}
                         <div className="flex items-center gap-2 ml-auto">
-                            <Button variant="outline" size="sm" className="h-9 gap-2 font-bold text-xs uppercase tracking-wider hidden sm:flex" onClick={() => onUpdate && onUpdate(content)}>
+                            <Button variant="outline" size="sm" className="h-9 gap-2 font-bold text-xs uppercase tracking-wider hidden sm:flex" onClick={() => {
+                                if (onUpdate) onUpdate(content)
+                                if (onSave) onSave()
+                            }}>
                                 <Save className="w-4 h-4" /> Save
                             </Button>
 
