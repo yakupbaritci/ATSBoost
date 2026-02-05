@@ -317,13 +317,13 @@ export function ResumeForm({
     // Wizard Steps Configuration - Refined Order
     const steps = [
         { id: "contact", title: "CONTACT", description: "Basics" },
-        { id: "experience", title: "EXPERIENCE", description: "Work History" },
-        { id: "projects", title: "PROJECT", description: "Portfolios" },
-        { id: "education", title: "EDUCATION", description: "Academics" },
-        { id: "certifications", title: "CERTIFICATIONS", description: "Credentials" },
-        { id: "skills", title: "SKILLS", description: "Competencies" },
         { id: "summary", title: "SUMMARY", description: "About You" },
+        { id: "experience", title: "EXPERIENCE", description: "Work History" },
+        { id: "education", title: "EDUCATION", description: "Academics" },
+        { id: "skills", title: "SKILLS", description: "Competencies" },
         { id: "languages", title: "LANGUAGES", description: "Languages" },
+        { id: "projects", title: "PROJECT", description: "Portfolios" },
+        { id: "certifications", title: "CERTIFICATIONS", description: "Credentials" },
         { id: "finish", title: "FINISH UP", description: "Review & Download" }
     ]
 
@@ -648,9 +648,7 @@ export function ResumeForm({
                                     {finishStep.title} ✨
                                 </Button>
                             )}
-                            <Button variant="outline" size="sm" className="h-9 hidden xl:flex text-xs font-bold uppercase tracking-wider" disabled>
-                                AI Cover Letter
-                            </Button>
+
                         </div>
                     </div>
                 )}
