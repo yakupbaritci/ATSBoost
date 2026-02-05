@@ -964,398 +964,366 @@ export function ResumeForm({
                         </TabsContent>
 
                         {/* Education Tab */}
-                        <TabsContent value="education" className="mt-0 space-y-4">
-                            {content.education?.map((edu, index) => (
-                                <AccordionItem
-                                    key={`${edu.id}-${index}`}
-                                    title={edu.school || "School / University"}
-                                    subtitle={edu.degree}
-                                    onDelete={() => removeItem('education', index)}
-                                    defaultOpen={index === 0}
-                                >
-                                    <div className="grid grid-cols-2 gap-4 mt-4">
-                                        <div className="space-y-2">
-                                            <Label>School / University</Label>
-                                            <Input
-                                                value={edu.school || ''}
-                                                onChange={(e) => handleChange('education', 'school', e.target.value, index)}
-                                            />
-                                        </div>
-                                        <div className="space-y-2">
-                                            <Label>Degree / Major</Label>
-                                            <Input
-                                                value={edu.degree || ''}
-                                                onChange={(e) => handleChange('education', 'degree', e.target.value, index)}
-                                            />
-                                        </div>
-                                        <div className="space-y-2">
-                                            <Label>Start Date</Label>
-                                            <DateSelector
-                                                value={edu.startDate}
-                                                onChange={(val) => handleChange('education', 'startDate', val, index)}
-                                                placeholder="Start Date"
-                                            />
-                                        </div>
-                                        <div className="space-y-2">
-                                            {/* Education Tab - Split Layout */}
-                                            <TabsContent value="education" className="mt-0 h-[calc(100vh-140px)]">
-                                                <div className="flex h-full gap-6">
-                                                    {/* Left Sidebar: List */}
-                                                    <div className="w-80 shrink-0 flex flex-col gap-4 overflow-y-auto pr-2 pb-20">
-                                                        <div className="flex items-center justify-between px-1">
-                                                            <h3 className="font-bold text-zinc-900 dark:text-zinc-100 flex items-center gap-2">
-                                                                <ChevronDown className="w-4 h-4" /> Your Education
-                                                            </h3>
-                                                            <Button size="icon" variant="ghost" className="h-6 w-6 bg-blue-600 text-white hover:bg-blue-700 rounded-full" onClick={() => {
-                                                                addEducation()
-                                                                setActiveEducationIndex((content.education?.length || 0))
-                                                            }}>
-                                                                <Plus className="w-4 h-4" />
-                                                            </Button>
-                                                        </div>
 
-                                                        <div className="space-y-2">
-                                                            {content.education?.map((edu, index) => (
-                                                                <div
-                                                                    key={edu.id}
-                                                                    onClick={() => setActiveEducationIndex(index)}
-                                                                    className={cn(
-                                                                        "group relative p-3 rounded-lg cursor-pointer border transition-all hover:shadow-md",
-                                                                        activeEducationIndex === index
-                                                                            ? "bg-blue-50 dark:bg-blue-900/20 border-blue-200 dark:border-blue-800 ring-1 ring-blue-100 dark:ring-blue-900"
-                                                                            : "bg-white dark:bg-zinc-900 border-zinc-200 dark:border-zinc-800 hover:border-zinc-300"
-                                                                    )}
-                                                                >
-                                                                    <div className="flex justify-between items-start">
-                                                                        <div>
-                                                                            <h4 className={cn("font-bold text-sm", activeEducationIndex === index ? "text-blue-700 dark:text-blue-300" : "text-zinc-800 dark:text-zinc-200")}>
-                                                                                {edu.school || "University/School"}
-                                                                            </h4>
-                                                                            <p className="text-xs text-zinc-500 truncate mt-0.5">
-                                                                                {edu.degree || "Degree"}
-                                                                            </p>
-                                                                        </div>
-                                                                        <Button
-                                                                            variant="ghost"
-                                                                            size="icon"
-                                                                            className="h-6 w-6 text-zinc-400 opacity-0 group-hover:opacity-100"
-                                                                            onClick={(e) => {
-                                                                                e.stopPropagation()
-                                                                                removeItem('education', index)
-                                                                                if (activeEducationIndex === index && index > 0) setActiveEducationIndex(index - 1)
-                                                                            }}
-                                                                        >
-                                                                            <MoreVertical className="w-3 h-3" />
-                                                                        </Button>
-                                                                    </div>
-                                                                </div>
-                                                            ))}
-                                                        </div>
+                        {/* Education Tab - Split Layout */}
+                        <TabsContent value="education" className="mt-0 h-[calc(100vh-140px)]">
+                            <div className="flex h-full gap-6">
+                                {/* Left Sidebar: List */}
+                                <div className="w-80 shrink-0 flex flex-col gap-4 overflow-y-auto pr-2 pb-20">
+                                    <div className="flex items-center justify-between px-1">
+                                        <h3 className="font-bold text-zinc-900 dark:text-zinc-100 flex items-center gap-2">
+                                            <ChevronDown className="w-4 h-4" /> Your Education
+                                        </h3>
+                                        <Button size="icon" variant="ghost" className="h-6 w-6 bg-blue-600 text-white hover:bg-blue-700 rounded-full" onClick={() => {
+                                            addEducation()
+                                            setActiveEducationIndex((content.education?.length || 0))
+                                        }}>
+                                            <Plus className="w-4 h-4" />
+                                        </Button>
+                                    </div>
+
+                                    <div className="space-y-2">
+                                        {content.education?.map((edu, index) => (
+                                            <div
+                                                key={edu.id}
+                                                onClick={() => setActiveEducationIndex(index)}
+                                                className={cn(
+                                                    "group relative p-3 rounded-lg cursor-pointer border transition-all hover:shadow-md",
+                                                    activeEducationIndex === index
+                                                        ? "bg-blue-50 dark:bg-blue-900/20 border-blue-200 dark:border-blue-800 ring-1 ring-blue-100 dark:ring-blue-900"
+                                                        : "bg-white dark:bg-zinc-900 border-zinc-200 dark:border-zinc-800 hover:border-zinc-300"
+                                                )}
+                                            >
+                                                <div className="flex justify-between items-start">
+                                                    <div>
+                                                        <h4 className={cn("font-bold text-sm", activeEducationIndex === index ? "text-blue-700 dark:text-blue-300" : "text-zinc-800 dark:text-zinc-200")}>
+                                                            {edu.school || "University/School"}
+                                                        </h4>
+                                                        <p className="text-xs text-zinc-500 truncate mt-0.5">
+                                                            {edu.degree || "Degree"}
+                                                        </p>
                                                     </div>
-
-                                                    {/* Right Main: Editor */}
-                                                    <div className="flex-1 overflow-y-auto pb-20">
-                                                        {content.education && content.education[activeEducationIndex] ? (
-                                                            <Card className="border-zinc-200 dark:border-zinc-800 shadow-sm">
-                                                                <CardHeader className="pb-4 border-b border-zinc-100 dark:border-zinc-800/50">
-                                                                    <h3 className="text-lg font-bold text-zinc-900 dark:text-zinc-100">
-                                                                        {content.education[activeEducationIndex].school || "New Education"}
-                                                                        <span className="text-zinc-400 font-normal ml-2 text-base">
-                                                                            {content.education[activeEducationIndex].degree ? `• ${content.education[activeEducationIndex].degree}` : ""}
-                                                                        </span>
-                                                                    </h3>
-                                                                </CardHeader>
-                                                                <CardContent className="space-y-6 pt-6">
-                                                                    <div className="space-y-4">
-                                                                        {/* School */}
-                                                                        <div className="space-y-1.5">
-                                                                            <Label className="text-xs uppercase font-bold text-zinc-500">School / University</Label>
-                                                                            <Input
-                                                                                value={content.education[activeEducationIndex].school || ''}
-                                                                                onChange={(e) => handleChange('education', 'school', e.target.value, activeEducationIndex)}
-                                                                                className="h-11 bg-zinc-50 dark:bg-zinc-900 border-zinc-200 dark:border-zinc-700"
-                                                                                placeholder="e.g. Harvard University"
-                                                                            />
-                                                                        </div>
-
-                                                                        {/* Degree */}
-                                                                        <div className="space-y-1.5">
-                                                                            <Label className="text-xs uppercase font-bold text-zinc-500">Degree / Major</Label>
-                                                                            <Input
-                                                                                value={content.education[activeEducationIndex].degree || ''}
-                                                                                onChange={(e) => handleChange('education', 'degree', e.target.value, activeEducationIndex)}
-                                                                                className="h-11 bg-zinc-50 dark:bg-zinc-900 border-zinc-200 dark:border-zinc-700"
-                                                                                placeholder="e.g. Bachelor of Science in Computer Science"
-                                                                            />
-                                                                        </div>
-
-                                                                        {/* Dates */}
-                                                                        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                                                                            <div className="space-y-1.5">
-                                                                                <Label className="text-xs uppercase font-bold text-zinc-500">Start Date</Label>
-                                                                                <DateSelector
-                                                                                    value={content.education[activeEducationIndex].startDate}
-                                                                                    onChange={(val) => handleChange('education', 'startDate', val, activeEducationIndex)}
-                                                                                    placeholder="Start Date"
-                                                                                />
-                                                                            </div>
-                                                                            <div className="space-y-1.5">
-                                                                                <Label className="text-xs uppercase font-bold text-zinc-500">End Date / Expected</Label>
-                                                                                <DateSelector
-                                                                                    value={content.education[activeEducationIndex].endDate}
-                                                                                    onChange={(val) => handleChange('education', 'endDate', val, activeEducationIndex)}
-                                                                                    placeholder="Graduation Date"
-                                                                                />
-                                                                            </div>
-                                                                        </div>
-
-                                                                        <div className="space-y-1.5">
-                                                                            <Label className="text-xs uppercase font-bold text-zinc-500">Location</Label>
-                                                                            <Input
-                                                                                value={content.education[activeEducationIndex].location || ''}
-                                                                                onChange={(e) => handleChange('education', 'location', e.target.value, activeEducationIndex)}
-                                                                                className="h-11 bg-zinc-50 dark:bg-zinc-900 border-zinc-200 dark:border-zinc-700"
-                                                                                placeholder="e.g. Cambridge, MA"
-                                                                            />
-                                                                        </div>
-
-                                                                        {/* Description (Optional for Education but good to have) */}
-                                                                        <div className="space-y-1.5 pt-2">
-                                                                            <Label className="text-xs uppercase font-bold text-zinc-500">Description / Achievements (Optional)</Label>
-                                                                            <Textarea
-                                                                                value={content.education[activeEducationIndex].description || ''}
-                                                                                onChange={(e) => handleChange('education', 'description', e.target.value, activeEducationIndex)}
-                                                                                className="min-h-[150px] p-4 bg-white dark:bg-zinc-950 resize-none rounded-lg border-zinc-200 dark:border-zinc-700 focus:ring-blue-500/20"
-                                                                                placeholder="• GPA: 3.8/4.0&#10;• Relevant Coursework: Data Structures, Algorithms..."
-                                                                            />
-                                                                        </div>
-                                                                    </div>
-                                                                </CardContent>
-                                                                <div className="p-4 bg-zinc-50 dark:bg-zinc-900/50 border-t border-zinc-200 dark:border-zinc-800 flex justify-end">
-                                                                    <Button className="bg-blue-600 hover:bg-blue-700 text-white font-semibold">
-                                                                        Save to Education List
-                                                                    </Button>
-                                                                </div>
-                                                            </Card>
-                                                        ) : (
-                                                            <div className="flex flex-col items-center justify-center h-full text-zinc-400 space-y-4">
-                                                                <div className="w-16 h-16 rounded-full bg-zinc-100 dark:bg-zinc-800 flex items-center justify-center">
-                                                                    <FileIcon className="w-8 h-8 opacity-50" />
-                                                                </div>
-                                                                <p>Select an education to edit or add a new one.</p>
-                                                                <Button onClick={() => {
-                                                                    addEducation()
-                                                                    setActiveEducationIndex((content.education?.length || 0))
-                                                                }}>
-                                                                    <Plus className="w-4 h-4 mr-2" /> Add Education
-                                                                </Button>
-                                                            </div>
-                                                        )}
-                                                    </div>
+                                                    <Button
+                                                        variant="ghost"
+                                                        size="icon"
+                                                        className="h-6 w-6 text-zinc-400 opacity-0 group-hover:opacity-100"
+                                                        onClick={(e) => {
+                                                            e.stopPropagation()
+                                                            removeItem('education', index)
+                                                            if (activeEducationIndex === index && index > 0) setActiveEducationIndex(index - 1)
+                                                        }}
+                                                    >
+                                                        <MoreVertical className="w-3 h-3" />
+                                                    </Button>
                                                 </div>
-                                            </TabsContent>
+                                            </div>
+                                        ))}
+                                    </div>
+                                </div>
 
-                                            {/* Skills Tab */}
-                                            <TabsContent value="skills" className="mt-0 space-y-4">
-                                                <Card>
-                                                    <CardHeader>
-                                                        <CardTitle>Skills & Technologies</CardTitle>
-                                                    </CardHeader>
-                                                    <CardContent className="space-y-3">
-                                                        <div className="space-y-2">
-                                                            <Label>Add Skills (Type and press Enter or Comma)</Label>
-                                                            <Input
-                                                                placeholder="e.g. React, Node.js, Typescript..."
-                                                                onKeyDown={(e) => {
-                                                                    if (e.key === 'Enter' || e.key === ',') {
-                                                                        e.preventDefault()
-                                                                        const val = e.currentTarget.value
-                                                                        if (val) {
-                                                                            addSkill(val)
-                                                                            e.currentTarget.value = ''
-                                                                        }
-                                                                    }
-                                                                }}
+                                {/* Right Main: Editor */}
+                                <div className="flex-1 overflow-y-auto pb-20">
+                                    {content.education && content.education[activeEducationIndex] ? (
+                                        <Card className="border-zinc-200 dark:border-zinc-800 shadow-sm">
+                                            <CardHeader className="pb-4 border-b border-zinc-100 dark:border-zinc-800/50">
+                                                <h3 className="text-lg font-bold text-zinc-900 dark:text-zinc-100">
+                                                    {content.education[activeEducationIndex].school || "New Education"}
+                                                    <span className="text-zinc-400 font-normal ml-2 text-base">
+                                                        {content.education[activeEducationIndex].degree ? `• ${content.education[activeEducationIndex].degree}` : ""}
+                                                    </span>
+                                                </h3>
+                                            </CardHeader>
+                                            <CardContent className="space-y-6 pt-6">
+                                                <div className="space-y-4">
+                                                    {/* School */}
+                                                    <div className="space-y-1.5">
+                                                        <Label className="text-xs uppercase font-bold text-zinc-500">School / University</Label>
+                                                        <Input
+                                                            value={content.education[activeEducationIndex].school || ''}
+                                                            onChange={(e) => handleChange('education', 'school', e.target.value, activeEducationIndex)}
+                                                            className="h-11 bg-zinc-50 dark:bg-zinc-900 border-zinc-200 dark:border-zinc-700"
+                                                            placeholder="e.g. Harvard University"
+                                                        />
+                                                    </div>
+
+                                                    {/* Degree */}
+                                                    <div className="space-y-1.5">
+                                                        <Label className="text-xs uppercase font-bold text-zinc-500">Degree / Major</Label>
+                                                        <Input
+                                                            value={content.education[activeEducationIndex].degree || ''}
+                                                            onChange={(e) => handleChange('education', 'degree', e.target.value, activeEducationIndex)}
+                                                            className="h-11 bg-zinc-50 dark:bg-zinc-900 border-zinc-200 dark:border-zinc-700"
+                                                            placeholder="e.g. Bachelor of Science in Computer Science"
+                                                        />
+                                                    </div>
+
+                                                    {/* Dates */}
+                                                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                                        <div className="space-y-1.5">
+                                                            <Label className="text-xs uppercase font-bold text-zinc-500">Start Date</Label>
+                                                            <DateSelector
+                                                                value={content.education[activeEducationIndex].startDate}
+                                                                onChange={(val) => handleChange('education', 'startDate', val, activeEducationIndex)}
+                                                                placeholder="Start Date"
                                                             />
                                                         </div>
-
-                                                        <div className="flex flex-wrap gap-2 mt-4">
-                                                            {content.skills?.map((skill, index) => (
-                                                                <Badge key={index} variant="secondary" className="pl-3 pr-1 py-1 text-sm flex items-center gap-1">
-                                                                    {skill}
-                                                                    <button
-                                                                        onClick={() => removeSkill(index)}
-                                                                        className="hover:bg-red-200 dark:hover:bg-red-900 rounded-full p-0.5 transition-colors text-red-500"
-                                                                    >
-                                                                        <X className="w-3 h-3" />
-                                                                    </button>
-                                                                </Badge>
-                                                            ))}
-                                                            {(!content.skills || content.skills.length === 0) && (
-                                                                <p className="text-sm text-muted-foreground italic">No skills added yet.</p>
-                                                            )}
+                                                        <div className="space-y-1.5">
+                                                            <Label className="text-xs uppercase font-bold text-zinc-500">End Date / Expected</Label>
+                                                            <DateSelector
+                                                                value={content.education[activeEducationIndex].endDate}
+                                                                onChange={(val) => handleChange('education', 'endDate', val, activeEducationIndex)}
+                                                                placeholder="Graduation Date"
+                                                            />
                                                         </div>
-                                                    </CardContent>
-                                                </Card>
-                                            </TabsContent>
-
-                                            {/* Certifications Tab */}
-                                            <TabsContent value="certifications" className="mt-0 space-y-4">
-                                                {content.certifications?.map((cert, index) => (
-                                                    <AccordionItem
-                                                        key={index}
-                                                        title={cert.title || "Certification"}
-                                                        subtitle={cert.issuer}
-                                                        onDelete={() => removeItem('certifications', index)}
-                                                        defaultOpen={index === 0}
-                                                    >
-                                                        <div className="grid grid-cols-2 gap-4 mt-4">
-                                                            <div className="space-y-2"><Label>Title</Label><Input value={cert.title} onChange={(e) => handleChange('certifications', 'title', e.target.value, index)} /></div>
-                                                            <div className="space-y-2"><Label>Issuer</Label><Input value={cert.issuer} onChange={(e) => handleChange('certifications', 'issuer', e.target.value, index)} /></div>
-                                                            <div className="space-y-2"><Label>Date</Label><Input value={cert.date} onChange={(e) => handleChange('certifications', 'date', e.target.value, index)} /></div>
-                                                        </div>
-                                                    </AccordionItem>
-                                                ))}
-                                                <Button onClick={() => addItem('certifications')} variant="outline" className="w-full border-dashed"><Plus className="w-4 h-4 mr-2" /> Add Certification</Button>
-                                            </TabsContent>
-
-                                            {/* Projects Tab */}
-                                            <TabsContent value="projects" className="mt-0 space-y-4">
-                                                {content.projects?.map((proj, index) => (
-                                                    <AccordionItem
-                                                        key={index}
-                                                        title={proj.title || "Project"}
-                                                        onDelete={() => removeItem('projects', index)}
-                                                        defaultOpen={index === 0}
-                                                    >
-                                                        <div className="space-y-2 mt-4"><Label>Project Title</Label><Input value={proj.title} onChange={(e) => handleChange('projects', 'title', e.target.value, index)} /></div>
-                                                        <div className="space-y-2"><Label>Link</Label><Input value={proj.link} onChange={(e) => handleChange('projects', 'link', e.target.value, index)} /></div>
-                                                        <div className="space-y-2"><Label>Description</Label><Textarea value={proj.description} onChange={(e) => handleChange('projects', 'description', e.target.value, index)} /></div>
-                                                    </AccordionItem>
-                                                ))}
-                                                <Button onClick={() => addItem('projects')} variant="outline" className="w-full border-dashed"><Plus className="w-4 h-4 mr-2" /> Add Project</Button>
-                                            </TabsContent>
-
-                                            {/* Languages Tab */}
-                                            <TabsContent value="languages" className="mt-0 space-y-4">
-                                                {content.languages?.map((lang, index) => (
-                                                    <AccordionItem
-                                                        key={index}
-                                                        title={lang.language || "Language"}
-                                                        subtitle={lang.proficiency}
-                                                        onDelete={() => removeItem('languages', index)}
-                                                        defaultOpen={index === 0}
-                                                    >
-                                                        <div className="grid grid-cols-2 gap-4 mt-4">
-                                                            <div className="space-y-2"><Label>Language</Label><Input value={lang.language} onChange={(e) => handleChange('languages', 'language', e.target.value, index)} /></div>
-                                                            <div className="space-y-2"><Label>Proficiency</Label>
-                                                                <LevelSelector
-                                                                    value={lang.proficiency}
-                                                                    onChange={(val) => handleChange('languages', 'proficiency', val, index)}
-                                                                />
-                                                            </div>
-                                                        </div>
-                                                    </AccordionItem>
-                                                ))}
-                                                <Button onClick={() => addItem('languages')} variant="outline" className="w-full border-dashed"><Plus className="w-4 h-4 mr-2" /> Add Language</Button>
-                                            </TabsContent>
-
-                                            {/* Finish Up Tab */}
-                                            <TabsContent value="finish" className="mt-0 space-y-6">
-                                                <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-                                                    {/* Left Col: Actions */}
-                                                    <div className="lg:col-span-1 space-y-6">
-                                                        <Card>
-                                                            <CardHeader>
-                                                                <CardTitle>Final Review</CardTitle>
-                                                            </CardHeader>
-                                                            <CardContent className="space-y-4">
-                                                                <div className="space-y-4">
-                                                                    <Label>Resume Template</Label>
-                                                                    <Select value={currentTemplate} onValueChange={onTemplateChange}>
-                                                                        <SelectTrigger>
-                                                                            <SelectValue placeholder="Select Template" />
-                                                                        </SelectTrigger>
-                                                                        <SelectContent>
-                                                                            <SelectItem value="classic">Global Standard</SelectItem>
-                                                                            <SelectItem value="modern">Modern Professional</SelectItem>
-                                                                            <SelectItem value="bold">Bold Executive</SelectItem>
-                                                                            <SelectItem value="minimalist">Minimalist Mono</SelectItem>
-                                                                            <SelectItem value="tech">Tech / Developer</SelectItem>
-                                                                        </SelectContent>
-                                                                    </Select>
-                                                                </div>
-
-                                                                <div className="pt-4 border-t border-zinc-100 dark:border-zinc-800 space-y-3">
-                                                                    <Button
-                                                                        className="w-full justify-between"
-                                                                        variant="outline"
-                                                                        onClick={onCheckScore}
-                                                                    >
-                                                                        <span>Check ATS Score</span>
-                                                                        {/* Show dynamic score badge if available */}
-                                                                        {atsScore?.score !== undefined ? (
-                                                                            <Badge variant={atsScore.score >= 80 ? 'default' : atsScore.score >= 60 ? 'secondary' : 'destructive'}>
-                                                                                {atsScore.score} / 100
-                                                                            </Badge>
-                                                                        ) : (
-                                                                            <Badge variant="outline">Not Checked</Badge>
-                                                                        )}
-                                                                    </Button>
-
-                                                                    <Button
-                                                                        className="w-full bg-gradient-to-r from-indigo-500 to-purple-600 hover:from-indigo-600 hover:to-purple-700 text-white border-0"
-                                                                        onClick={onAutoOptimize}
-                                                                        disabled={isOptimizing}
-                                                                    >
-                                                                        {isOptimizing ? 'Optimizing...' : '✨ AI Auto-Optimize'}
-                                                                    </Button>
-                                                                </div>
-
-                                                                <div className="pt-4 border-t border-zinc-100 dark:border-zinc-800">
-                                                                    {onDownload && onDownload()}
-                                                                </div>
-                                                            </CardContent>
-                                                        </Card>
                                                     </div>
 
-                                                    {/* Right Col: Preview */}
-                                                    <div className="lg:col-span-2 min-h-[600px] bg-white dark:bg-zinc-900 shadow-sm rounded-xl border border-zinc-200 dark:border-zinc-800 overflow-hidden flex flex-col">
-                                                        <div className="p-4 border-b border-zinc-100 dark:border-zinc-800 bg-zinc-50 dark:bg-zinc-950 flex justify-between items-center">
-                                                            <span className="font-semibold text-sm">Resume Preview</span>
-                                                        </div>
-                                                        <div className="flex-1 bg-zinc-50 dark:bg-zinc-950/50 p-6 overflow-y-auto">
-                                                            <div className="mx-auto shadow-2xl origin-top transform scale-95" style={{ width: '210mm' }}>
-                                                                {/* Render the preview component passed from parent */}
-                                                                {previewComponent}
-                                                            </div>
-                                                        </div>
+                                                    <div className="space-y-1.5">
+                                                        <Label className="text-xs uppercase font-bold text-zinc-500">Location</Label>
+                                                        <Input
+                                                            value={content.education[activeEducationIndex].location || ''}
+                                                            onChange={(e) => handleChange('education', 'location', e.target.value, activeEducationIndex)}
+                                                            className="h-11 bg-zinc-50 dark:bg-zinc-900 border-zinc-200 dark:border-zinc-700"
+                                                            placeholder="e.g. Cambridge, MA"
+                                                        />
+                                                    </div>
+
+                                                    {/* Description (Optional for Education but good to have) */}
+                                                    <div className="space-y-1.5 pt-2">
+                                                        <Label className="text-xs uppercase font-bold text-zinc-500">Description / Achievements (Optional)</Label>
+                                                        <Textarea
+                                                            value={content.education[activeEducationIndex].description || ''}
+                                                            onChange={(e) => handleChange('education', 'description', e.target.value, activeEducationIndex)}
+                                                            className="min-h-[150px] p-4 bg-white dark:bg-zinc-950 resize-none rounded-lg border-zinc-200 dark:border-zinc-700 focus:ring-blue-500/20"
+                                                            placeholder="• GPA: 3.8/4.0&#10;• Relevant Coursework: Data Structures, Algorithms..."
+                                                        />
                                                     </div>
                                                 </div>
-                                            </TabsContent>
-                                        </div> {/* End Centered Container */}
-                                    </div>
-                                    {/* Wizard Nav Buttons (Only in Wizard Mode) */}
-                                    {isWizardMode && (
-                                        <div className="flex items-center justify-between mt-0 p-4 border-t border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-900 sticky bottom-0 z-10 shrink-0">
-                                            <Button
-                                                variant="outline"
-                                                onClick={handleBack}
-                                                disabled={currentStepIndex === 0}
-                                            >
-                                                <ArrowLeft className="w-4 h-4 mr-2" /> Back
-                                            </Button>
-
-                                            <Button
-                                                onClick={handleNext}
-                                                disabled={currentStepIndex === steps.length - 1} // Hide next on last step, user interacts with finish tab content
-                                                className={cn(currentStepIndex === steps.length - 1 && "invisible")}
-                                            >
-                                                Next <ArrowRight className="w-4 h-4 ml-2" />
+                                            </CardContent>
+                                            <div className="p-4 bg-zinc-50 dark:bg-zinc-900/50 border-t border-zinc-200 dark:border-zinc-800 flex justify-end">
+                                                <Button className="bg-blue-600 hover:bg-blue-700 text-white font-semibold">
+                                                    Save to Education List
+                                                </Button>
+                                            </div>
+                                        </Card>
+                                    ) : (
+                                        <div className="flex flex-col items-center justify-center h-full text-zinc-400 space-y-4">
+                                            <div className="w-16 h-16 rounded-full bg-zinc-100 dark:bg-zinc-800 flex items-center justify-center">
+                                                <FileIcon className="w-8 h-8 opacity-50" />
+                                            </div>
+                                            <p>Select an education to edit or add a new one.</p>
+                                            <Button onClick={() => {
+                                                addEducation()
+                                                setActiveEducationIndex((content.education?.length || 0))
+                                            }}>
+                                                <Plus className="w-4 h-4 mr-2" /> Add Education
                                             </Button>
                                         </div>
                                     )}
-                                </Tabs>
+                                </div>
+                            </div>
+                        </TabsContent>
+
+                        {/* Skills Tab */}
+                        <TabsContent value="skills" className="mt-0 space-y-4">
+                            <Card>
+                                <CardHeader>
+                                    <CardTitle>Skills & Technologies</CardTitle>
+                                </CardHeader>
+                                <CardContent className="space-y-3">
+                                    <div className="space-y-2">
+                                        <Label>Add Skills (Type and press Enter or Comma)</Label>
+                                        <Input
+                                            placeholder="e.g. React, Node.js, Typescript..."
+                                            onKeyDown={(e) => {
+                                                if (e.key === 'Enter' || e.key === ',') {
+                                                    e.preventDefault()
+                                                    const val = e.currentTarget.value
+                                                    if (val) {
+                                                        addSkill(val)
+                                                        e.currentTarget.value = ''
+                                                    }
+                                                }
+                                            }}
+                                        />
+                                    </div>
+
+                                    <div className="flex flex-wrap gap-2 mt-4">
+                                        {content.skills?.map((skill, index) => (
+                                            <Badge key={index} variant="secondary" className="pl-3 pr-1 py-1 text-sm flex items-center gap-1">
+                                                {skill}
+                                                <button
+                                                    onClick={() => removeSkill(index)}
+                                                    className="hover:bg-red-200 dark:hover:bg-red-900 rounded-full p-0.5 transition-colors text-red-500"
+                                                >
+                                                    <X className="w-3 h-3" />
+                                                </button>
+                                            </Badge>
+                                        ))}
+                                        {(!content.skills || content.skills.length === 0) && (
+                                            <p className="text-sm text-muted-foreground italic">No skills added yet.</p>
+                                        )}
+                                    </div>
+                                </CardContent>
+                            </Card>
+                        </TabsContent>
+
+                        {/* Certifications Tab */}
+                        <TabsContent value="certifications" className="mt-0 space-y-4">
+                            {content.certifications?.map((cert, index) => (
+                                <AccordionItem
+                                    key={index}
+                                    title={cert.title || "Certification"}
+                                    subtitle={cert.issuer}
+                                    onDelete={() => removeItem('certifications', index)}
+                                    defaultOpen={index === 0}
+                                >
+                                    <div className="grid grid-cols-2 gap-4 mt-4">
+                                        <div className="space-y-2"><Label>Title</Label><Input value={cert.title} onChange={(e) => handleChange('certifications', 'title', e.target.value, index)} /></div>
+                                        <div className="space-y-2"><Label>Issuer</Label><Input value={cert.issuer} onChange={(e) => handleChange('certifications', 'issuer', e.target.value, index)} /></div>
+                                        <div className="space-y-2"><Label>Date</Label><Input value={cert.date} onChange={(e) => handleChange('certifications', 'date', e.target.value, index)} /></div>
+                                    </div>
+                                </AccordionItem>
+                            ))}
+                            <Button onClick={() => addItem('certifications')} variant="outline" className="w-full border-dashed"><Plus className="w-4 h-4 mr-2" /> Add Certification</Button>
+                        </TabsContent>
+
+                        {/* Projects Tab */}
+                        <TabsContent value="projects" className="mt-0 space-y-4">
+                            {content.projects?.map((proj, index) => (
+                                <AccordionItem
+                                    key={index}
+                                    title={proj.title || "Project"}
+                                    onDelete={() => removeItem('projects', index)}
+                                    defaultOpen={index === 0}
+                                >
+                                    <div className="space-y-2 mt-4"><Label>Project Title</Label><Input value={proj.title} onChange={(e) => handleChange('projects', 'title', e.target.value, index)} /></div>
+                                    <div className="space-y-2"><Label>Link</Label><Input value={proj.link} onChange={(e) => handleChange('projects', 'link', e.target.value, index)} /></div>
+                                    <div className="space-y-2"><Label>Description</Label><Textarea value={proj.description} onChange={(e) => handleChange('projects', 'description', e.target.value, index)} /></div>
+                                </AccordionItem>
+                            ))}
+                            <Button onClick={() => addItem('projects')} variant="outline" className="w-full border-dashed"><Plus className="w-4 h-4 mr-2" /> Add Project</Button>
+                        </TabsContent>
+
+                        {/* Languages Tab */}
+                        <TabsContent value="languages" className="mt-0 space-y-4">
+                            {content.languages?.map((lang, index) => (
+                                <AccordionItem
+                                    key={index}
+                                    title={lang.language || "Language"}
+                                    subtitle={lang.proficiency}
+                                    onDelete={() => removeItem('languages', index)}
+                                    defaultOpen={index === 0}
+                                >
+                                    <div className="grid grid-cols-2 gap-4 mt-4">
+                                        <div className="space-y-2"><Label>Language</Label><Input value={lang.language} onChange={(e) => handleChange('languages', 'language', e.target.value, index)} /></div>
+                                        <div className="space-y-2"><Label>Proficiency</Label>
+                                            <LevelSelector
+                                                value={lang.proficiency}
+                                                onChange={(val) => handleChange('languages', 'proficiency', val, index)}
+                                            />
+                                        </div>
+                                    </div>
+                                </AccordionItem>
+                            ))}
+                            <Button onClick={() => addItem('languages')} variant="outline" className="w-full border-dashed"><Plus className="w-4 h-4 mr-2" /> Add Language</Button>
+                        </TabsContent>
+
+                        {/* Finish Up Tab */}
+                        <TabsContent value="finish" className="mt-0 space-y-6">
+                            <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                                {/* Left Col: Actions */}
+                                <div className="lg:col-span-1 space-y-6">
+                                    <Card>
+                                        <CardHeader>
+                                            <CardTitle>Final Review</CardTitle>
+                                        </CardHeader>
+                                        <CardContent className="space-y-4">
+                                            <div className="space-y-4">
+                                                <Label>Resume Template</Label>
+                                                <Select value={currentTemplate} onValueChange={onTemplateChange}>
+                                                    <SelectTrigger>
+                                                        <SelectValue placeholder="Select Template" />
+                                                    </SelectTrigger>
+                                                    <SelectContent>
+                                                        <SelectItem value="classic">Global Standard</SelectItem>
+                                                        <SelectItem value="modern">Modern Professional</SelectItem>
+                                                        <SelectItem value="bold">Bold Executive</SelectItem>
+                                                        <SelectItem value="minimalist">Minimalist Mono</SelectItem>
+                                                        <SelectItem value="tech">Tech / Developer</SelectItem>
+                                                    </SelectContent>
+                                                </Select>
+                                            </div>
+
+                                            <div className="pt-4 border-t border-zinc-100 dark:border-zinc-800 space-y-3">
+                                                <Button
+                                                    className="w-full justify-between"
+                                                    variant="outline"
+                                                    onClick={onCheckScore}
+                                                >
+                                                    <span>Check ATS Score</span>
+                                                    {/* Show dynamic score badge if available */}
+                                                    {atsScore?.score !== undefined ? (
+                                                        <Badge variant={atsScore.score >= 80 ? 'default' : atsScore.score >= 60 ? 'secondary' : 'destructive'}>
+                                                            {atsScore.score} / 100
+                                                        </Badge>
+                                                    ) : (
+                                                        <Badge variant="outline">Not Checked</Badge>
+                                                    )}
+                                                </Button>
+
+                                                <Button
+                                                    className="w-full bg-gradient-to-r from-indigo-500 to-purple-600 hover:from-indigo-600 hover:to-purple-700 text-white border-0"
+                                                    onClick={onAutoOptimize}
+                                                    disabled={isOptimizing}
+                                                >
+                                                    {isOptimizing ? 'Optimizing...' : '✨ AI Auto-Optimize'}
+                                                </Button>
+                                            </div>
+
+                                            <div className="pt-4 border-t border-zinc-100 dark:border-zinc-800">
+                                                {onDownload && onDownload()}
+                                            </div>
+                                        </CardContent>
+                                    </Card>
+                                </div>
+
+                                {/* Right Col: Preview */}
+                                <div className="lg:col-span-2 min-h-[600px] bg-white dark:bg-zinc-900 shadow-sm rounded-xl border border-zinc-200 dark:border-zinc-800 overflow-hidden flex flex-col">
+                                    <div className="p-4 border-b border-zinc-100 dark:border-zinc-800 bg-zinc-50 dark:bg-zinc-950 flex justify-between items-center">
+                                        <span className="font-semibold text-sm">Resume Preview</span>
+                                    </div>
+                                    <div className="flex-1 bg-zinc-50 dark:bg-zinc-950/50 p-6 overflow-y-auto">
+                                        <div className="mx-auto shadow-2xl origin-top transform scale-95" style={{ width: '210mm' }}>
+                                            {/* Render the preview component passed from parent */}
+                                            {previewComponent}
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </TabsContent>
+                    </div> {/* End Centered Container */}
+                </div>
+                {/* Wizard Nav Buttons (Only in Wizard Mode) */}
+                {isWizardMode && (
+                    <div className="flex items-center justify-between mt-0 p-4 border-t border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-900 sticky bottom-0 z-10 shrink-0">
+                        <Button
+                            variant="outline"
+                            onClick={handleBack}
+                            disabled={currentStepIndex === 0}
+                        >
+                            <ArrowLeft className="w-4 h-4 mr-2" /> Back
+                        </Button>
+
+                        <Button
+                            onClick={handleNext}
+                            disabled={currentStepIndex === steps.length - 1} // Hide next on last step, user interacts with finish tab content
+                            className={cn(currentStepIndex === steps.length - 1 && "invisible")}
+                        >
+                            Next <ArrowRight className="w-4 h-4 ml-2" />
+                        </Button>
+                    </div>
+                )}
+            </Tabs>
         </div>
-                    )
+    )
 }
