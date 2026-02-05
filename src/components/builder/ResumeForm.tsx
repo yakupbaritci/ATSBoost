@@ -1116,6 +1116,7 @@ export function ResumeForm({
                                             setActiveEducationIndex((content.education?.length || 0))
                                         }}
                                         onToggleVisible={(index) => {
+                                            if (!content.education) return;
                                             const current = content.education[index];
                                             handleChange('education', 'visible', current.visible === false ? true : false, index);
                                         }}
