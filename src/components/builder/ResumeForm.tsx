@@ -304,7 +304,8 @@ export function ResumeForm({
 }: ResumeFormProps) {
     const [content, setContent] = useState<ResumeContent>(initialContent)
     const [activeTab, setActiveTab] = useState("contact")
-    const [activeExperienceIndex, setActiveExperienceIndex] = useState(0) // Track active job for editing
+    const [activeExperienceIndex, setActiveExperienceIndex] = useState(0)
+    const [activeEducationIndex, setActiveEducationIndex] = useState(0) // New state for Education
 
     // Wizard Steps Configuration - Refined Order
     const steps = [
@@ -445,6 +446,7 @@ export function ResumeForm({
             newContent.skills = newSkills
         } else if ((section === 'certifications' || section === 'projects' || section === 'languages') && typeof index === 'number') {
             // Generic handler for array of objects (Certifications, Projects, Languages)
+            // @ts-ignore
             newContent[section] = [...(newContent[section] || [])]
             // @ts-ignore
             newContent[section][index] = { ...newContent[section][index], [field]: value }
