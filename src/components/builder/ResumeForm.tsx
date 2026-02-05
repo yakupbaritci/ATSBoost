@@ -1567,8 +1567,8 @@ export function ResumeForm({
                                     <div className="p-4 border-b border-zinc-100 dark:border-zinc-800 bg-zinc-50 dark:bg-zinc-950 flex justify-between items-center">
                                         <span className="font-semibold text-sm">Resume Preview</span>
                                     </div>
-                                    <div className="flex-1 bg-zinc-50 dark:bg-zinc-950/50 p-6 overflow-y-auto">
-                                        <div className="mx-auto shadow-2xl origin-top transform scale-95" style={{ width: '210mm' }}>
+                                    <div className="flex-1 bg-zinc-50 dark:bg-zinc-950/50 p-4 lg:p-6 overflow-hidden">
+                                        <div className="w-full h-full max-w-4xl mx-auto">
                                             {/* Render the preview component passed from parent */}
                                             {previewComponent}
                                         </div>
