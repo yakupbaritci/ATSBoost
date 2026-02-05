@@ -80,10 +80,13 @@ export async function createResumeFromPdf(formData: FormData) {
     }
 
     revalidatePath('/dashboard')
-    redirect(`/dashboard/builder/${data.id}`)
+    revalidatePath('/dashboard')
+    redirect(`/dashboard/builder/${data.id}?wizard=true`)
 }
 
 export async function createEmptyResume() {
+    // Actually we can just redirect to 'new' route which we handled in the previous step
+    // But to be consistent with the backend action way:
     const supabase = await createClient()
     const { data: { user } } = await supabase.auth.getUser()
 
@@ -108,5 +111,5 @@ export async function createEmptyResume() {
     if (error) throw new Error('Failed to create resume')
 
     revalidatePath('/dashboard')
-    redirect(`/dashboard/builder/${data.id}`)
+    redirect(`/dashboard/builder/${data.id}?wizard=true`)
 }
