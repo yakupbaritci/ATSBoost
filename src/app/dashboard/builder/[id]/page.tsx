@@ -229,232 +229,218 @@ export default function BuilderPage() {
             await handleCheckScore(newContent)
         }
     }
-}
 
-// New AI Handler for Single Bullet Points
-const handleGenerateBullet = async (role: string, company: string, currentDesc: string) => {
-    try {
-        const bullet = await generateSingleBullet(role, company, currentDesc)
-        return bullet
-    } catch (error) {
-        console.error(error)
-        throw error
+    const handleGenerateBullet = async (role: string, company: string, currentDesc: string) => {
+        try {
+            const bullet = await generateSingleBullet(role, company, currentDesc)
+            return bullet
+        } catch (error) {
+            console.error(error)
+            throw error
+        }
     }
-}
-}
 
-// New AI Handler for Single Bullet Points
-const handleGenerateBullet = async (role: string, company: string, currentDesc: string) => {
-    try {
-        const bullet = await generateSingleBullet(role, company, currentDesc)
-        return bullet
-    } catch (error) {
-        console.error(error)
-        throw error
+    if (loading) {
+        return (
+            <div className="h-screen flex items-center justify-center">
+                <Loader2 className="w-8 h-8 animate-spin text-primary" />
+            </div>
+        )
     }
-}
 
-if (loading) {
+    if (!resume) return <div>Resume not found</div>
+
     return (
-        <div className="h-screen flex items-center justify-center">
-            <Loader2 className="w-8 h-8 animate-spin text-primary" />
-        </div>
-    )
-}
-
-if (!resume) return <div>Resume not found</div>
-
-return (
-    <div className="flex flex-col h-screen bg-zinc-50 dark:bg-zinc-950 overflow-hidden">
-        {/* Top Bar */}
-        {/* Top Bar - Minimalist */}
-        <header className="h-14 border-b border-zinc-200 bg-white dark:border-zinc-800 dark:bg-zinc-900 flex items-center justify-between px-4 shrink-0">
-            <div className="flex items-center gap-4">
-                <Link href="/dashboard/resumes" className="text-zinc-500 hover:text-zinc-900 transition-colors">
-                    <ArrowLeft className="w-5 h-5" />
-                </Link>
-                <div className="flex items-center gap-2">
-                    <span className="text-sm text-zinc-400">
-                        {resume.is_optimized ? 'Optimized' : 'Draft'}
-                    </span>
-                </div>
-            </div>
-            <div className="flex gap-2">
-                <Button size="sm" variant="ghost" className="text-zinc-500" onClick={handleSave} disabled={saving}>
-                    {saving ? <Loader2 className="w-4 h-4 animate-spin mr-2" /> : <Save className="w-4 h-4 mr-2" />}
-                    {saving ? 'Saving...' : 'Save Draft'}
-                </Button>
-
-                <Button
-                    variant="ghost"
-                    size="sm"
-                    onClick={() => setIsWizardMode(!isWizardMode)}
-                    className="ml-2 text-zinc-400 hover:text-zinc-900"
-                >
-                    {isWizardMode ? <LayoutDashboard className="w-4 h-4" /> : <Wand2 className="w-4 h-4" />}
-                </Button>
-            </div>
-        </header>
-
-        {/* Main Workspace - Simplified */}
-        <div className="flex-1 overflow-hidden bg-[#f8f9fc] dark:bg-black">
-            {/* We render ONLY the ResumeForm which now handles the entire layout & preview in 'Finish' tab */}
-            <ResumeForm
-                initialContent={resume.content}
-                onUpdate={handleUpdate}
-                isWizardMode={isWizardMode}
-                key={isWizardMode ? 'wizard' : 'editor'}
-                title={resume.title}
-
-                // Finish Up Props
-                atsScore={atsResult}
-                onCheckScore={() => handleCheckScore()}
-                isOptimizing={optimizing}
-                onGenerateBullet={handleGenerateBullet}
-                onAutoOptimize={handleOptimize}
-                currentTemplate={currentTemplate}
-                onTemplateChange={setCurrentTemplate}
-
-                // Pass the Preview component to be rendered inside the Finish tab
-                previewComponent={
-                    <ResumePreview content={resume.content} template={currentTemplate} />
-                }
-
-                // Pass Download Logic
-                onDownload={() => (
-                    <PDFDownloadLink
-                        document={<ResumeDocument content={resume.content} template={currentTemplate} />}
-                        fileName={`${resume.title || 'resume'}.pdf`}
-                    >
-                        {({ blob, url, loading: pdfLoading, error }) => (
-                            <Button size="lg" className="w-full font-bold" disabled={pdfLoading}>
-                                {pdfLoading ? <Loader2 className="w-4 h-4 animate-spin mr-2" /> : <Download className="w-4 h-4 mr-2" />}
-                                Download PDF
-                            </Button>
-                        )}
-                    </PDFDownloadLink>
-                )}
-            />
-        </div>
-
-        {/* ATS Score Modal - Still kept at page level for the full modal experience if triggered */}
-        <Dialog open={showScoreModal} onOpenChange={setShowScoreModal}>
-            <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
-                <DialogHeader>
-                    <DialogTitle className="flex items-center gap-2 text-2xl">
-                        <Trophy className="w-6 h-6 text-yellow-500" />
-                        ATS Score Analysis
-                    </DialogTitle>
-                    <DialogDescription>
-                        AI-powered analysis of your resume's effectiveness.
-                    </DialogDescription>
-                </DialogHeader>
-
-                {scoring ? (
-                    <div className="flex flex-col items-center justify-center py-12 space-y-4">
-                        <Loader2 className="w-12 h-12 animate-spin text-primary" />
-                        <p className="text-zinc-500 animate-pulse">Analyzing keywords and formatting...</p>
+        <div className="flex flex-col h-screen bg-zinc-50 dark:bg-zinc-950 overflow-hidden">
+            {/* Top Bar */}
+            {/* Top Bar - Minimalist */}
+            <header className="h-14 border-b border-zinc-200 bg-white dark:border-zinc-800 dark:bg-zinc-900 flex items-center justify-between px-4 shrink-0">
+                <div className="flex items-center gap-4">
+                    <Link href="/dashboard/resumes" className="text-zinc-500 hover:text-zinc-900 transition-colors">
+                        <ArrowLeft className="w-5 h-5" />
+                    </Link>
+                    <div className="flex items-center gap-2">
+                        <span className="text-sm text-zinc-400">
+                            {resume.is_optimized ? 'Optimized' : 'Draft'}
+                        </span>
                     </div>
-                ) : (atsResult && (
-                    <div className="space-y-6">
-                        {/* Score Display */}
-                        <div className="flex flex-col items-center justify-center p-6 bg-zinc-50 dark:bg-zinc-900 rounded-xl border border-zinc-200 dark:border-zinc-800">
-                            <div className="relative flex items-center justify-center w-32 h-32">
-                                <svg className="w-full h-full transform -rotate-90">
-                                    <circle cx="64" cy="64" r="60" stroke="currentColor" strokeWidth="8" fill="transparent" className="text-zinc-200 dark:text-zinc-800" />
-                                    <circle
-                                        cx="64" cy="64" r="60"
-                                        stroke="currentColor" strokeWidth="8" fill="transparent"
-                                        strokeDasharray={2 * Math.PI * 60}
-                                        strokeDashoffset={2 * Math.PI * 60 * (1 - atsResult.score / 100)}
-                                        className={`transition-all duration-1000 ease-out ${atsResult.score >= 80 ? 'text-green-500' : atsResult.score >= 60 ? 'text-yellow-500' : 'text-red-500'}`}
-                                    />
-                                </svg>
-                                <div className="absolute flex flex-col items-center">
-                                    <span className="text-4xl font-bold">{atsResult.score}</span>
-                                    <span className="text-xs uppercase font-medium text-zinc-500">Score</span>
+                </div>
+                <div className="flex gap-2">
+                    <Button size="sm" variant="ghost" className="text-zinc-500" onClick={handleSave} disabled={saving}>
+                        {saving ? <Loader2 className="w-4 h-4 animate-spin mr-2" /> : <Save className="w-4 h-4 mr-2" />}
+                        {saving ? 'Saving...' : 'Save Draft'}
+                    </Button>
+
+                    <Button
+                        variant="ghost"
+                        size="sm"
+                        onClick={() => setIsWizardMode(!isWizardMode)}
+                        className="ml-2 text-zinc-400 hover:text-zinc-900"
+                    >
+                        {isWizardMode ? <LayoutDashboard className="w-4 h-4" /> : <Wand2 className="w-4 h-4" />}
+                    </Button>
+                </div>
+            </header>
+
+            {/* Main Workspace - Simplified */}
+            <div className="flex-1 overflow-hidden bg-[#f8f9fc] dark:bg-black">
+                {/* We render ONLY the ResumeForm which now handles the entire layout & preview in 'Finish' tab */}
+                <ResumeForm
+                    initialContent={resume.content}
+                    onUpdate={handleUpdate}
+                    isWizardMode={isWizardMode}
+                    key={isWizardMode ? 'wizard' : 'editor'}
+                    title={resume.title}
+
+                    // Finish Up Props
+                    atsScore={atsResult}
+                    onCheckScore={() => handleCheckScore()}
+                    isOptimizing={optimizing}
+                    onGenerateBullet={handleGenerateBullet}
+                    onAutoOptimize={handleOptimize}
+                    currentTemplate={currentTemplate}
+                    onTemplateChange={setCurrentTemplate}
+
+                    // Pass the Preview component to be rendered inside the Finish tab
+                    previewComponent={
+                        <ResumePreview content={resume.content} template={currentTemplate} />
+                    }
+
+                    // Pass Download Logic
+                    onDownload={() => (
+                        <PDFDownloadLink
+                            document={<ResumeDocument content={resume.content} template={currentTemplate} />}
+                            fileName={`${resume.title || 'resume'}.pdf`}
+                        >
+                            {({ blob, url, loading: pdfLoading, error }) => (
+                                <Button size="lg" className="w-full font-bold" disabled={pdfLoading}>
+                                    {pdfLoading ? <Loader2 className="w-4 h-4 animate-spin mr-2" /> : <Download className="w-4 h-4 mr-2" />}
+                                    Download PDF
+                                </Button>
+                            )}
+                        </PDFDownloadLink>
+                    )}
+                />
+            </div>
+
+            {/* ATS Score Modal - Still kept at page level for the full modal experience if triggered */}
+            <Dialog open={showScoreModal} onOpenChange={setShowScoreModal}>
+                <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
+                    <DialogHeader>
+                        <DialogTitle className="flex items-center gap-2 text-2xl">
+                            <Trophy className="w-6 h-6 text-yellow-500" />
+                            ATS Score Analysis
+                        </DialogTitle>
+                        <DialogDescription>
+                            AI-powered analysis of your resume's effectiveness.
+                        </DialogDescription>
+                    </DialogHeader>
+
+                    {scoring ? (
+                        <div className="flex flex-col items-center justify-center py-12 space-y-4">
+                            <Loader2 className="w-12 h-12 animate-spin text-primary" />
+                            <p className="text-zinc-500 animate-pulse">Analyzing keywords and formatting...</p>
+                        </div>
+                    ) : (atsResult && (
+                        <div className="space-y-6">
+                            {/* Score Display */}
+                            <div className="flex flex-col items-center justify-center p-6 bg-zinc-50 dark:bg-zinc-900 rounded-xl border border-zinc-200 dark:border-zinc-800">
+                                <div className="relative flex items-center justify-center w-32 h-32">
+                                    <svg className="w-full h-full transform -rotate-90">
+                                        <circle cx="64" cy="64" r="60" stroke="currentColor" strokeWidth="8" fill="transparent" className="text-zinc-200 dark:text-zinc-800" />
+                                        <circle
+                                            cx="64" cy="64" r="60"
+                                            stroke="currentColor" strokeWidth="8" fill="transparent"
+                                            strokeDasharray={2 * Math.PI * 60}
+                                            strokeDashoffset={2 * Math.PI * 60 * (1 - atsResult.score / 100)}
+                                            className={`transition-all duration-1000 ease-out ${atsResult.score >= 80 ? 'text-green-500' : atsResult.score >= 60 ? 'text-yellow-500' : 'text-red-500'}`}
+                                        />
+                                    </svg>
+                                    <div className="absolute flex flex-col items-center">
+                                        <span className="text-4xl font-bold">{atsResult.score}</span>
+                                        <span className="text-xs uppercase font-medium text-zinc-500">Score</span>
+                                    </div>
                                 </div>
+                                <h3 className={`mt-4 text-lg font-bold ${atsResult.score >= 80 ? 'text-green-600' : atsResult.score >= 60 ? 'text-yellow-600' : 'text-red-600'}`}>
+                                    {atsResult.verdict}
+                                </h3>
+                                <p className="text-center text-sm text-zinc-500 mt-2 px-4">
+                                    {atsResult.summary}
+                                </p>
                             </div>
-                            <h3 className={`mt-4 text-lg font-bold ${atsResult.score >= 80 ? 'text-green-600' : atsResult.score >= 60 ? 'text-yellow-600' : 'text-red-600'}`}>
-                                {atsResult.verdict}
-                            </h3>
-                            <p className="text-center text-sm text-zinc-500 mt-2 px-4">
-                                {atsResult.summary}
-                            </p>
-                        </div>
 
-                        {/* Improvements */}
-                        <div className="space-y-3">
-                            <h4 className="font-semibold flex items-center gap-2">
-                                <AlertCircle className="w-4 h-4 text-blue-500" />
-                                Recommended Improvements
-                            </h4>
-                            <ul className="space-y-2">
-                                {atsResult.improvements?.map((imp: string, i: number) => (
-                                    <li key={i} className="text-sm bg-blue-50 dark:bg-blue-900/20 p-3 rounded-md flex justify-between items-center gap-3 text-blue-700 dark:text-blue-300 group">
-                                        <div className="flex gap-2">
-                                            <span className="font-bold shrink-0">{i + 1}.</span>
-                                            <span>{imp}</span>
-                                        </div>
-                                        <Button
-                                            size="sm"
-                                            variant="default"
-                                            className="h-7 text-xs bg-blue-600 hover:bg-blue-700 opacity-60 group-hover:opacity-100 transition-opacity"
-                                            onClick={() => handleApplyFix(imp, i)}
-                                            disabled={fixingIndex !== null}
-                                        >
-                                            {fixingIndex === i ? <Loader2 className="w-3 h-3 animate-spin mr-1" /> : <MagicWand className="w-3 h-3 mr-1" />}
-                                            Fix
-                                        </Button>
-                                    </li>
-                                ))}
-                            </ul>
-                        </div>
-
-                        {/* Missing Keywords (Only if JD exist) */}
-                        {atsResult.missingKeywords?.length > 0 && (
+                            {/* Improvements */}
                             <div className="space-y-3">
                                 <h4 className="font-semibold flex items-center gap-2">
-                                    <CheckCircle2 className="w-4 h-4 text-red-500" />
-                                    Missing Keywords
+                                    <AlertCircle className="w-4 h-4 text-blue-500" />
+                                    Recommended Improvements
                                 </h4>
-                                <div className="flex flex-wrap gap-2">
-                                    {atsResult.missingKeywords.map((kw: string, i: number) => (
-                                        <Badge key={i} variant="outline" className="border-red-200 text-red-600 bg-red-50 hover:bg-red-100">
-                                            {kw}
-                                        </Badge>
+                                <ul className="space-y-2">
+                                    {atsResult.improvements?.map((imp: string, i: number) => (
+                                        <li key={i} className="text-sm bg-blue-50 dark:bg-blue-900/20 p-3 rounded-md flex justify-between items-center gap-3 text-blue-700 dark:text-blue-300 group">
+                                            <div className="flex gap-2">
+                                                <span className="font-bold shrink-0">{i + 1}.</span>
+                                                <span>{imp}</span>
+                                            </div>
+                                            <Button
+                                                size="sm"
+                                                variant="default"
+                                                className="h-7 text-xs bg-blue-600 hover:bg-blue-700 opacity-60 group-hover:opacity-100 transition-opacity"
+                                                onClick={() => handleApplyFix(imp, i)}
+                                                disabled={fixingIndex !== null}
+                                            >
+                                                {fixingIndex === i ? <Loader2 className="w-3 h-3 animate-spin mr-1" /> : <MagicWand className="w-3 h-3 mr-1" />}
+                                                Fix
+                                            </Button>
+                                        </li>
                                     ))}
-                                </div>
+                                </ul>
                             </div>
-                        )}
+
+                            {/* Missing Keywords (Only if JD exist) */}
+                            {atsResult.missingKeywords?.length > 0 && (
+                                <div className="space-y-3">
+                                    <h4 className="font-semibold flex items-center gap-2">
+                                        <CheckCircle2 className="w-4 h-4 text-red-500" />
+                                        Missing Keywords
+                                    </h4>
+                                    <div className="flex flex-wrap gap-2">
+                                        {atsResult.missingKeywords.map((kw: string, i: number) => (
+                                            <Badge key={i} variant="outline" className="border-red-200 text-red-600 bg-red-50 hover:bg-red-100">
+                                                {kw}
+                                            </Badge>
+                                        ))}
+                                    </div>
+                                </div>
+                            )}
+                        </div>
+                    ))}
+                </DialogContent>
+            </Dialog>
+
+            {/* Fix Confirmation Modal */}
+            <Dialog open={showFixConfirm} onOpenChange={setShowFixConfirm}>
+                <DialogContent>
+                    <DialogHeader>
+                        <DialogTitle>Apply Improvement?</DialogTitle>
+                        <DialogDescription>
+                            AI has generated a new version of your resume based on this suggestion.
+                        </DialogDescription>
+                    </DialogHeader>
+                    <div className="py-4 text-sm text-zinc-600 bg-zinc-50 p-4 rounded border">
+                        The content has been optimized. Check the main preview to see changes after applying.
+                        <br />
+                        (Undo is available via standard undo if implemented, otherwise careful!)
                     </div>
-                ))}
-            </DialogContent>
-        </Dialog>
+                    <DialogFooter>
+                        <Button variant="outline" onClick={() => setShowFixConfirm(false)}>Cancel</Button>
+                        <Button onClick={confirmFix} className="bg-green-600 hover:bg-green-700">
+                            Apply Changes
+                        </Button>
+                    </DialogFooter>
+                </DialogContent>
+            </Dialog>
 
-        {/* Fix Confirmation Modal */}
-        <Dialog open={showFixConfirm} onOpenChange={setShowFixConfirm}>
-            <DialogContent>
-                <DialogHeader>
-                    <DialogTitle>Apply Improvement?</DialogTitle>
-                    <DialogDescription>
-                        AI has generated a new version of your resume based on this suggestion.
-                    </DialogDescription>
-                </DialogHeader>
-                <div className="py-4 text-sm text-zinc-600 bg-zinc-50 p-4 rounded border">
-                    The content has been optimized. Check the main preview to see changes after applying.
-                    <br />
-                    (Undo is available via standard undo if implemented, otherwise careful!)
-                </div>
-                <DialogFooter>
-                    <Button variant="outline" onClick={() => setShowFixConfirm(false)}>Cancel</Button>
-                    <Button onClick={confirmFix} className="bg-green-600 hover:bg-green-700">
-                        Apply Changes
-                    </Button>
-                </DialogFooter>
-            </DialogContent>
-        </Dialog>
-
-    </div>
-)
+        </div>
+    )
 }
