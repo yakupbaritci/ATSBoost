@@ -128,7 +128,7 @@ export function ResumeForm({ initialContent, onUpdate }: ResumeFormProps) {
         onUpdate(newContent)
     }
 
-    const removeItem = (section: 'experience' | 'education' | 'skills', index: number) => {
+    const removeItem = (section: 'experience' | 'education' | 'skills' | 'certifications' | 'projects' | 'languages', index: number) => {
         const newContent = { ...content }
         if (section === 'skills') {
             newContent.skills = newContent.skills?.filter((_, i) => i !== index)
@@ -136,323 +136,327 @@ export function ResumeForm({ initialContent, onUpdate }: ResumeFormProps) {
             newContent.experience = newContent.experience?.filter((_, i) => i !== index)
         } else if (section === 'education') {
             newContent.education = newContent.education?.filter((_, i) => i !== index)
+        } else {
+            // @ts-ignore
+            newContent[section] = newContent[section]?.filter((_, i) => i !== index)
         }
         setContent(newContent)
         onUpdate(newContent)
     }
+}
 
-    return (
-        <div className="h-full flex flex-col">
-            <Tabs defaultValue="contact" className="w-full h-full flex flex-col">
-                <TabsList className="grid w-full grid-cols-3 mb-2 h-auto">
-                    <TabsTrigger value="contact">Contact</TabsTrigger>
-                    <TabsTrigger value="summary">Summary</TabsTrigger>
-                    <TabsTrigger value="experience">Exp</TabsTrigger>
-                    <TabsTrigger value="education">Edu</TabsTrigger>
-                    <TabsTrigger value="skills">Skills</TabsTrigger>
-                    <TabsTrigger value="certifications">Certs</TabsTrigger>
-                    <TabsTrigger value="projects">Projects</TabsTrigger>
-                    <TabsTrigger value="languages">Langs</TabsTrigger>
-                    <TabsTrigger value="job">Job</TabsTrigger>
-                </TabsList>
+return (
+    <div className="h-full flex flex-col">
+        <Tabs defaultValue="contact" className="w-full h-full flex flex-col">
+            <TabsList className="grid w-full grid-cols-3 mb-2 h-auto">
+                <TabsTrigger value="contact">Contact</TabsTrigger>
+                <TabsTrigger value="summary">Summary</TabsTrigger>
+                <TabsTrigger value="experience">Exp</TabsTrigger>
+                <TabsTrigger value="education">Edu</TabsTrigger>
+                <TabsTrigger value="skills">Skills</TabsTrigger>
+                <TabsTrigger value="certifications">Certs</TabsTrigger>
+                <TabsTrigger value="projects">Projects</TabsTrigger>
+                <TabsTrigger value="languages">Langs</TabsTrigger>
+                <TabsTrigger value="job">Job</TabsTrigger>
+            </TabsList>
 
-                <div className="flex-1 overflow-y-auto pr-2 space-y-4">
+            <div className="flex-1 overflow-y-auto pr-2 space-y-4">
 
-                    {/* Contact Tab */}
-                    <TabsContent value="contact" className="space-y-4 mt-0">
-                        <Card>
-                            <CardHeader>
-                                <CardTitle>Personal Information</CardTitle>
-                            </CardHeader>
-                            <CardContent className="space-y-4">
+                {/* Contact Tab */}
+                <TabsContent value="contact" className="space-y-4 mt-0">
+                    <Card>
+                        <CardHeader>
+                            <CardTitle>Personal Information</CardTitle>
+                        </CardHeader>
+                        <CardContent className="space-y-4">
+                            <div className="grid grid-cols-2 gap-4">
+                                <div className="space-y-2">
+                                    <Label>Full Name</Label>
+                                    <Input
+                                        value={content.contact?.fullName || ''}
+                                        onChange={(e) => handleChange('contact', 'fullName', e.target.value)}
+                                    />
+                                </div>
+                                <div className="space-y-2">
+                                    <Label>Email</Label>
+                                    <Input
+                                        value={content.contact?.email || ''}
+                                        onChange={(e) => handleChange('contact', 'email', e.target.value)}
+                                    />
+                                </div>
+                                <div className="space-y-2">
+                                    <Label>Phone</Label>
+                                    <Input
+                                        value={content.contact?.phone || ''}
+                                        onChange={(e) => handleChange('contact', 'phone', e.target.value)}
+                                    />
+                                </div>
+                                <div className="space-y-2">
+                                    <Label>Location</Label>
+                                    <Input
+                                        value={content.contact?.location || ''}
+                                        onChange={(e) => handleChange('contact', 'location', e.target.value)}
+                                    />
+                                </div>
+                                <div className="space-y-2">
+                                    <Label>LinkedIn</Label>
+                                    <Input
+                                        value={content.contact?.linkedin || ''}
+                                        onChange={(e) => handleChange('contact', 'linkedin', e.target.value)}
+                                    />
+                                </div>
+                                <div className="space-y-2">
+                                    <Label>Portfolio / Website</Label>
+                                    <Input
+                                        value={content.contact?.portfolio || ''}
+                                        onChange={(e) => handleChange('contact', 'portfolio', e.target.value)}
+                                    />
+                                </div>
+                            </div>
+                        </CardContent>
+                    </Card>
+                </TabsContent>
+
+                {/* Summary Tab */}
+                <TabsContent value="summary" className="mt-0">
+                    <Card>
+                        <CardHeader>
+                            <CardTitle>Professional Summary</CardTitle>
+                        </CardHeader>
+                        <CardContent>
+                            <Textarea
+                                className="min-h-[200px]"
+                                placeholder="Briefly describe your career highlights..."
+                                value={content.summary || ''}
+                                onChange={(e) => handleChange('summary', '', e.target.value)}
+                            />
+                        </CardContent>
+                    </Card>
+                </TabsContent>
+
+                {/* Experience Tab */}
+                <TabsContent value="experience" className="mt-0 space-y-4">
+                    {content.experience?.map((exp, index) => (
+                        <Card key={`${exp.id}-${index}`}>
+                            <CardContent className="pt-6 space-y-4 relative">
+                                <Button
+                                    variant="ghost"
+                                    size="icon"
+                                    className="absolute top-2 right-2 text-red-500 hover:bg-red-50 hover:text-red-600"
+                                    onClick={() => removeItem('experience', index)}
+                                >
+                                    <Trash2 className="w-4 h-4" />
+                                </Button>
                                 <div className="grid grid-cols-2 gap-4">
                                     <div className="space-y-2">
-                                        <Label>Full Name</Label>
+                                        <Label>Job Title</Label>
                                         <Input
-                                            value={content.contact?.fullName || ''}
-                                            onChange={(e) => handleChange('contact', 'fullName', e.target.value)}
+                                            value={exp.title || ''}
+                                            onChange={(e) => handleChange('experience', 'title', e.target.value, index)}
                                         />
                                     </div>
                                     <div className="space-y-2">
-                                        <Label>Email</Label>
+                                        <Label>Company</Label>
                                         <Input
-                                            value={content.contact?.email || ''}
-                                            onChange={(e) => handleChange('contact', 'email', e.target.value)}
+                                            value={exp.company || ''}
+                                            onChange={(e) => handleChange('experience', 'company', e.target.value, index)}
                                         />
                                     </div>
                                     <div className="space-y-2">
-                                        <Label>Phone</Label>
+                                        <Label>Start Date</Label>
                                         <Input
-                                            value={content.contact?.phone || ''}
-                                            onChange={(e) => handleChange('contact', 'phone', e.target.value)}
+                                            value={exp.startDate || ''}
+                                            onChange={(e) => handleChange('experience', 'startDate', e.target.value, index)}
+                                            placeholder="MM/YYYY"
                                         />
                                     </div>
                                     <div className="space-y-2">
-                                        <Label>Location</Label>
+                                        <Label>End Date</Label>
                                         <Input
-                                            value={content.contact?.location || ''}
-                                            onChange={(e) => handleChange('contact', 'location', e.target.value)}
-                                        />
-                                    </div>
-                                    <div className="space-y-2">
-                                        <Label>LinkedIn</Label>
-                                        <Input
-                                            value={content.contact?.linkedin || ''}
-                                            onChange={(e) => handleChange('contact', 'linkedin', e.target.value)}
-                                        />
-                                    </div>
-                                    <div className="space-y-2">
-                                        <Label>Portfolio / Website</Label>
-                                        <Input
-                                            value={content.contact?.portfolio || ''}
-                                            onChange={(e) => handleChange('contact', 'portfolio', e.target.value)}
+                                            value={exp.endDate || ''}
+                                            onChange={(e) => handleChange('experience', 'endDate', e.target.value, index)}
+                                            placeholder="Present or MM/YYYY"
                                         />
                                     </div>
                                 </div>
-                            </CardContent>
-                        </Card>
-                    </TabsContent>
-
-                    {/* Summary Tab */}
-                    <TabsContent value="summary" className="mt-0">
-                        <Card>
-                            <CardHeader>
-                                <CardTitle>Professional Summary</CardTitle>
-                            </CardHeader>
-                            <CardContent>
-                                <Textarea
-                                    className="min-h-[200px]"
-                                    placeholder="Briefly describe your career highlights..."
-                                    value={content.summary || ''}
-                                    onChange={(e) => handleChange('summary', '', e.target.value)}
-                                />
-                            </CardContent>
-                        </Card>
-                    </TabsContent>
-
-                    {/* Experience Tab */}
-                    <TabsContent value="experience" className="mt-0 space-y-4">
-                        {content.experience?.map((exp, index) => (
-                            <Card key={`${exp.id}-${index}`}>
-                                <CardContent className="pt-6 space-y-4 relative">
-                                    <Button
-                                        variant="ghost"
-                                        size="icon"
-                                        className="absolute top-2 right-2 text-red-500 hover:bg-red-50 hover:text-red-600"
-                                        onClick={() => removeItem('experience', index)}
-                                    >
-                                        <Trash2 className="w-4 h-4" />
-                                    </Button>
-                                    <div className="grid grid-cols-2 gap-4">
-                                        <div className="space-y-2">
-                                            <Label>Job Title</Label>
-                                            <Input
-                                                value={exp.title || ''}
-                                                onChange={(e) => handleChange('experience', 'title', e.target.value, index)}
-                                            />
-                                        </div>
-                                        <div className="space-y-2">
-                                            <Label>Company</Label>
-                                            <Input
-                                                value={exp.company || ''}
-                                                onChange={(e) => handleChange('experience', 'company', e.target.value, index)}
-                                            />
-                                        </div>
-                                        <div className="space-y-2">
-                                            <Label>Start Date</Label>
-                                            <Input
-                                                value={exp.startDate || ''}
-                                                onChange={(e) => handleChange('experience', 'startDate', e.target.value, index)}
-                                                placeholder="MM/YYYY"
-                                            />
-                                        </div>
-                                        <div className="space-y-2">
-                                            <Label>End Date</Label>
-                                            <Input
-                                                value={exp.endDate || ''}
-                                                onChange={(e) => handleChange('experience', 'endDate', e.target.value, index)}
-                                                placeholder="Present or MM/YYYY"
-                                            />
-                                        </div>
-                                    </div>
-                                    <div className="space-y-2">
-                                        <Label>Description (Bullet Points)</Label>
-                                        <Textarea
-                                            value={exp.description || ''}
-                                            onChange={(e) => handleChange('experience', 'description', e.target.value, index)}
-                                            className="min-h-[100px]"
-                                        />
-                                    </div>
-                                </CardContent>
-                            </Card>
-                        ))}
-                        <Button onClick={addExperience} variant="outline" className="w-full border-dashed">
-                            <Plus className="w-4 h-4 mr-2" /> Add Experience
-                        </Button>
-                    </TabsContent>
-
-                    {/* Education Tab */}
-                    <TabsContent value="education" className="mt-0 space-y-4">
-                        {content.education?.map((edu, index) => (
-                            <Card key={`${edu.id}-${index}`}>
-                                <CardContent className="pt-6 space-y-4 relative">
-                                    <Button
-                                        variant="ghost"
-                                        size="icon"
-                                        className="absolute top-2 right-2 text-red-500 hover:bg-red-50 hover:text-red-600"
-                                        onClick={() => removeItem('education', index)}
-                                    >
-                                        <Trash2 className="w-4 h-4" />
-                                    </Button>
-                                    <div className="grid grid-cols-2 gap-4">
-                                        <div className="space-y-2">
-                                            <Label>School / University</Label>
-                                            <Input
-                                                value={edu.school || ''}
-                                                onChange={(e) => handleChange('education', 'school', e.target.value, index)}
-                                            />
-                                        </div>
-                                        <div className="space-y-2">
-                                            <Label>Degree / Major</Label>
-                                            <Input
-                                                value={edu.degree || ''}
-                                                onChange={(e) => handleChange('education', 'degree', e.target.value, index)}
-                                            />
-                                        </div>
-                                        <div className="space-y-2">
-                                            <Label>Start Date</Label>
-                                            <Input
-                                                value={edu.startDate || ''}
-                                                onChange={(e) => handleChange('education', 'startDate', e.target.value, index)}
-                                                placeholder="MM/YYYY"
-                                            />
-                                        </div>
-                                        <div className="space-y-2">
-                                            <Label>End Date</Label>
-                                            <Input
-                                                value={edu.endDate || ''}
-                                                onChange={(e) => handleChange('education', 'endDate', e.target.value, index)}
-                                                placeholder="YYYY"
-                                            />
-                                        </div>
-                                    </div>
-                                </CardContent>
-                            </Card>
-                        ))}
-                        <Button onClick={addEducation} variant="outline" className="w-full border-dashed">
-                            <Plus className="w-4 h-4 mr-2" /> Add Education
-                        </Button>
-                    </TabsContent>
-
-                    {/* Skills Tab */}
-                    <TabsContent value="skills" className="mt-0 space-y-4">
-                        <Card>
-                            <CardHeader>
-                                <CardTitle>Skills & Technologies</CardTitle>
-                            </CardHeader>
-                            <CardContent className="space-y-3">
-                                {content.skills?.map((skill, index) => (
-                                    <div key={index} className="flex gap-2">
-                                        <Input
-                                            value={skill}
-                                            onChange={(e) => handleChange('skills', '', e.target.value, index)}
-                                        />
-                                        <Button
-                                            variant="ghost"
-                                            size="icon"
-                                            className="text-red-500 hover:bg-red-50"
-                                            onClick={() => removeItem('skills', index)}
-                                        >
-                                            <Trash2 className="w-4 h-4" />
-                                        </Button>
-                                    </div>
-                                ))}
-                                <Button onClick={addSkill} variant="outline" className="w-full border-dashed">
-                                    <Plus className="w-4 h-4 mr-2" /> Add Skill
-                                </Button>
-                            </CardContent>
-                        </Card>
-                    </TabsContent>
-
-                    {/* Certifications Tab */}
-                    <TabsContent value="certifications" className="mt-0 space-y-4">
-                        {content.certifications?.map((cert, index) => (
-                            <Card key={index}>
-                                <CardContent className="pt-6 space-y-4 relative">
-                                    <Button variant="ghost" size="icon" className="absolute top-2 right-2 text-red-500" onClick={() => removeItem('certifications', index)}><Trash2 className="w-4 h-4" /></Button>
-                                    <div className="grid grid-cols-2 gap-4">
-                                        <div className="space-y-2"><Label>Title</Label><Input value={cert.title} onChange={(e) => handleChange('certifications', 'title', e.target.value, index)} /></div>
-                                        <div className="space-y-2"><Label>Issuer</Label><Input value={cert.issuer} onChange={(e) => handleChange('certifications', 'issuer', e.target.value, index)} /></div>
-                                        <div className="space-y-2"><Label>Date</Label><Input value={cert.date} onChange={(e) => handleChange('certifications', 'date', e.target.value, index)} /></div>
-                                    </div>
-                                </CardContent>
-                            </Card>
-                        ))}
-                        <Button onClick={() => addItem('certifications')} variant="outline" className="w-full border-dashed"><Plus className="w-4 h-4 mr-2" /> Add Certification</Button>
-                    </TabsContent>
-
-                    {/* Projects Tab */}
-                    <TabsContent value="projects" className="mt-0 space-y-4">
-                        {content.projects?.map((proj, index) => (
-                            <Card key={index}>
-                                <CardContent className="pt-6 space-y-4 relative">
-                                    <Button variant="ghost" size="icon" className="absolute top-2 right-2 text-red-500" onClick={() => removeItem('projects', index)}><Trash2 className="w-4 h-4" /></Button>
-                                    <div className="space-y-2"><Label>Project Title</Label><Input value={proj.title} onChange={(e) => handleChange('projects', 'title', e.target.value, index)} /></div>
-                                    <div className="space-y-2"><Label>Link</Label><Input value={proj.link} onChange={(e) => handleChange('projects', 'link', e.target.value, index)} /></div>
-                                    <div className="space-y-2"><Label>Description</Label><Textarea value={proj.description} onChange={(e) => handleChange('projects', 'description', e.target.value, index)} /></div>
-                                </CardContent>
-                            </Card>
-                        ))}
-                        <Button onClick={() => addItem('projects')} variant="outline" className="w-full border-dashed"><Plus className="w-4 h-4 mr-2" /> Add Project</Button>
-                    </TabsContent>
-
-                    {/* Languages Tab */}
-                    <TabsContent value="languages" className="mt-0 space-y-4">
-                        {content.languages?.map((lang, index) => (
-                            <Card key={index}>
-                                <CardContent className="pt-6 space-y-4 relative">
-                                    <Button variant="ghost" size="icon" className="absolute top-2 right-2 text-red-500" onClick={() => removeItem('languages', index)}><Trash2 className="w-4 h-4" /></Button>
-                                    <div className="grid grid-cols-2 gap-4">
-                                        <div className="space-y-2"><Label>Language</Label><Input value={lang.language} onChange={(e) => handleChange('languages', 'language', e.target.value, index)} /></div>
-                                        <div className="space-y-2"><Label>Proficiency</Label><Input value={lang.proficiency} placeholder="e.g. Native, B2" onChange={(e) => handleChange('languages', 'proficiency', e.target.value, index)} /></div>
-                                    </div>
-                                </CardContent>
-                            </Card>
-                        ))}
-                        <Button onClick={() => addItem('languages')} variant="outline" className="w-full border-dashed"><Plus className="w-4 h-4 mr-2" /> Add Language</Button>
-                    </TabsContent>
-
-                    {/* Target Job Tab */}
-                    <TabsContent value="job" className="mt-0 space-y-4">
-                        <Card>
-                            <CardHeader>
-                                <CardTitle>Target Job Description</CardTitle>
-                            </CardHeader>
-                            <CardContent className="space-y-4">
                                 <div className="space-y-2">
-                                    <Label>Job URL (LinkedIn/Indeed)</Label>
-                                    <Input
-                                        placeholder="https://..."
-                                        value={content.targetJob?.url || ''}
-                                        onChange={(e) => handleChange('targetJob', 'url', e.target.value)}
-                                    />
-                                    <p className="text-xs text-zinc-500">Paste a link to auto-fill (Coming soon) or paste text below.</p>
-                                </div>
-                                <div className="space-y-2">
-                                    <Label>Job Description Text</Label>
+                                    <Label>Description (Bullet Points)</Label>
                                     <Textarea
-                                        className="min-h-[300px]"
-                                        placeholder="Paste the full job description here..."
-                                        value={content.targetJob?.description || ''}
-                                        onChange={(e) => handleChange('targetJob', 'description', e.target.value)}
+                                        value={exp.description || ''}
+                                        onChange={(e) => handleChange('experience', 'description', e.target.value, index)}
+                                        className="min-h-[100px]"
                                     />
                                 </div>
                             </CardContent>
                         </Card>
-                    </TabsContent>
+                    ))}
+                    <Button onClick={addExperience} variant="outline" className="w-full border-dashed">
+                        <Plus className="w-4 h-4 mr-2" /> Add Experience
+                    </Button>
+                </TabsContent>
 
-                </div>
-            </Tabs>
-        </div>
-    )
+                {/* Education Tab */}
+                <TabsContent value="education" className="mt-0 space-y-4">
+                    {content.education?.map((edu, index) => (
+                        <Card key={`${edu.id}-${index}`}>
+                            <CardContent className="pt-6 space-y-4 relative">
+                                <Button
+                                    variant="ghost"
+                                    size="icon"
+                                    className="absolute top-2 right-2 text-red-500 hover:bg-red-50 hover:text-red-600"
+                                    onClick={() => removeItem('education', index)}
+                                >
+                                    <Trash2 className="w-4 h-4" />
+                                </Button>
+                                <div className="grid grid-cols-2 gap-4">
+                                    <div className="space-y-2">
+                                        <Label>School / University</Label>
+                                        <Input
+                                            value={edu.school || ''}
+                                            onChange={(e) => handleChange('education', 'school', e.target.value, index)}
+                                        />
+                                    </div>
+                                    <div className="space-y-2">
+                                        <Label>Degree / Major</Label>
+                                        <Input
+                                            value={edu.degree || ''}
+                                            onChange={(e) => handleChange('education', 'degree', e.target.value, index)}
+                                        />
+                                    </div>
+                                    <div className="space-y-2">
+                                        <Label>Start Date</Label>
+                                        <Input
+                                            value={edu.startDate || ''}
+                                            onChange={(e) => handleChange('education', 'startDate', e.target.value, index)}
+                                            placeholder="MM/YYYY"
+                                        />
+                                    </div>
+                                    <div className="space-y-2">
+                                        <Label>End Date</Label>
+                                        <Input
+                                            value={edu.endDate || ''}
+                                            onChange={(e) => handleChange('education', 'endDate', e.target.value, index)}
+                                            placeholder="YYYY"
+                                        />
+                                    </div>
+                                </div>
+                            </CardContent>
+                        </Card>
+                    ))}
+                    <Button onClick={addEducation} variant="outline" className="w-full border-dashed">
+                        <Plus className="w-4 h-4 mr-2" /> Add Education
+                    </Button>
+                </TabsContent>
+
+                {/* Skills Tab */}
+                <TabsContent value="skills" className="mt-0 space-y-4">
+                    <Card>
+                        <CardHeader>
+                            <CardTitle>Skills & Technologies</CardTitle>
+                        </CardHeader>
+                        <CardContent className="space-y-3">
+                            {content.skills?.map((skill, index) => (
+                                <div key={index} className="flex gap-2">
+                                    <Input
+                                        value={skill}
+                                        onChange={(e) => handleChange('skills', '', e.target.value, index)}
+                                    />
+                                    <Button
+                                        variant="ghost"
+                                        size="icon"
+                                        className="text-red-500 hover:bg-red-50"
+                                        onClick={() => removeItem('skills', index)}
+                                    >
+                                        <Trash2 className="w-4 h-4" />
+                                    </Button>
+                                </div>
+                            ))}
+                            <Button onClick={addSkill} variant="outline" className="w-full border-dashed">
+                                <Plus className="w-4 h-4 mr-2" /> Add Skill
+                            </Button>
+                        </CardContent>
+                    </Card>
+                </TabsContent>
+
+                {/* Certifications Tab */}
+                <TabsContent value="certifications" className="mt-0 space-y-4">
+                    {content.certifications?.map((cert, index) => (
+                        <Card key={index}>
+                            <CardContent className="pt-6 space-y-4 relative">
+                                <Button variant="ghost" size="icon" className="absolute top-2 right-2 text-red-500" onClick={() => removeItem('certifications', index)}><Trash2 className="w-4 h-4" /></Button>
+                                <div className="grid grid-cols-2 gap-4">
+                                    <div className="space-y-2"><Label>Title</Label><Input value={cert.title} onChange={(e) => handleChange('certifications', 'title', e.target.value, index)} /></div>
+                                    <div className="space-y-2"><Label>Issuer</Label><Input value={cert.issuer} onChange={(e) => handleChange('certifications', 'issuer', e.target.value, index)} /></div>
+                                    <div className="space-y-2"><Label>Date</Label><Input value={cert.date} onChange={(e) => handleChange('certifications', 'date', e.target.value, index)} /></div>
+                                </div>
+                            </CardContent>
+                        </Card>
+                    ))}
+                    <Button onClick={() => addItem('certifications')} variant="outline" className="w-full border-dashed"><Plus className="w-4 h-4 mr-2" /> Add Certification</Button>
+                </TabsContent>
+
+                {/* Projects Tab */}
+                <TabsContent value="projects" className="mt-0 space-y-4">
+                    {content.projects?.map((proj, index) => (
+                        <Card key={index}>
+                            <CardContent className="pt-6 space-y-4 relative">
+                                <Button variant="ghost" size="icon" className="absolute top-2 right-2 text-red-500" onClick={() => removeItem('projects', index)}><Trash2 className="w-4 h-4" /></Button>
+                                <div className="space-y-2"><Label>Project Title</Label><Input value={proj.title} onChange={(e) => handleChange('projects', 'title', e.target.value, index)} /></div>
+                                <div className="space-y-2"><Label>Link</Label><Input value={proj.link} onChange={(e) => handleChange('projects', 'link', e.target.value, index)} /></div>
+                                <div className="space-y-2"><Label>Description</Label><Textarea value={proj.description} onChange={(e) => handleChange('projects', 'description', e.target.value, index)} /></div>
+                            </CardContent>
+                        </Card>
+                    ))}
+                    <Button onClick={() => addItem('projects')} variant="outline" className="w-full border-dashed"><Plus className="w-4 h-4 mr-2" /> Add Project</Button>
+                </TabsContent>
+
+                {/* Languages Tab */}
+                <TabsContent value="languages" className="mt-0 space-y-4">
+                    {content.languages?.map((lang, index) => (
+                        <Card key={index}>
+                            <CardContent className="pt-6 space-y-4 relative">
+                                <Button variant="ghost" size="icon" className="absolute top-2 right-2 text-red-500" onClick={() => removeItem('languages', index)}><Trash2 className="w-4 h-4" /></Button>
+                                <div className="grid grid-cols-2 gap-4">
+                                    <div className="space-y-2"><Label>Language</Label><Input value={lang.language} onChange={(e) => handleChange('languages', 'language', e.target.value, index)} /></div>
+                                    <div className="space-y-2"><Label>Proficiency</Label><Input value={lang.proficiency} placeholder="e.g. Native, B2" onChange={(e) => handleChange('languages', 'proficiency', e.target.value, index)} /></div>
+                                </div>
+                            </CardContent>
+                        </Card>
+                    ))}
+                    <Button onClick={() => addItem('languages')} variant="outline" className="w-full border-dashed"><Plus className="w-4 h-4 mr-2" /> Add Language</Button>
+                </TabsContent>
+
+                {/* Target Job Tab */}
+                <TabsContent value="job" className="mt-0 space-y-4">
+                    <Card>
+                        <CardHeader>
+                            <CardTitle>Target Job Description</CardTitle>
+                        </CardHeader>
+                        <CardContent className="space-y-4">
+                            <div className="space-y-2">
+                                <Label>Job URL (LinkedIn/Indeed)</Label>
+                                <Input
+                                    placeholder="https://..."
+                                    value={content.targetJob?.url || ''}
+                                    onChange={(e) => handleChange('targetJob', 'url', e.target.value)}
+                                />
+                                <p className="text-xs text-zinc-500">Paste a link to auto-fill (Coming soon) or paste text below.</p>
+                            </div>
+                            <div className="space-y-2">
+                                <Label>Job Description Text</Label>
+                                <Textarea
+                                    className="min-h-[300px]"
+                                    placeholder="Paste the full job description here..."
+                                    value={content.targetJob?.description || ''}
+                                    onChange={(e) => handleChange('targetJob', 'description', e.target.value)}
+                                />
+                            </div>
+                        </CardContent>
+                    </Card>
+                </TabsContent>
+
+            </div>
+        </Tabs>
+    </div>
+)
 }
