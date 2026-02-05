@@ -16,11 +16,33 @@ export async function createResumeFromPdf(formData: FormData) {
     const arrayBuffer = await file.arrayBuffer()
     const buffer = Buffer.from(arrayBuffer)
 
-    // 1. Extract raw text
+    const supabase = await createClient()
+    const { data: { user } } = await supabase.auth.getUser()
+
+    if (!user) throw new Error('Unauthorized')
+
+    // 0. Upload PDF to Storage
+    const fileName = `${user.id}/${Date.now()}-${file.name}`
+    const { data: storageData, error: storageError } = await supabase.storage
+        .from('resumes')
+        .upload(fileName, file, {
+            upsert: true,
+            contentType: 'application/pdf'
+        })
+
+    if (storageError) {
+        console.error('Storage Error:', storageError)
+        // We continue even if upload fails, but original_pdf_url will be empty
+    }
+
+    const publicUrl = storageData?.path
+        ? `${process.env.NEXT_PUBLIC_SUPABASE_URL}/storage/v1/object/public/resumes/${storageData.path}`
+        : ''
+
+    // 1. Extract raw text...
     const rawText = await extractTextFromPdf(buffer)
 
-    // 2. Structure with AI
-    let structuredData = await parseResumeWithAI(rawText)
+    // 2. Structure with AI...    let structuredData = await parseResumeWithAI(rawText)
 
     // Fallback if AI fails
     if (!structuredData) {
@@ -38,10 +60,10 @@ export async function createResumeFromPdf(formData: FormData) {
         raw_text_dump: rawText
     }
 
-    const supabase = await createClient()
-    const { data: { user } } = await supabase.auth.getUser()
-
-    if (!user) throw new Error('Unauthorized')
+    const initialContent = {
+        ...structuredData,
+        raw_text_dump: rawText
+    }
 
     // 3. Save to DB
     const { data, error } = await supabase
@@ -50,7 +72,7 @@ export async function createResumeFromPdf(formData: FormData) {
             user_id: user.id,
             title: file.name.replace('.pdf', ''),
             content: initialContent,
-            original_pdf_url: '', // We could upload to storage here if needed
+            original_pdf_url: publicUrl,
             is_optimized: false
         })
         .select()
