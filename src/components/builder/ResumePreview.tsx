@@ -19,7 +19,7 @@ const styles = StyleSheet.create({
         flexDirection: 'column',
         backgroundColor: '#ffffff',
         padding: 40,
-        fontFamily: 'Roboto', // Use the registered font
+        fontFamily: 'Open Sans',
     },
     section: {
         marginBottom: 10,
