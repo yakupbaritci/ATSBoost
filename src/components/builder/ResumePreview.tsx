@@ -174,6 +174,19 @@ const TemplateClassic = ({ content }: { content: ResumeContent }) => (
             </View>
         )}
 
+        {/* Certifications */}
+        {content.certifications?.length > 0 && (
+            <View style={styles.section}>
+                <Text style={{ ...styles.sectionTitle, fontFamily: 'Times-Bold' }}>Certifications</Text>
+                {content.certifications.map((cert: any, i: number) => (
+                    <View key={i} style={{ marginBottom: 4 }}>
+                        <Text style={{ fontSize: 11, fontFamily: 'Times-Bold' }}>{cert.title} {cert.issuer ? `- ${cert.issuer}` : ''}</Text>
+                        {cert.date && <Text style={{ fontSize: 10, fontStyle: 'italic' }}>{cert.date}</Text>}
+                    </View>
+                ))}
+            </View>
+        )}
+
         {/* Languages */}
         {content.languages?.length > 0 && (
             <View style={styles.section}>
@@ -242,6 +255,22 @@ const TemplateModern = ({ content }: { content: ResumeContent }) => (
             </View>
         )}
 
+        {/* Certifications */}
+        {content.certifications?.length > 0 && (
+            <View style={styles.section}>
+                <Text style={{ fontSize: 12, fontWeight: 'bold', color: '#2563eb', textTransform: 'uppercase', marginBottom: 8 }}>Certifications</Text>
+                {content.certifications.map((cert: any, i: number) => (
+                    <View key={i} style={{ marginBottom: 6 }}>
+                        <Text style={{ fontSize: 11, fontWeight: 'bold' }}>{cert.title}</Text>
+                        <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
+                            <Text style={{ fontSize: 10, color: '#64748b' }}>{cert.issuer}</Text>
+                            <Text style={{ fontSize: 10, color: '#64748b' }}>{cert.date}</Text>
+                        </View>
+                    </View>
+                ))}
+            </View>
+        )}
+
         {/* Skills - Badges style */}
         {content.skills?.length > 0 && (
             <View style={styles.section}>
@@ -304,6 +333,18 @@ const TemplateBold = ({ content }: { content: ResumeContent }) => (
                 </View>
             )}
 
+            {content.certifications?.length > 0 && (
+                <View style={styles.section}>
+                    <Text style={{ fontSize: 14, fontWeight: 'bold', textTransform: 'uppercase', borderBottomWidth: 3, borderBottomColor: '#000', marginBottom: 12 }}>Certifications</Text>
+                    {content.certifications.map((cert: any, i: number) => (
+                        <View key={i} style={{ marginBottom: 8 }}>
+                            <Text style={{ fontSize: 12, fontWeight: 'bold' }}>{cert.title}</Text>
+                            <Text style={{ fontSize: 10 }}>{cert.issuer} {cert.date ? `| ${cert.date}` : ''}</Text>
+                        </View>
+                    ))}
+                </View>
+            )}
+
             {content.skills?.length > 0 && (
                 <View style={styles.section}>
                     <Text style={{ fontSize: 14, fontWeight: 'bold', textTransform: 'uppercase', borderBottomWidth: 3, borderBottomColor: '#000', marginBottom: 12 }}>Skills</Text>
@@ -351,6 +392,18 @@ const TemplateMinimalist = ({ content }: { content: ResumeContent }) => (
             </View>
         )}
 
+        {content.certifications?.length > 0 && (
+            <View style={{ marginBottom: 20 }}>
+                <Text style={{ fontSize: 10, letterSpacing: 1, textTransform: 'uppercase', borderBottom: '1px solid #ddd', paddingBottom: 4, marginBottom: 8, color: '#666' }}>Certifications</Text>
+                {content.certifications.map((cert: any, i: number) => (
+                    <View key={i} style={{ marginBottom: 6 }}>
+                        <Text style={{ fontSize: 11 }}>{cert.title}</Text>
+                        <Text style={{ fontSize: 10, color: '#555' }}>{cert.issuer} {cert.date ? `• ${cert.date}` : ''}</Text>
+                    </View>
+                ))}
+            </View>
+        )}
+
         {content.skills?.length > 0 && (
             <View>
                 <Text style={{ fontSize: 10, letterSpacing: 1, textTransform: 'uppercase', borderBottom: '1px solid #ddd', paddingBottom: 4, marginBottom: 8, color: '#666' }}>Skills</Text>
@@ -392,6 +445,18 @@ const TemplateTech = ({ content }: { content: ResumeContent }) => (
                             <Text style={{ fontSize: 10, color: '#64748b', fontFamily: 'Courier' }}>[{exp.startDate} :: {exp.endDate}]</Text>
                         </View>
                         {exp.description && <Text style={{ fontSize: 10, lineHeight: 1.5, color: '#334155' }}>{exp.description}</Text>}
+                    </View>
+                ))}
+            </View>
+        )}
+
+        {content.certifications?.length > 0 && (
+            <View style={styles.section}>
+                <Text style={{ fontSize: 14, fontWeight: 'bold', color: '#111827', marginBottom: 10 }}>Certifications</Text>
+                {content.certifications.map((cert: any, i: number) => (
+                    <View key={i} style={{ marginBottom: 10 }}>
+                        <Text style={{ fontSize: 11, fontWeight: 'bold', color: '#0f172a' }}>{cert.title}</Text>
+                        <Text style={{ fontSize: 10, color: '#0d9488', fontFamily: 'Courier' }}>{cert.issuer} {cert.date ? `// ${cert.date}` : ''}</Text>
                     </View>
                 ))}
             </View>
