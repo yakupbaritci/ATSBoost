@@ -7,6 +7,15 @@ import { useState } from 'react'
 
 export default function UploadPage() {
     const [isLoading, setIsLoading] = useState(false)
+    const [fileName, setFileName] = useState<string | null>(null)
+
+    const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        if (e.target.files && e.target.files.length > 0) {
+            setFileName(e.target.files[0].name)
+        } else {
+            setFileName(null)
+        }
+    }
 
     return (
         <div className="max-w-xl mx-auto py-12">
@@ -25,22 +34,55 @@ export default function UploadPage() {
                     }}
                     className="space-y-6"
                 >
-                    <div className="border-2 border-dashed border-zinc-300 rounded-lg p-12 text-center hover:bg-zinc-50 transition-colors dark:border-zinc-700 dark:hover:bg-zinc-800/50">
-                        <Upload className="mx-auto h-12 w-12 text-zinc-400" />
-                        <div className="mt-4 flex text-sm text-zinc-600 justify-center dark:text-zinc-400">
-                            <label
-                                htmlFor="file-upload"
-                                className="relative cursor-pointer rounded-md font-semibold text-primary hover:text-primary/80 focus-within:outline-none focus-within:ring-2 focus-within:ring-primary focus-within:ring-offset-2"
-                            >
-                                <span>Upload a file</span>
-                                <input id="file-upload" name="file" type="file" accept=".pdf" className="sr-only" required />
-                            </label>
-                            <p className="pl-1">or drag and drop</p>
-                        </div>
-                        <p className="text-xs text-zinc-500 mt-2">PDF up to 10MB</p>
+                    <div className="border-2 border-dashed border-zinc-300 rounded-lg p-12 text-center hover:bg-zinc-50 transition-colors dark:border-zinc-700 dark:hover:bg-zinc-800/50 relative">
+                        {fileName ? (
+                            <div className="flex flex-col items-center justify-center animate-in fade-in zoom-in duration-300">
+                                <FileText className="h-12 w-12 text-blue-500 mb-2" />
+                                <p className="text-sm font-medium text-zinc-900 dark:text-zinc-100">{fileName}</p>
+                                <p className="text-xs text-zinc-500 mt-1">Ready to upload</p>
+                                <Button
+                                    type="button"
+                                    variant="ghost"
+                                    size="sm"
+                                    className="mt-2 text-red-500 hover:text-red-600 hover:bg-red-50"
+                                    onClick={(e) => {
+                                        e.preventDefault();
+                                        setFileName(null);
+                                        // Reset the input value if needed via ref, but for now state controls visibility
+                                        const input = document.getElementById('file-upload') as HTMLInputElement;
+                                        if (input) input.value = '';
+                                    }}
+                                >
+                                    Remove
+                                </Button>
+                            </div>
+                        ) : (
+                            <>
+                                <Upload className="mx-auto h-12 w-12 text-zinc-400" />
+                                <div className="mt-4 flex text-sm text-zinc-600 justify-center dark:text-zinc-400">
+                                    <label
+                                        htmlFor="file-upload"
+                                        className="relative cursor-pointer rounded-md font-semibold text-primary hover:text-primary/80 focus-within:outline-none focus-within:ring-2 focus-within:ring-primary focus-within:ring-offset-2"
+                                    >
+                                        <span>Upload a file</span>
+                                        <input
+                                            id="file-upload"
+                                            name="file"
+                                            type="file"
+                                            accept=".pdf"
+                                            className="sr-only"
+                                            required
+                                            onChange={handleFileChange}
+                                        />
+                                    </label>
+                                    <p className="pl-1">or drag and drop</p>
+                                </div>
+                                <p className="text-xs text-zinc-500 mt-2">PDF up to 10MB</p>
+                            </>
+                        )}
                     </div>
 
-                    <Button type="submit" className="w-full" size="lg" disabled={isLoading}>
+                    <Button type="submit" className="w-full" size="lg" disabled={isLoading || !fileName}>
                         {isLoading ? 'Processing...' : 'Analyze CV'}
                     </Button>
                 </form>
