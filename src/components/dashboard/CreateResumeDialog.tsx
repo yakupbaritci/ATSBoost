@@ -67,7 +67,7 @@ export function CreateResumeDialog({ children }: { children?: React.ReactNode })
                                 id="title"
                                 name="title"
                                 placeholder="Ex: First Last Name - Job Title"
-                                className="h-12 border-zinc-200 dark:border-zinc-800 focus-visible:ring-green-500"
+                                className="h-12 border-zinc-200 dark:border-zinc-800 focus-visible:ring-green-500 text-zinc-900 dark:text-zinc-100 bg-transparent"
                                 required
                             />
                         </div>
@@ -76,18 +76,21 @@ export function CreateResumeDialog({ children }: { children?: React.ReactNode })
                             <Label htmlFor="experienceLevel" className="text-xs font-bold text-zinc-500 uppercase tracking-wider">
                                 Experience
                             </Label>
-                            <Select name="experienceLevel">
-                                <SelectTrigger className="h-12 border-zinc-200 dark:border-zinc-800 focus:ring-green-500">
-                                    <SelectValue placeholder="Select..." />
-                                </SelectTrigger>
-                                <SelectContent>
-                                    <SelectItem value="internship">Internship (0-1 years)</SelectItem>
-                                    <SelectItem value="entry">Entry Level (1-3 years)</SelectItem>
-                                    <SelectItem value="mid">Mid Level (3-5 years)</SelectItem>
-                                    <SelectItem value="senior">Senior Level (5+ years)</SelectItem>
-                                    <SelectItem value="executive">Executive</SelectItem>
-                                </SelectContent>
-                            </Select>
+                            <div className="relative">
+                                <select
+                                    name="experienceLevel"
+                                    className="flex h-12 w-full appearance-none items-center justify-between rounded-md border border-zinc-200 bg-white dark:bg-zinc-950 px-3 py-2 text-sm ring-offset-white placeholder:text-zinc-500 focus:outline-none focus:ring-2 focus:ring-green-500 disabled:cursor-not-allowed disabled:opacity-50 dark:border-zinc-800 dark:ring-offset-zinc-950 dark:focus:ring-zinc-300 text-zinc-900 dark:text-zinc-100"
+                                    defaultValue=""
+                                >
+                                    <option value="" disabled>Select...</option>
+                                    <option value="internship">Internship (0-1 years)</option>
+                                    <option value="entry">Entry Level (1-3 years)</option>
+                                    <option value="mid">Mid Level (3-5 years)</option>
+                                    <option value="senior">Senior Level (5+ years)</option>
+                                    <option value="executive">Executive</option>
+                                </select>
+                                <ChevronDown className="absolute right-3 top-4 h-4 w-4 opacity-50 pointer-events-none" />
+                            </div>
                         </div>
 
                         <div className="pt-2">
