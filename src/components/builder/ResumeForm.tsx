@@ -278,7 +278,6 @@ export function ResumeForm({ initialContent, onUpdate, isWizardMode = false }: R
         { id: "skills", title: "Skills", description: "What are your superpowers?" },
         { id: "certifications", title: "Certifications", description: "Extra credentials." },
         { id: "projects", title: "Projects", description: "Showcase your work." },
-        { id: "projects", title: "Projects", description: "Showcase your work." },
         { id: "languages", title: "Languages", description: "Global communication." }
     ]
 
