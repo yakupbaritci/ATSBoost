@@ -69,6 +69,11 @@ export function ResumeForm({ initialContent, onUpdate }: ResumeFormProps) {
             newContent.experience[index] = { ...newContent.experience[index], [field]: value }
         } else if (section === 'education' && typeof index === 'number') {
             newContent.education[index] = { ...newContent.education[index], [field]: value }
+        } else if (section === 'skills' && typeof index === 'number') {
+            // For skills array edits
+            const newSkills = [...(newContent.skills || [])]
+            newSkills[index] = value
+            newContent.skills = newSkills
         }
 
         setContent(newContent)
@@ -82,9 +87,26 @@ export function ResumeForm({ initialContent, onUpdate }: ResumeFormProps) {
         onUpdate(newContent)
     }
 
-    const removeItem = (section: 'experience' | 'education', index: number) => {
+    const addEducation = () => {
+        const newEdu = { id: crypto.randomUUID(), school: '', degree: '' }
+        const newContent = { ...content, education: [...(content.education || []), newEdu] }
+        setContent(newContent)
+        onUpdate(newContent)
+    }
+
+    const addSkill = () => {
+        const newContent = { ...content, skills: [...(content.skills || []), ''] }
+        setContent(newContent)
+        onUpdate(newContent)
+    }
+
+    const removeItem = (section: 'experience' | 'education' | 'skills', index: number) => {
         const newContent = { ...content }
-        newContent[section] = newContent[section]?.filter((_, i) => i !== index)
+        if (section === 'skills') {
+            newContent.skills = newContent.skills?.filter((_, i) => i !== index)
+        } else {
+            newContent[section] = newContent[section]?.filter((_, i) => i !== index)
+        }
         setContent(newContent)
         onUpdate(newContent)
     }
@@ -178,7 +200,7 @@ export function ResumeForm({ initialContent, onUpdate }: ResumeFormProps) {
                     {/* Experience Tab */}
                     <TabsContent value="experience" className="mt-0 space-y-4">
                         {content.experience?.map((exp, index) => (
-                            <Card key={exp.id || index}>
+                            <Card key={`${exp.id}-${index}`}>
                                 <CardContent className="pt-6 space-y-4 relative">
                                     <Button
                                         variant="ghost"
@@ -236,12 +258,87 @@ export function ResumeForm({ initialContent, onUpdate }: ResumeFormProps) {
                         </Button>
                     </TabsContent>
 
-                    {/* TODO: Education & Skills implementation similarly */}
-                    <TabsContent value="education" className="mt-0">
-                        <div className="text-center text-zinc-500 py-8">Education fields coming soon...</div>
+                    {/* Education Tab */}
+                    <TabsContent value="education" className="mt-0 space-y-4">
+                        {content.education?.map((edu, index) => (
+                            <Card key={`${edu.id}-${index}`}>
+                                <CardContent className="pt-6 space-y-4 relative">
+                                    <Button
+                                        variant="ghost"
+                                        size="icon"
+                                        className="absolute top-2 right-2 text-red-500 hover:bg-red-50 hover:text-red-600"
+                                        onClick={() => removeItem('education', index)}
+                                    >
+                                        <Trash2 className="w-4 h-4" />
+                                    </Button>
+                                    <div className="grid grid-cols-2 gap-4">
+                                        <div className="space-y-2">
+                                            <Label>School / University</Label>
+                                            <Input
+                                                value={edu.school || ''}
+                                                onChange={(e) => handleChange('education', 'school', e.target.value, index)}
+                                            />
+                                        </div>
+                                        <div className="space-y-2">
+                                            <Label>Degree / Major</Label>
+                                            <Input
+                                                value={edu.degree || ''}
+                                                onChange={(e) => handleChange('education', 'degree', e.target.value, index)}
+                                            />
+                                        </div>
+                                        <div className="space-y-2">
+                                            <Label>Start Date</Label>
+                                            <Input
+                                                value={edu.startDate || ''}
+                                                onChange={(e) => handleChange('education', 'startDate', e.target.value, index)}
+                                                placeholder="MM/YYYY"
+                                            />
+                                        </div>
+                                        <div className="space-y-2">
+                                            <Label>End Date</Label>
+                                            <Input
+                                                value={edu.endDate || ''}
+                                                onChange={(e) => handleChange('education', 'endDate', e.target.value, index)}
+                                                placeholder="YYYY"
+                                            />
+                                        </div>
+                                    </div>
+                                </CardContent>
+                            </Card>
+                        ))}
+                        <Button onClick={addEducation} variant="outline" className="w-full border-dashed">
+                            <Plus className="w-4 h-4 mr-2" /> Add Education
+                        </Button>
                     </TabsContent>
-                    <TabsContent value="skills" className="mt-0">
-                        <div className="text-center text-zinc-500 py-8">Skills fields coming soon...</div>
+
+                    {/* Skills Tab */}
+                    <TabsContent value="skills" className="mt-0 space-y-4">
+                        <Card>
+                            <CardHeader>
+                                <CardTitle>Skills & Technologies</CardTitle>
+                            </CardHeader>
+                            <CardContent className="space-y-3">
+                                {content.skills?.map((skill, index) => (
+                                    <div key={index} className="flex gap-2">
+                                        <Input
+                                            value={skill}
+                                            onChange={(e) => handleChange('skills', '', e.target.value, index)}
+                                        />
+                                        <Button
+                                            variant="ghost"
+                                            size="icon"
+                                            className="text-red-500 hover:bg-red-50"
+                                            onClick={() => removeItem('skills', index)}
+                                        >
+                                            <Trash2 className="w-4 h-4" />
+                                        </Button>
+                                    </div>
+                                ))}
+                                <Button onClick={addSkill} variant="outline" className="w-full border-dashed">
+                                    <Plus className="w-4 h-4 mr-2" /> Add Skill
+                                </Button>
+                            </CardContent>
+                        </Card>
                     </TabsContent>
 
                     {/* Target Job Tab */}
