@@ -1277,11 +1277,7 @@ export function ResumeForm({
                                         addItem('certifications')
                                         setActiveCertificationIndex((content.certifications?.length || 0))
                                     }}
-                                    onToggleVisible={(index) => {
-                                        if (!content.certifications) return;
-                                        const current = content.certifications[index];
-                                        handleChange('certifications', 'visible', current.visible === false ? true : false, index);
-                                    }}
+                                    onToggleVisible={(index) => toggleVisibility('certifications', index)}
                                     titleKey="title"
                                     subtitleKey="issuer"
                                 />
