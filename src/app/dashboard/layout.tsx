@@ -27,7 +27,7 @@ export default function DashboardLayout({
 
     const navItems = [
         { href: '/dashboard', label: 'Overview', icon: Home },
-        { href: '/dashboard/resumes', label: 'My Resumes', icon: FileText },
+        { href: '/dashboard', label: 'My Resumes', icon: FileText },
         { href: '/dashboard/settings', label: 'Settings', icon: Settings },
     ]
 
@@ -51,8 +51,8 @@ export default function DashboardLayout({
                                 key={item.href}
                                 href={item.href}
                                 className={`flex items-center gap-3 px-3 py-2 rounded-md text-sm font-medium transition-colors ${isActive
-                                        ? 'bg-zinc-100 text-zinc-900 dark:bg-zinc-800 dark:text-zinc-50'
-                                        : 'text-zinc-500 hover:text-zinc-900 hover:bg-zinc-100 dark:text-zinc-400 dark:hover:text-zinc-50 dark:hover:bg-zinc-800'
+                                    ? 'bg-zinc-100 text-zinc-900 dark:bg-zinc-800 dark:text-zinc-50'
+                                    : 'text-zinc-500 hover:text-zinc-900 hover:bg-zinc-100 dark:text-zinc-400 dark:hover:text-zinc-50 dark:hover:bg-zinc-800'
                                     }`}
                             >
                                 <Icon className="w-4 h-4" />
