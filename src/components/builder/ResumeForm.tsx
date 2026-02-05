@@ -304,7 +304,8 @@ export function ResumeForm({
     onTemplateChange,
     previewComponent,
     title = "Untitled Resume",
-    onGenerateBullet
+    onGenerateBullet,
+    onGenerateSummary
 }: ResumeFormProps) {
     const [content, setContent] = useState<ResumeContent>(initialContent)
     const [activeTab, setActiveTab] = useState("contact")
@@ -313,6 +314,7 @@ export function ResumeForm({
 
     // AI Generation State
     const [isGeneratingBullet, setIsGeneratingBullet] = useState(false)
+    const [isGeneratingSummary, setIsGeneratingSummary] = useState(false)
 
     // Wizard Steps Configuration - Refined Order
     const steps = [
@@ -743,8 +745,33 @@ export function ResumeForm({
                         {/* Summary Tab */}
                         <TabsContent value="summary" className="mt-0">
                             <Card>
-                                <CardHeader>
+                                <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-4">
                                     <CardTitle>Professional Summary</CardTitle>
+                                    <Button
+                                        variant="outline"
+                                        size="sm"
+                                        className="gap-2 bg-gradient-to-r from-purple-50 to-indigo-50 text-indigo-700 hover:from-purple-100 hover:to-indigo-100 border-indigo-200 dark:bg-indigo-900/20 dark:text-indigo-300 dark:border-indigo-800"
+                                        disabled={isGeneratingSummary}
+                                        onClick={async () => {
+                                            if (onGenerateSummary) {
+                                                setIsGeneratingSummary(true)
+                                                try {
+                                                    const summary = await onGenerateSummary(content)
+                                                    handleChange('summary', '', summary)
+                                                    toast.success("AI Summary Generated!")
+                                                } catch (e) {
+                                                    toast.error("Failed to generate summary")
+                                                } finally {
+                                                    setIsGeneratingSummary(false)
+                                                }
+                                            } else {
+                                                toast.error("AI Feature not available")
+                                            }
+                                        }}
+                                    >
+                                        {isGeneratingSummary ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <Sparkles className="w-3.5 h-3.5" />}
+                                        {isGeneratingSummary ? 'Writing...' : 'Generate with AI'}
+                                    </Button>
                                 </CardHeader>
                                 <CardContent>
                                     <Textarea
