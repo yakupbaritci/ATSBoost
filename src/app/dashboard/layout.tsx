@@ -27,7 +27,7 @@ export default function DashboardLayout({
 
     const navItems = [
         { href: '/dashboard', label: 'Overview', icon: Home },
-        { href: '/dashboard', label: 'My Resumes', icon: FileText },
+        { href: '/dashboard/resumes', label: 'My Resumes', icon: FileText },
         { href: '/dashboard/settings', label: 'Settings', icon: Settings },
     ]
 
