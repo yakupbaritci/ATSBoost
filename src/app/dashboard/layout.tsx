@@ -45,7 +45,7 @@ export default function DashboardLayout({
         { href: '#', label: 'AI Resume Agent', icon: Sparkles, badge: 'New', highlight: true },
         { href: '#', label: 'AI Interview', icon: Video, badge: 'New', highlight: true },
         { href: '#', label: 'Job Search', icon: Briefcase },
-        { href: '#', label: 'Sample Library', icon: Library },
+        { href: '/dashboard/samples', label: 'Sample Resumes', icon: Library },
         { href: '#', label: 'Review My Resume', icon: FileText },
     ]
 
