@@ -29,23 +29,6 @@ import { SidebarList } from './SidebarList'
 
 import { toast } from 'sonner'
 
-// AI Generation State
-const [isGeneratingBullet, setIsGeneratingBullet] = useState(false)
-const [isGeneratingSummary, setIsGeneratingSummary] = useState(false)
-
-// Helper to toggle visibility of list items
-const toggleVisibility = (section: keyof ResumeContent, index: number) => {
-    setContent(prev => {
-        const newContent = { ...prev }
-        if (Array.isArray(newContent[section])) {
-            const items = [...(newContent[section] as any[])]
-            items[index] = { ...items[index], visible: items[index].visible === undefined ? false : !items[index].visible }
-            newContent[section] = items
-        }
-        if (onUpdate) onUpdate(newContent)
-        return newContent
-    })
-}
 
 // Accordion Card Component for managing expandable sections
 const AccordionItem = ({
