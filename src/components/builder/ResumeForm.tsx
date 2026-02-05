@@ -88,6 +88,11 @@ export function ResumeForm({ initialContent, onUpdate }: ResumeFormProps) {
             const newSkills = [...(newContent.skills || [])]
             newSkills[index] = value
             newContent.skills = newSkills
+        } else if ((section === 'certifications' || section === 'projects' || section === 'languages') && typeof index === 'number') {
+            // Generic handler for array of objects (Certifications, Projects, Languages)
+            newContent[section] = [...(newContent[section] || [])]
+            // @ts-ignore
+            newContent[section][index] = { ...newContent[section][index], [field]: value }
         }
 
         setContent(newContent)
@@ -110,6 +115,15 @@ export function ResumeForm({ initialContent, onUpdate }: ResumeFormProps) {
 
     const addSkill = () => {
         const newContent = { ...content, skills: [...(content.skills || []), ''] }
+        setContent(newContent)
+        onUpdate(newContent)
+    }
+
+    const addItem = (section: 'certifications' | 'projects' | 'languages') => {
+        const newContent = { ...content }
+        if (section === 'certifications') newContent.certifications = [...(content.certifications || []), { title: '', issuer: '' }]
+        if (section === 'projects') newContent.projects = [...(content.projects || []), { title: '', description: '' }]
+        if (section === 'languages') newContent.languages = [...(content.languages || []), { language: '', proficiency: '' }]
         setContent(newContent)
         onUpdate(newContent)
     }
