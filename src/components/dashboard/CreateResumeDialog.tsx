@@ -33,6 +33,7 @@ export function CreateResumeDialog({ children }: { children?: React.ReactNode })
     const [fileName, setFileName] = useState<string | null>(null)
     const [progress, setProgress] = useState(0)
     const [statusMessage, setStatusMessage] = useState("")
+    const [createdResumeId, setCreatedResumeId] = useState<string | null>(null)
 
     const formRef = useRef<HTMLFormElement>(null)
 
