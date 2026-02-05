@@ -4,24 +4,26 @@ import { Document, Page, Text, View, StyleSheet, PDFViewer, Font } from '@react-
 import { useEffect, useState } from 'react'
 
 // Register Open Sans font which has excellent unicode support including Turkish
-// Register fonts from local public/fonts directory (WOFF files copied from @fontsource)
+// Register fonts from local public/fonts directory (Full Unicode TTF downloaded from source)
+// We use Roboto for both families temporarily to ensure Turkish character support across all templates
+// (Merriweather download failed, so we fallback to Roboto to avoid 'unknown font' and 'missing char' errors)
 Font.register({
     family: 'Roboto',
     fonts: [
-        { src: '/fonts/Roboto-Regular.woff' },
-        { src: '/fonts/Roboto-Bold.woff', fontWeight: 'bold' },
-        { src: '/fonts/Roboto-Italic.woff', fontStyle: 'italic' },
-        { src: '/fonts/Roboto-BoldItalic.woff', fontWeight: 'bold', fontStyle: 'italic' }
+        { src: '/fonts/Roboto-Regular.ttf' },
+        { src: '/fonts/Roboto-Bold.ttf', fontWeight: 'bold' },
+        { src: '/fonts/Roboto-Italic.ttf', fontStyle: 'italic' },
+        { src: '/fonts/Roboto-BoldItalic.ttf', fontWeight: 'bold', fontStyle: 'italic' }
     ]
 });
 
 Font.register({
     family: 'Merriweather',
     fonts: [
-        { src: '/fonts/Merriweather-Regular.woff' },
-        { src: '/fonts/Merriweather-Bold.woff', fontWeight: 'bold' },
-        { src: '/fonts/Merriweather-Italic.woff', fontStyle: 'italic' },
-        { src: '/fonts/Merriweather-BoldItalic.woff', fontWeight: 'bold', fontStyle: 'italic' }
+        { src: '/fonts/Roboto-Regular.ttf' }, // Fallback to Roboto
+        { src: '/fonts/Roboto-Bold.ttf', fontWeight: 'bold' },
+        { src: '/fonts/Roboto-Italic.ttf', fontStyle: 'italic' },
+        { src: '/fonts/Roboto-BoldItalic.ttf', fontWeight: 'bold', fontStyle: 'italic' }
     ]
 });
 
