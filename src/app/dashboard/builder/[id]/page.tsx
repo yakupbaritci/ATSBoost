@@ -319,68 +319,46 @@ export default function BuilderPage() {
                 </div>
             </header>
 
-            {/* Main Workspace */}
-            <div className="flex-1 flex overflow-hidden">
-                {/* Left: Interactive Form */}
-                <div className="w-1/2 p-6 overflow-hidden border-r border-zinc-200 bg-white dark:border-zinc-800 dark:bg-zinc-900">
-                    <ResumeForm
-                        initialContent={resume.content}
-                        onUpdate={handleUpdate}
-                        isWizardMode={isWizardMode}
-                        key={isWizardMode ? 'wizard' : 'editor'}
-                    />
-                </div>
+            {/* Main Workspace - Simplified */}
+            <div className="flex-1 overflow-hidden bg-[#f8f9fc] dark:bg-black">
+                {/* We render ONLY the ResumeForm which now handles the entire layout & preview in 'Finish' tab */}
+                <ResumeForm
+                    initialContent={resume.content}
+                    onUpdate={handleUpdate}
+                    isWizardMode={isWizardMode}
+                    key={isWizardMode ? 'wizard' : 'editor'}
 
-                {/* Right: Live Preview */}
-                <div className="w-1/2 bg-zinc-100 p-8 dark:bg-zinc-950 flex flex-col overflow-hidden">
-                    <Tabs defaultValue="preview" className="w-full h-full flex flex-col">
-                        <div className="flex justify-between mb-4 items-center">
-                            <TabsList>
-                                <TabsTrigger value="preview"><Eye className="w-4 h-4 mr-2" /> ATS Preview</TabsTrigger>
-                                <TabsTrigger value="original" disabled={!resume.original_pdf_url}><FileText className="w-4 h-4 mr-2" /> Original PDF</TabsTrigger>
-                            </TabsList>
+                    // Finish Up Props
+                    atsScore={atsResult}
+                    onCheckScore={() => handleCheckScore()}
+                    isOptimizing={optimizing}
+                    onAutoOptimize={handleOptimize}
+                    currentTemplate={currentTemplate}
+                    onTemplateChange={setCurrentTemplate}
 
-                            {/* Template Selector */}
-                            <div className="flex items-center gap-2">
-                                <Palette className="w-4 h-4 text-zinc-500" />
-                                <Select value={currentTemplate} onValueChange={setCurrentTemplate}>
-                                    <SelectTrigger className="w-[180px] h-9">
-                                        <SelectValue placeholder="Select Template" />
-                                    </SelectTrigger>
-                                    <SelectContent>
-                                        <SelectItem value="classic">Global Standard</SelectItem>
-                                        <SelectItem value="modern">Modern Professional</SelectItem>
-                                        <SelectItem value="bold">Bold Executive</SelectItem>
-                                        <SelectItem value="minimalist">Minimalist Mono</SelectItem>
-                                        <SelectItem value="tech">Tech / Developer</SelectItem>
-                                    </SelectContent>
-                                </Select>
-                            </div>
-                        </div>
+                    // Pass the Preview component to be rendered inside the Finish tab
+                    previewComponent={
+                        <ResumePreview content={resume.content} template={currentTemplate} />
+                    }
 
-                        <TabsContent value="preview" className="flex-1 flex justify-center overflow-hidden data-[state=inactive]:hidden">
-                            <div className="w-full max-w-[210mm] shadow-2xl h-full overflow-y-auto">
-                                <ResumePreview content={resume.content} template={currentTemplate} />
-                            </div>
-                        </TabsContent>
-
-                        <TabsContent value="original" className="flex-1 h-full data-[state=inactive]:hidden">
-                            {resume.original_pdf_url ? (
-                                <iframe
-                                    src={resume.original_pdf_url}
-                                    className="w-full h-full rounded-lg border border-zinc-200 dark:border-zinc-800"
-                                />
-                            ) : (
-                                <div className="flex items-center justify-center h-full text-zinc-500">
-                                    No original PDF found
-                                </div>
+                    // Pass Download Logic
+                    onDownload={() => (
+                        <PDFDownloadLink
+                            document={<ResumeDocument content={resume.content} template={currentTemplate} />}
+                            fileName={`${resume.title || 'resume'}.pdf`}
+                        >
+                            {({ blob, url, loading: pdfLoading, error }) => (
+                                <Button size="lg" className="w-full font-bold" disabled={pdfLoading}>
+                                    {pdfLoading ? <Loader2 className="w-4 h-4 animate-spin mr-2" /> : <Download className="w-4 h-4 mr-2" />}
+                                    Download PDF
+                                </Button>
                             )}
-                        </TabsContent>
-                    </Tabs>
-                </div>
+                        </PDFDownloadLink>
+                    )}
+                />
             </div>
 
-            {/* ATS Score Modal */}
+            {/* ATS Score Modal - Still kept at page level for the full modal experience if triggered */}
             <Dialog open={showScoreModal} onOpenChange={setShowScoreModal}>
                 <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
                     <DialogHeader>
