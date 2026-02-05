@@ -104,8 +104,10 @@ export function ResumeForm({ initialContent, onUpdate }: ResumeFormProps) {
         const newContent = { ...content }
         if (section === 'skills') {
             newContent.skills = newContent.skills?.filter((_, i) => i !== index)
-        } else {
-            newContent[section] = newContent[section]?.filter((_, i) => i !== index)
+        } else if (section === 'experience') {
+            newContent.experience = newContent.experience?.filter((_, i) => i !== index)
+        } else if (section === 'education') {
+            newContent.education = newContent.education?.filter((_, i) => i !== index)
         }
         setContent(newContent)
         onUpdate(newContent)
