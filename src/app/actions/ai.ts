@@ -37,10 +37,35 @@ export async function parseResumeWithAI(rawText: string) {
 
     } catch (error: any) {
         console.error('Gemini Parse Error:', error)
+
+        // --- Fallback: Regex Parsers (Graceful Degradation) ---
+        console.log("Attempting Regex Fallback...");
+
+        const emailRegex = /([a-zA-Z0-9._-]+@[a-zA-Z0-9._-]+\.[a-zA-Z0-9_-]+)/;
+        const phoneRegex = /([\+]?[(]?[0-9]{3}[)]?[-\s\.]?[0-9]{3}[-\s\.]?[0-9]{4,6})/;
+        const linkedinRegex = /(linkedin\.com\/in\/[a-zA-Z0-9_-]+)/;
+        const websiteRegex = /(https?:\/\/[^\s]+)/;
+
+        const emailMatch = rawText.match(emailRegex);
+        const phoneMatch = rawText.match(phoneRegex);
+        const linkedinMatch = rawText.match(linkedinRegex);
+        const websiteMatch = rawText.match(websiteRegex);
+
+        // Guess Name: First non-empty line that isn't too long
+        const lines = rawText.split('\n').map(l => l.trim()).filter(l => l.length > 2);
+        const likelyName = lines[0] || "";
+
         return {
-            error: `AI Error: ${error.message || error}`,
-            contact: {},
-            summary: `AI Processing Failed. \n\nError Details: ${error.message}\n\nPlease edit manually from the raw text below.\n\n${rawText.slice(0, 2000)}...`,
+            error: `AI Error (Using Regex Fallback): ${error.message || error}`,
+            contact: {
+                fullName: likelyName,
+                email: emailMatch ? emailMatch[0] : "",
+                phone: phoneMatch ? phoneMatch[0] : "",
+                location: "",
+                linkedin: linkedinMatch ? `https://${linkedinMatch[0]}` : "",
+                portfolio: websiteMatch ? websiteMatch[0] : ""
+            },
+            summary: rawText.slice(0, 500) + "...\n(Note: Basic info extracted via fallback mechanism due to AI API error. Please edit manually.)",
             experience: [],
             education: [],
             skills: []
