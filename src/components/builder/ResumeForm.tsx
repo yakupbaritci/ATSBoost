@@ -756,7 +756,7 @@ export function ResumeForm({
                         <TabsContent value="experience" className="mt-0 h-[calc(100vh-140px)]">
                             <div className="flex h-full gap-6">
                                 {/* Left Sidebar: List & Score */}
-                                <div className="w-80 shrink-0 flex flex-col gap-4 overflow-y-auto pr-2 pb-20">
+                                <div className="w-80 shrink-0 flex flex-col gap-4 overflow-y-auto pr-2 pb-20 [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]">
                                     {/* Score Card Mockup */}
                                     <div className="bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-xl p-4 flex items-center gap-4 shadow-sm">
                                         <div className="relative w-12 h-12 flex items-center justify-center">
@@ -843,7 +843,7 @@ export function ResumeForm({
                                 </div>
 
                                 {/* Right Main: Editor */}
-                                <div className="flex-1 overflow-y-auto pb-20">
+                                <div className="flex-1 overflow-y-auto pb-20 [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]">
                                     {content.experience && content.experience[activeExperienceIndex] ? (
                                         <Card className="border-zinc-200 dark:border-zinc-800 shadow-sm">
                                             <CardHeader className="pb-4 border-b border-zinc-100 dark:border-zinc-800/50">
@@ -969,7 +969,7 @@ export function ResumeForm({
                         <TabsContent value="education" className="mt-0 h-[calc(100vh-140px)]">
                             <div className="flex h-full gap-6">
                                 {/* Left Sidebar: List */}
-                                <div className="w-80 shrink-0 flex flex-col gap-4 overflow-y-auto pr-2 pb-20">
+                                <div className="w-80 shrink-0 flex flex-col gap-4 overflow-y-auto pr-2 pb-20 [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]">
                                     <div className="flex items-center justify-between px-1">
                                         <h3 className="font-bold text-zinc-900 dark:text-zinc-100 flex items-center gap-2">
                                             <ChevronDown className="w-4 h-4" /> Your Education
@@ -1022,7 +1022,7 @@ export function ResumeForm({
                                 </div>
 
                                 {/* Right Main: Editor */}
-                                <div className="flex-1 overflow-y-auto pb-20">
+                                <div className="flex-1 overflow-y-auto pb-20 [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]">
                                     {content.education && content.education[activeEducationIndex] ? (
                                         <Card className="border-zinc-200 dark:border-zinc-800 shadow-sm">
                                             <CardHeader className="pb-4 border-b border-zinc-100 dark:border-zinc-800/50">
