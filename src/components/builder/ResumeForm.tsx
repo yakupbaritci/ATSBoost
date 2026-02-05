@@ -1271,64 +1271,232 @@ export function ResumeForm({
                         </TabsContent>
 
                         {/* Certifications Tab */}
-                        <TabsContent value="certifications" className="mt-0 space-y-4">
-                            {content.certifications?.map((cert, index) => (
-                                <AccordionItem
-                                    key={index}
-                                    title={cert.title || "Certification"}
-                                    subtitle={cert.issuer}
-                                    onDelete={() => removeItem('certifications', index)}
-                                    defaultOpen={index === 0}
-                                >
-                                    <div className="grid grid-cols-2 gap-4 mt-4">
-                                        <div className="space-y-2"><Label>Title</Label><Input value={cert.title} onChange={(e) => handleChange('certifications', 'title', e.target.value, index)} /></div>
-                                        <div className="space-y-2"><Label>Issuer</Label><Input value={cert.issuer} onChange={(e) => handleChange('certifications', 'issuer', e.target.value, index)} /></div>
-                                        <div className="space-y-2"><Label>Date</Label><Input value={cert.date} onChange={(e) => handleChange('certifications', 'date', e.target.value, index)} /></div>
-                                    </div>
-                                </AccordionItem>
-                            ))}
-                            <Button onClick={() => addItem('certifications')} variant="outline" className="w-full border-dashed"><Plus className="w-4 h-4 mr-2" /> Add Certification</Button>
+                        <TabsContent value="certifications" className="mt-0 h-[calc(100vh-140px)]">
+                            <div className="flex h-full gap-6">
+                                <SidebarList
+                                    title="Certifications"
+                                    items={content.certifications || []}
+                                    selectedIndex={activeCertificationIndex}
+                                    onSelect={setActiveCertificationIndex}
+                                    onDelete={(index) => {
+                                        removeItem('certifications', index)
+                                        if (activeCertificationIndex >= index && activeCertificationIndex > 0) setActiveCertificationIndex(activeCertificationIndex - 1)
+                                    }}
+                                    onAdd={() => {
+                                        addItem('certifications')
+                                        setActiveCertificationIndex((content.certifications?.length || 0))
+                                    }}
+                                    onToggleVisible={(index) => {
+                                        const current = content.certifications[index];
+                                        handleChange('certifications', 'visible', current.visible === false ? true : false, index);
+                                    }}
+                                    titleKey="title"
+                                    subtitleKey="issuer"
+                                />
+                                <div className="flex-1 h-full overflow-y-auto pr-2 pb-20">
+                                    {(content.certifications && content.certifications.length > 0) ? (
+                                        <Card>
+                                            <CardHeader>
+                                                <CardTitle>Edit Certification</CardTitle>
+                                            </CardHeader>
+                                            <CardContent className="space-y-4">
+                                                <div className="space-y-2">
+                                                    <Label>Certification Name</Label>
+                                                    <Input
+                                                        value={content.certifications[activeCertificationIndex]?.title || ''}
+                                                        onChange={(e) => handleChange('certifications', 'title', e.target.value, activeCertificationIndex)}
+                                                        placeholder="e.g. AWS Certified Solutions Architect"
+                                                    />
+                                                </div>
+                                                <div className="space-y-2">
+                                                    <Label>Issuer / Organization</Label>
+                                                    <Input
+                                                        value={content.certifications[activeCertificationIndex]?.issuer || ''}
+                                                        onChange={(e) => handleChange('certifications', 'issuer', e.target.value, activeCertificationIndex)}
+                                                        placeholder="e.g. Amazon Web Services"
+                                                    />
+                                                </div>
+                                                <div className="space-y-2">
+                                                    <Label>Date Obtained</Label>
+                                                    <Input
+                                                        value={content.certifications[activeCertificationIndex]?.date || ''}
+                                                        onChange={(e) => handleChange('certifications', 'date', e.target.value, activeCertificationIndex)}
+                                                        placeholder="e.g. 2023"
+                                                    />
+                                                </div>
+                                            </CardContent>
+                                            <div className="p-4 bg-zinc-50 dark:bg-zinc-900/50 border-t border-zinc-200 dark:border-zinc-800 flex justify-end">
+                                                <Button className="bg-blue-600 hover:bg-blue-700 text-white font-semibold">
+                                                    Save to Certifications List
+                                                </Button>
+                                            </div>
+                                        </Card>
+                                    ) : (
+                                        <div className="flex flex-col items-center justify-center h-full text-zinc-400 space-y-4">
+                                            <div className="w-16 h-16 rounded-full bg-zinc-100 dark:bg-zinc-800 flex items-center justify-center">
+                                                <FileIcon className="w-8 h-8 opacity-50" />
+                                            </div>
+                                            <p>Select a certification to edit or add a new one.</p>
+                                            <Button onClick={() => {
+                                                addItem('certifications')
+                                                setActiveCertificationIndex((content.certifications?.length || 0))
+                                            }}>
+                                                <Plus className="w-4 h-4 mr-2" /> Add Certification
+                                            </Button>
+                                        </div>
+                                    )}
+                                </div>
+                            </div>
                         </TabsContent>
 
                         {/* Projects Tab */}
-                        <TabsContent value="projects" className="mt-0 space-y-4">
-                            {content.projects?.map((proj, index) => (
-                                <AccordionItem
-                                    key={index}
-                                    title={proj.title || "Project"}
-                                    onDelete={() => removeItem('projects', index)}
-                                    defaultOpen={index === 0}
-                                >
-                                    <div className="space-y-2 mt-4"><Label>Project Title</Label><Input value={proj.title} onChange={(e) => handleChange('projects', 'title', e.target.value, index)} /></div>
-                                    <div className="space-y-2"><Label>Link</Label><Input value={proj.link} onChange={(e) => handleChange('projects', 'link', e.target.value, index)} /></div>
-                                    <div className="space-y-2"><Label>Description</Label><Textarea value={proj.description} onChange={(e) => handleChange('projects', 'description', e.target.value, index)} /></div>
-                                </AccordionItem>
-                            ))}
-                            <Button onClick={() => addItem('projects')} variant="outline" className="w-full border-dashed"><Plus className="w-4 h-4 mr-2" /> Add Project</Button>
+                        <TabsContent value="projects" className="mt-0 h-[calc(100vh-140px)]">
+                            <div className="flex h-full gap-6">
+                                <SidebarList
+                                    title="Projects"
+                                    items={content.projects || []}
+                                    selectedIndex={activeProjectIndex}
+                                    onSelect={setActiveProjectIndex}
+                                    onDelete={(index) => {
+                                        removeItem('projects', index)
+                                        if (activeProjectIndex >= index && activeProjectIndex > 0) setActiveProjectIndex(activeProjectIndex - 1)
+                                    }}
+                                    onAdd={() => {
+                                        addItem('projects')
+                                        setActiveProjectIndex((content.projects?.length || 0))
+                                    }}
+                                    onToggleVisible={(index) => {
+                                        const current = content.projects[index];
+                                        handleChange('projects', 'visible', current.visible === false ? true : false, index);
+                                    }}
+                                    titleKey="title"
+                                    subtitleKey="link"
+                                />
+                                <div className="flex-1 h-full overflow-y-auto pr-2 pb-20">
+                                    {(content.projects && content.projects.length > 0) ? (
+                                        <Card>
+                                            <CardHeader>
+                                                <CardTitle>Edit Project</CardTitle>
+                                            </CardHeader>
+                                            <CardContent className="space-y-4">
+                                                <div className="space-y-2">
+                                                    <Label>Project Title</Label>
+                                                    <Input
+                                                        value={content.projects[activeProjectIndex]?.title || ''}
+                                                        onChange={(e) => handleChange('projects', 'title', e.target.value, activeProjectIndex)}
+                                                        placeholder="e.g. Personal Portfolio Website"
+                                                    />
+                                                </div>
+                                                <div className="space-y-2">
+                                                    <Label>Project Link</Label>
+                                                    <Input
+                                                        value={content.projects[activeProjectIndex]?.link || ''}
+                                                        onChange={(e) => handleChange('projects', 'link', e.target.value, activeProjectIndex)}
+                                                        placeholder="e.g. github.com/username/project"
+                                                    />
+                                                </div>
+                                                <div className="space-y-2">
+                                                    <Label>Description</Label>
+                                                    <Textarea
+                                                        value={content.projects[activeProjectIndex]?.description || ''}
+                                                        onChange={(e) => handleChange('projects', 'description', e.target.value, activeProjectIndex)}
+                                                        className="min-h-[150px]"
+                                                        placeholder="Describe what you built..."
+                                                    />
+                                                </div>
+                                            </CardContent>
+                                            <div className="p-4 bg-zinc-50 dark:bg-zinc-900/50 border-t border-zinc-200 dark:border-zinc-800 flex justify-end">
+                                                <Button className="bg-blue-600 hover:bg-blue-700 text-white font-semibold">
+                                                    Save to Projects List
+                                                </Button>
+                                            </div>
+                                        </Card>
+                                    ) : (
+                                        <div className="flex flex-col items-center justify-center h-full text-zinc-400 space-y-4">
+                                            <div className="w-16 h-16 rounded-full bg-zinc-100 dark:bg-zinc-800 flex items-center justify-center">
+                                                <FileIcon className="w-8 h-8 opacity-50" />
+                                            </div>
+                                            <p>Select a project to edit or add a new one.</p>
+                                            <Button onClick={() => {
+                                                addItem('projects')
+                                                setActiveProjectIndex((content.projects?.length || 0))
+                                            }}>
+                                                <Plus className="w-4 h-4 mr-2" /> Add Project
+                                            </Button>
+                                        </div>
+                                    )}
+                                </div>
+                            </div>
                         </TabsContent>
 
                         {/* Languages Tab */}
-                        <TabsContent value="languages" className="mt-0 space-y-4">
-                            {content.languages?.map((lang, index) => (
-                                <AccordionItem
-                                    key={index}
-                                    title={lang.language || "Language"}
-                                    subtitle={lang.proficiency}
-                                    onDelete={() => removeItem('languages', index)}
-                                    defaultOpen={index === 0}
-                                >
-                                    <div className="grid grid-cols-2 gap-4 mt-4">
-                                        <div className="space-y-2"><Label>Language</Label><Input value={lang.language} onChange={(e) => handleChange('languages', 'language', e.target.value, index)} /></div>
-                                        <div className="space-y-2"><Label>Proficiency</Label>
-                                            <LevelSelector
-                                                value={lang.proficiency}
-                                                onChange={(val) => handleChange('languages', 'proficiency', val, index)}
-                                            />
+                        <TabsContent value="languages" className="mt-0 h-[calc(100vh-140px)]">
+                            <div className="flex h-full gap-6">
+                                <SidebarList
+                                    title="Languages"
+                                    items={content.languages || []}
+                                    selectedIndex={activeLanguageIndex}
+                                    onSelect={setActiveLanguageIndex}
+                                    onDelete={(index) => {
+                                        removeItem('languages', index)
+                                        if (activeLanguageIndex >= index && activeLanguageIndex > 0) setActiveLanguageIndex(activeLanguageIndex - 1)
+                                    }}
+                                    onAdd={() => {
+                                        addItem('languages')
+                                        setActiveLanguageIndex((content.languages?.length || 0))
+                                    }}
+                                    onToggleVisible={(index) => {
+                                        const current = content.languages[index];
+                                        handleChange('languages', 'visible', current.visible === false ? true : false, index);
+                                    }}
+                                    titleKey="language"
+                                    subtitleKey="proficiency"
+                                />
+                                <div className="flex-1 h-full overflow-y-auto pr-2 pb-20">
+                                    {(content.languages && content.languages.length > 0) ? (
+                                        <Card>
+                                            <CardHeader>
+                                                <CardTitle>Edit Language</CardTitle>
+                                            </CardHeader>
+                                            <CardContent className="space-y-4">
+                                                <div className="space-y-2">
+                                                    <Label>Language</Label>
+                                                    <Input
+                                                        value={content.languages[activeLanguageIndex]?.language || ''}
+                                                        onChange={(e) => handleChange('languages', 'language', e.target.value, activeLanguageIndex)}
+                                                        placeholder="e.g. English, Turkish"
+                                                    />
+                                                </div>
+                                                <div className="space-y-2">
+                                                    <Label>Proficiency</Label>
+                                                    <LevelSelector
+                                                        value={content.languages[activeLanguageIndex]?.proficiency}
+                                                        onChange={(val) => handleChange('languages', 'proficiency', val, activeLanguageIndex)}
+                                                    />
+                                                </div>
+                                            </CardContent>
+                                            <div className="p-4 bg-zinc-50 dark:bg-zinc-900/50 border-t border-zinc-200 dark:border-zinc-800 flex justify-end">
+                                                <Button className="bg-blue-600 hover:bg-blue-700 text-white font-semibold">
+                                                    Save to Languages List
+                                                </Button>
+                                            </div>
+                                        </Card>
+                                    ) : (
+                                        <div className="flex flex-col items-center justify-center h-full text-zinc-400 space-y-4">
+                                            <div className="w-16 h-16 rounded-full bg-zinc-100 dark:bg-zinc-800 flex items-center justify-center">
+                                                <FileIcon className="w-8 h-8 opacity-50" />
+                                            </div>
+                                            <p>Select a language to edit or add a new one.</p>
+                                            <Button onClick={() => {
+                                                addItem('languages')
+                                                setActiveLanguageIndex((content.languages?.length || 0))
+                                            }}>
+                                                <Plus className="w-4 h-4 mr-2" /> Add Language
+                                            </Button>
                                         </div>
-                                    </div>
-                                </AccordionItem>
-                            ))}
-                            <Button onClick={() => addItem('languages')} variant="outline" className="w-full border-dashed"><Plus className="w-4 h-4 mr-2" /> Add Language</Button>
+                                    )}
+                                </div>
+                            </div>
                         </TabsContent>
 
                         {/* Finish Up Tab */}
