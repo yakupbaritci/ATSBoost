@@ -4,24 +4,24 @@ import { Document, Page, Text, View, StyleSheet, PDFViewer, Font } from '@react-
 import { useEffect, useState } from 'react'
 
 // Register Open Sans font which has excellent unicode support including Turkish
-// Register fonts from Google Fonts Static CDN (reliable TTF)
+// Register fonts from local public/fonts directory to avoid network/cors/format issues
 Font.register({
     family: 'Roboto',
     fonts: [
-        { src: 'https://fonts.gstatic.com/s/roboto/v32/KFOmCnqEu92Fr1Mu4mxK.ttf' }, // Regular
-        { src: 'https://fonts.gstatic.com/s/roboto/v32/KFOlCnqEu92Fr1MmWUlfBBc4.ttf', fontWeight: 'bold' },
-        { src: 'https://fonts.gstatic.com/s/roboto/v32/KFOkCnqEu92Fr1Mu51xIIzIXKMny.ttf', fontStyle: 'italic' },
-        { src: 'https://fonts.gstatic.com/s/roboto/v32/KFOjCnqEu92Fr1Mu51TzBhc4CsE.ttf', fontWeight: 'bold', fontStyle: 'italic' }
+        { src: '/fonts/Roboto-Regular.ttf' },
+        { src: '/fonts/Roboto-Bold.ttf', fontWeight: 'bold' },
+        { src: '/fonts/Roboto-Italic.ttf', fontStyle: 'italic' },
+        { src: '/fonts/Roboto-BoldItalic.ttf', fontWeight: 'bold', fontStyle: 'italic' }
     ]
 });
 
 Font.register({
     family: 'Merriweather',
     fonts: [
-        { src: 'https://fonts.gstatic.com/s/merriweather/v30/u8y7gqDvlWzRn0g2Y71bGTtX.ttf' }, // Regular
-        { src: 'https://fonts.gstatic.com/s/merriweather/v30/u8yznqDvlWzRn0g2Y71bHqsuPWIr.ttf', fontWeight: 'bold' },
-        { src: 'https://fonts.gstatic.com/s/merriweather/v30/u8yzmqDvlWzRn0g2Y71bDq8sPZwrYg.ttf', fontStyle: 'italic' }, // Italic
-        // Bold Italic skipped to save requests, usually bold+italic synthetic works or add if needed
+        { src: '/fonts/Merriweather-Regular.ttf' },
+        { src: '/fonts/Merriweather-Bold.ttf', fontWeight: 'bold' },
+        { src: '/fonts/Merriweather-Italic.ttf', fontStyle: 'italic' },
+        { src: '/fonts/Merriweather-BoldItalic.ttf', fontWeight: 'bold', fontStyle: 'italic' }
     ]
 });
 
