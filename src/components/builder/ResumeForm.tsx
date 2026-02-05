@@ -873,8 +873,8 @@ export function ResumeForm({
 
                                     <SidebarList
                                         title="Your Experience"
-                                        titleField="title"
-                                        subtitleField="company"
+                                        titleKey="title"
+                                        subtitleKey="company"
                                         items={content.experience || []}
                                         activeIndex={activeExperienceIndex}
                                         onSelect={setActiveExperienceIndex}
