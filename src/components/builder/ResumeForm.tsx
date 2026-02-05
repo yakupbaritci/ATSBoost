@@ -289,6 +289,7 @@ interface ResumeFormProps {
     previewComponent?: React.ReactNode // Pass the live preview component to render in the finish tab
     title?: string
     onGenerateBullet?: (role: string, company: string, currentDesc: string) => Promise<string> // New prop for single bullet generation
+    onGenerateSummary?: (content: any) => Promise<string> // New prop for summary generation
 }
 
 export function ResumeForm({
