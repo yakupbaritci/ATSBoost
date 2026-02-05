@@ -164,24 +164,26 @@ export function ResumeForm({ initialContent, onUpdate }: ResumeFormProps) {
 
 
     return (
-        <div className="h-full flex flex-col md:flex-row gap-6">
-            <Tabs defaultValue="contact" orientation="vertical" className="w-full h-full flex flex-col md:flex-row gap-6">
+        <div className="h-full flex flex-col">
+            <Tabs defaultValue="contact" className="w-full h-full flex flex-col">
 
-                {/* Sidebar Navigation */}
-                <TabsList className="flex md:flex-col justify-start md:w-64 h-auto md:h-full gap-2 bg-transparent p-0 overflow-x-auto md:overflow-visible pb-2 md:pb-0 shrink-0 border-b md:border-b-0 md:border-r border-zinc-200 dark:border-zinc-800">
-                    <TabsTrigger className="w-full justify-start px-4 py-2 data-[state=active]:bg-primary/10 data-[state=active]:text-primary border border-transparent hover:bg-zinc-100 dark:hover:bg-zinc-800 rounded-md" value="contact">Contact Info</TabsTrigger>
-                    <TabsTrigger className="w-full justify-start px-4 py-2 data-[state=active]:bg-primary/10 data-[state=active]:text-primary border border-transparent hover:bg-zinc-100 dark:hover:bg-zinc-800 rounded-md" value="summary">Professional Summary</TabsTrigger>
-                    <TabsTrigger className="w-full justify-start px-4 py-2 data-[state=active]:bg-primary/10 data-[state=active]:text-primary border border-transparent hover:bg-zinc-100 dark:hover:bg-zinc-800 rounded-md" value="experience">Experience</TabsTrigger>
-                    <TabsTrigger className="w-full justify-start px-4 py-2 data-[state=active]:bg-primary/10 data-[state=active]:text-primary border border-transparent hover:bg-zinc-100 dark:hover:bg-zinc-800 rounded-md" value="education">Education</TabsTrigger>
-                    <TabsTrigger className="w-full justify-start px-4 py-2 data-[state=active]:bg-primary/10 data-[state=active]:text-primary border border-transparent hover:bg-zinc-100 dark:hover:bg-zinc-800 rounded-md" value="skills">Skills</TabsTrigger>
-                    <TabsTrigger className="w-full justify-start px-4 py-2 data-[state=active]:bg-primary/10 data-[state=active]:text-primary border border-transparent hover:bg-zinc-100 dark:hover:bg-zinc-800 rounded-md" value="certifications">Certifications</TabsTrigger>
-                    <TabsTrigger className="w-full justify-start px-4 py-2 data-[state=active]:bg-primary/10 data-[state=active]:text-primary border border-transparent hover:bg-zinc-100 dark:hover:bg-zinc-800 rounded-md" value="projects">Projects</TabsTrigger>
-                    <TabsTrigger className="w-full justify-start px-4 py-2 data-[state=active]:bg-primary/10 data-[state=active]:text-primary border border-transparent hover:bg-zinc-100 dark:hover:bg-zinc-800 rounded-md" value="languages">Languages</TabsTrigger>
-                    <TabsTrigger className="w-full justify-start px-4 py-2 data-[state=active]:bg-primary/10 data-[state=active]:text-primary border border-transparent hover:bg-zinc-100 dark:hover:bg-zinc-800 rounded-md" value="job">Target Job</TabsTrigger>
-                </TabsList>
+                {/* Horizontal Scrollable Tabs */}
+                <div className="w-full overflow-x-auto pb-2 mb-4 scrollbar-hide">
+                    <TabsList className="inline-flex w-auto h-auto p-1 bg-zinc-100 dark:bg-zinc-800 rounded-lg">
+                        <TabsTrigger className="px-4 py-2 rounded-md data-[state=active]:bg-white dark:data-[state=active]:bg-zinc-950 data-[state=active]:shadow-sm transition-all" value="contact">Contact</TabsTrigger>
+                        <TabsTrigger className="px-4 py-2 rounded-md data-[state=active]:bg-white dark:data-[state=active]:bg-zinc-950 data-[state=active]:shadow-sm transition-all" value="summary">Summary</TabsTrigger>
+                        <TabsTrigger className="px-4 py-2 rounded-md data-[state=active]:bg-white dark:data-[state=active]:bg-zinc-950 data-[state=active]:shadow-sm transition-all" value="experience">Experience</TabsTrigger>
+                        <TabsTrigger className="px-4 py-2 rounded-md data-[state=active]:bg-white dark:data-[state=active]:bg-zinc-950 data-[state=active]:shadow-sm transition-all" value="education">Education</TabsTrigger>
+                        <TabsTrigger className="px-4 py-2 rounded-md data-[state=active]:bg-white dark:data-[state=active]:bg-zinc-950 data-[state=active]:shadow-sm transition-all" value="skills">Skills</TabsTrigger>
+                        <TabsTrigger className="px-4 py-2 rounded-md data-[state=active]:bg-white dark:data-[state=active]:bg-zinc-950 data-[state=active]:shadow-sm transition-all" value="certifications">Certs</TabsTrigger>
+                        <TabsTrigger className="px-4 py-2 rounded-md data-[state=active]:bg-white dark:data-[state=active]:bg-zinc-950 data-[state=active]:shadow-sm transition-all" value="projects">Projects</TabsTrigger>
+                        <TabsTrigger className="px-4 py-2 rounded-md data-[state=active]:bg-white dark:data-[state=active]:bg-zinc-950 data-[state=active]:shadow-sm transition-all" value="languages">Languages</TabsTrigger>
+                        <TabsTrigger className="px-4 py-2 rounded-md data-[state=active]:bg-white dark:data-[state=active]:bg-zinc-950 data-[state=active]:shadow-sm transition-all" value="job">Target Job</TabsTrigger>
+                    </TabsList>
+                </div>
 
                 {/* Main Content Area */}
-                <div className="flex-1 h-full overflow-y-auto pr-2 pb-10">
+                <div className="flex-1 overflow-y-auto pr-2 pb-10 space-y-4">
 
                     {/* Contact Tab */}
                     <TabsContent value="contact" className="space-y-4 mt-0">
