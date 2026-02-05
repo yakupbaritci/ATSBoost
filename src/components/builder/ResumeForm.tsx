@@ -876,7 +876,7 @@ export function ResumeForm({
                                         titleKey="title"
                                         subtitleKey="company"
                                         items={content.experience || []}
-                                        activeIndex={activeExperienceIndex}
+                                        selectedIndex={activeExperienceIndex}
                                         onSelect={setActiveExperienceIndex}
                                         onAdd={() => {
                                             addExperience()
