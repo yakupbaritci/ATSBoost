@@ -280,6 +280,7 @@ export default function BuilderPage() {
                     onUpdate={handleUpdate}
                     isWizardMode={isWizardMode}
                     key={isWizardMode ? 'wizard' : 'editor'}
+                    title={resume.title}
 
                     // Finish Up Props
                     atsScore={atsResult}
