@@ -61,6 +61,9 @@ export default function BuilderPage() {
                 if (!data.content.contact) data.content.contact = {}
                 if (!data.content.experience) data.content.experience = []
                 setResume(data)
+                if (data.content.template) {
+                    setCurrentTemplate(data.content.template)
+                }
             }
             setLoading(false)
         }
@@ -87,7 +90,7 @@ export default function BuilderPage() {
                 .insert({
                     user_id: user.id,
                     title: resume.title || 'Untitled Resume',
-                    content: resume.content,
+                    content: { ...resume.content, template: currentTemplate },
                     updated_at: new Date().toISOString()
                 })
                 .select()
@@ -104,7 +107,7 @@ export default function BuilderPage() {
             const { error } = await supabase
                 .from('resumes')
                 .update({
-                    content: resume.content,
+                    content: { ...resume.content, template: currentTemplate },
                     title: resume.title,
                     updated_at: new Date().toISOString()
                 })
