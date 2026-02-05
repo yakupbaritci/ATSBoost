@@ -89,10 +89,10 @@ export default async function DashboardPage() {
                                 key={resume.id}
                                 className="group relative flex flex-col justify-between rounded-xl border border-zinc-200 bg-white p-6 shadow-sm transition-all hover:border-zinc-300 hover:shadow-md dark:border-zinc-800 dark:bg-zinc-900 dark:hover:border-zinc-700"
                             >
-                                <Link href={`/dashboard/builder/${resume.id}`} className="absolute inset-0 z-0" />
+                                <Link href={`/dashboard/builder/${resume.id}`} className="absolute inset-0 z-10 focus:outline-none rounded-xl" />
 
-                                <div className="relative z-10 flex justify-between items-start">
-                                    <div>
+                                <div className="relative flex justify-between items-start">
+                                    <div className="pointer-events-none">
                                         <h3 className="font-semibold group-hover:text-primary transition-colors">
                                             {resume.title}
                                         </h3>
@@ -103,7 +103,7 @@ export default async function DashboardPage() {
                                     <form action={async () => {
                                         'use server'
                                         await deleteResume(resume.id)
-                                    }}>
+                                    }} className="relative z-20">
                                         <Button variant="ghost" size="icon" className="h-8 w-8 text-zinc-400 hover:text-red-500 hover:bg-red-50" type="submit">
                                             <Trash2 className="h-4 w-4" />
                                         </Button>
