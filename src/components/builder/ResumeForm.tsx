@@ -300,7 +300,7 @@ export function ResumeForm({
     currentTemplate,
     onTemplateChange,
     previewComponent,
-    title = "Untitled Resume"    previewComponent
+    title = "Untitled Resume"
 }: ResumeFormProps) {
     const [content, setContent] = useState<ResumeContent>(initialContent)
     const [activeTab, setActiveTab] = useState("contact")
