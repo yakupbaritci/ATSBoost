@@ -399,15 +399,27 @@ const TemplateTech = ({ content }: { content: ResumeContent }) => (
     </Page>
 )
 
-export const ResumeDocument = ({ content, template }: { content: ResumeContent, template: string }) => (
-    <Document>
-        {template === 'modern' ? <TemplateModern content={content} /> :
-            template === 'bold' ? <TemplateBold content={content} /> :
-                template === 'minimalist' ? <TemplateMinimalist content={content} /> :
-                    template === 'tech' ? <TemplateTech content={content} /> :
-                        <TemplateClassic content={content} />}
-    </Document>
-)
+export const ResumeDocument = ({ content, template }: { content: ResumeContent, template: string }) => {
+    // Filter hidden items before passing to templates
+    const filteredContent = {
+        ...content,
+        experience: content.experience?.filter((item: any) => item.visible !== false) || [],
+        education: content.education?.filter((item: any) => item.visible !== false) || [],
+        projects: content.projects?.filter((item: any) => item.visible !== false) || [],
+        languages: content.languages?.filter((item: any) => item.visible !== false) || [],
+        certifications: content.certifications?.filter((item: any) => item.visible !== false) || [],
+    }
+
+    return (
+        <Document>
+            {template === 'modern' ? <TemplateModern content={filteredContent} /> :
+                template === 'bold' ? <TemplateBold content={filteredContent} /> :
+                    template === 'minimalist' ? <TemplateMinimalist content={filteredContent} /> :
+                        template === 'tech' ? <TemplateTech content={filteredContent} /> :
+                            <TemplateClassic content={filteredContent} />}
+        </Document>
+    )
+}
 
 export function ResumePreview({ content, template = 'classic' }: { content: ResumeContent, template?: string }) {
     const [isClient, setIsClient] = useState(false)
