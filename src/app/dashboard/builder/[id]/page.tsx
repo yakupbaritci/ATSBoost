@@ -8,17 +8,19 @@ import { Button } from '@/components/ui/button'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { Save, Loader2, ArrowLeft, FileText, Eye, Wand2, LayoutDashboard } from 'lucide-react'
 import Link from 'next/link'
-import { useParams } from 'next/navigation'
+import { useParams, useSearchParams } from 'next/navigation'
 import { toast } from 'sonner'
 import { optimizeResumeContent } from '@/app/actions/ai'
 
 export default function BuilderPage() {
     const params = useParams()
+    const searchParams = useSearchParams()
     const [resume, setResume] = useState<any>(null)
     const [loading, setLoading] = useState(true)
     const [saving, setSaving] = useState(false)
     const [optimizing, setOptimizing] = useState(false)
-    const [isWizardMode, setIsWizardMode] = useState(false)
+    // Initialize wizard mode if 'new' or if query param present
+    const [isWizardMode, setIsWizardMode] = useState(params.id === 'new' || searchParams.get('wizard') === 'true')
 
     const supabase = createClient()
 
