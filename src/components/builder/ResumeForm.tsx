@@ -217,6 +217,7 @@ type ResumeContent = {
         linkedin?: string
         portfolio?: string
     }
+    documentLanguage?: string // New field for resume language
     summary?: string
     experience: Array<{
         id: string
@@ -378,7 +379,12 @@ export function ResumeForm({ initialContent, onUpdate, isWizardMode = false }: R
         validateField(section, field, value)
 
         if (section === 'contact') {
-            newContent.contact = { ...newContent.contact, [field]: value }
+            // Special case for documentLanguage which is root level but UI is in contact tab
+            if (field === 'documentLanguage') {
+                newContent.documentLanguage = value
+            } else {
+                newContent.contact = { ...newContent.contact, [field]: value }
+            }
 
         } else if (section === 'summary') {
             newContent.summary = value
@@ -507,6 +513,30 @@ export function ResumeForm({ initialContent, onUpdate, isWizardMode = false }: R
                                 <CardTitle>Personal Information</CardTitle>
                             </CardHeader>
                             <CardContent className="space-y-4">
+                                {/* Document Language Selector */}
+                                <div className="p-4 bg-zinc-50 dark:bg-zinc-800/50 rounded-lg border border-zinc-200 dark:border-zinc-700 flex items-center justify-between">
+                                    <div className="space-y-1">
+                                        <Label htmlFor="doc-lang" className="text-base font-semibold">Resume Language</Label>
+                                        <p className="text-xs text-muted-foreground">Select the primary language for this resume.</p>
+                                    </div>
+                                    <Select
+                                        value={content.documentLanguage || 'en'}
+                                        onValueChange={(val) => handleChange('contact', 'documentLanguage', val)} // Handles update via special check or new section handler
+                                    >
+                                        <SelectTrigger className="w-[180px] bg-white dark:bg-zinc-900" id="doc-lang">
+                                            <SelectValue placeholder="Language" />
+                                        </SelectTrigger>
+                                        <SelectContent>
+                                            <SelectItem value="en">🇺🇸 English</SelectItem>
+                                            <SelectItem value="tr">🇹🇷 Türkçe</SelectItem>
+                                            <SelectItem value="de">🇩🇪 Deutsch</SelectItem>
+                                            <SelectItem value="fr">🇫🇷 Français</SelectItem>
+                                            <SelectItem value="es">🇪🇸 Español</SelectItem>
+                                            <SelectItem value="it">🇮🇹 Italiano</SelectItem>
+                                        </SelectContent>
+                                    </Select>
+                                </div>
+
                                 <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
                                     <div className="space-y-2">
                                         <Label>Full Name</Label>
