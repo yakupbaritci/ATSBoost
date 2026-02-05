@@ -243,78 +243,31 @@ export default function BuilderPage() {
     return (
         <div className="flex flex-col h-screen bg-zinc-50 dark:bg-zinc-950 overflow-hidden">
             {/* Top Bar */}
+            {/* Top Bar - Minimalist */}
             <header className="h-14 border-b border-zinc-200 bg-white dark:border-zinc-800 dark:bg-zinc-900 flex items-center justify-between px-4 shrink-0">
                 <div className="flex items-center gap-4">
-                    <Link href="/dashboard" className="text-zinc-500 hover:text-zinc-900">
-                        <ArrowLeft className="w-4 h-4" />
+                    <Link href="/dashboard/resumes" className="text-zinc-500 hover:text-zinc-900 transition-colors">
+                        <ArrowLeft className="w-5 h-5" />
                     </Link>
-                    <div>
-                        <input
-                            className="font-semibold bg-transparent focus:outline-none focus:ring-1 focus:ring-primary rounded px-1"
-                            value={resume.title}
-                            onChange={(e) => setResume((prev: any) => ({ ...prev, title: e.target.value }))}
-                        />
-                        <span className="text-xs text-zinc-400 ml-2">
+                    <div className="flex items-center gap-2">
+                        <span className="text-sm text-zinc-400">
                             {resume.is_optimized ? 'Optimized' : 'Draft'}
                         </span>
                     </div>
                 </div>
                 <div className="flex gap-2">
-                    <Button size="sm" onClick={handleSave} disabled={saving}>
+                    <Button size="sm" variant="ghost" className="text-zinc-500" onClick={handleSave} disabled={saving}>
                         {saving ? <Loader2 className="w-4 h-4 animate-spin mr-2" /> : <Save className="w-4 h-4 mr-2" />}
-                        Save
-                    </Button>
-                    <Button
-                        size="sm"
-                        variant="default"
-                        className="bg-gradient-to-r from-blue-600 to-violet-600 hover:from-blue-700 hover:to-violet-700 text-white border-0"
-                        onClick={handleOptimize}
-                        disabled={optimizing}
-                    >
-                        {optimizing ? (
-                            <>
-                                <Loader2 className="w-4 h-4 animate-spin mr-2" /> Optimizing...
-                            </>
-                        ) : (
-                            <>✨ Auto-Optimize</>
-                        )}
+                        {saving ? 'Saving...' : 'Save Draft'}
                     </Button>
 
                     <Button
-                        variant="outline"
-                        size="sm"
-                        onClick={() => handleCheckScore()}
-                        className="ml-2 gap-2"
-                    >
-                        <Trophy className="w-4 h-4 text-yellow-500" />
-                        Check ATS Score
-                    </Button>
-
-                    {/* Download Button - Client Only */}
-                    {loading ? null : (
-                        <div className="inline-flex">
-                            <PDFDownloadLink
-                                document={<ResumeDocument content={resume.content} template={currentTemplate} />}
-                                fileName={`${resume.title || 'resume'}.pdf`}
-                            >
-                                {({ blob, url, loading: pdfLoading, error }) => (
-                                    <Button size="sm" variant="secondary" className="mr-2" disabled={pdfLoading}>
-                                        {pdfLoading ? <Loader2 className="w-4 h-4 animate-spin mr-2" /> : <Download className="w-4 h-4 mr-2" />}
-                                        Download PDF
-                                    </Button>
-                                )}
-                            </PDFDownloadLink>
-                        </div>
-                    )}
-
-                    <Button
-                        variant="outline"
+                        variant="ghost"
                         size="sm"
                         onClick={() => setIsWizardMode(!isWizardMode)}
-                        className="ml-2"
+                        className="ml-2 text-zinc-400 hover:text-zinc-900"
                     >
-                        {isWizardMode ? <LayoutDashboard className="w-4 h-4 mr-2" /> : <Wand2 className="w-4 h-4 mr-2" />}
-                        {isWizardMode ? 'Editor Mode' : 'Wizard Mode'}
+                        {isWizardMode ? <LayoutDashboard className="w-4 h-4" /> : <Wand2 className="w-4 h-4" />}
                     </Button>
                 </div>
             </header>
