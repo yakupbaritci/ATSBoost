@@ -24,7 +24,7 @@ import {
     DropdownMenuSubTrigger,
     DropdownMenuSubContent
 } from "@/components/ui/dropdown-menu"
-import { MoreVertical, FileText as FileIcon, Copy, Eye, Download as DownloadIcon, Settings as SettingsIcon } from 'lucide-react'
+import { MoreVertical, FileText as FileIcon, Copy, Eye, Download as DownloadIcon, Settings as SettingsIcon, Check } from 'lucide-react'
 
 // Accordion Card Component for managing expandable sections
 const AccordionItem = ({
