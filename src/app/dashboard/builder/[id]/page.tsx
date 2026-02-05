@@ -11,8 +11,12 @@ import { Save, Loader2, ArrowLeft, FileText, Eye, Wand2, LayoutDashboard, Palett
 import Link from 'next/link'
 import { useParams, useSearchParams } from 'next/navigation'
 import { toast } from 'sonner'
-import { optimizeResumeContent } from '@/app/actions/ai'
+import { optimizeResumeContent, calculateATSScore } from '@/app/actions/ai'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger, DialogFooter } from '@/components/ui/dialog'
+import { Progress } from "@/components/ui/progress"
+import { Badge } from "@/components/ui/badge"
+import { AlertCircle, CheckCircle2, Trophy } from 'lucide-react'
 
 export default function BuilderPage() {
     const params = useParams()
@@ -21,6 +25,9 @@ export default function BuilderPage() {
     const [loading, setLoading] = useState(true)
     const [saving, setSaving] = useState(false)
     const [optimizing, setOptimizing] = useState(false)
+    const [scoring, setScoring] = useState(false)
+    const [atsResult, setAtsResult] = useState<any>(null)
+    const [showScoreModal, setShowScoreModal] = useState(false)
     // Initialize wizard mode if 'new' or if query param present
     const [isWizardMode, setIsWizardMode] = useState(params.id === 'new' || searchParams.get('wizard') === 'true')
     const [currentTemplate, setCurrentTemplate] = useState('classic')
@@ -146,6 +153,21 @@ export default function BuilderPage() {
         }
     }
 
+    const handleCheckScore = async () => {
+        setScoring(true)
+        setShowScoreModal(true)
+        try {
+            const jd = resume.content.targetJob?.description
+            const result = await calculateATSScore(resume.content, jd)
+            setAtsResult(result)
+        } catch (e: any) {
+            toast.error("Failed to calculate score")
+            setShowScoreModal(false)
+        } finally {
+            setScoring(false)
+        }
+    }
+
     if (loading) {
         return (
             <div className="h-screen flex items-center justify-center">
@@ -211,6 +233,16 @@ export default function BuilderPage() {
                             </PDFDownloadLink>
                         </div>
                     )}
+
+                    <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={handleCheckScore}
+                        className="ml-2 gap-2"
+                    >
+                        <Trophy className="w-4 h-4 text-yellow-500" />
+                        Check ATS Score
+                    </Button>
 
                     <Button
                         variant="outline"
@@ -284,6 +316,89 @@ export default function BuilderPage() {
                     </Tabs>
                 </div>
             </div>
+            {/* ATS Score Modal */}
+            <Dialog open={showScoreModal} onOpenChange={setShowScoreModal}>
+                <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
+                    <DialogHeader>
+                        <DialogTitle className="flex items-center gap-2 text-2xl">
+                            <Trophy className="w-6 h-6 text-yellow-500" />
+                            ATS Score Analysis
+                        </DialogTitle>
+                        <DialogDescription>
+                            AI-powered analysis of your resume's effectiveness.
+                        </DialogDescription>
+                    </DialogHeader>
+
+                    {scoring ? (
+                        <div className="flex flex-col items-center justify-center py-12 space-y-4">
+                            <Loader2 className="w-12 h-12 animate-spin text-primary" />
+                            <p className="text-zinc-500 animate-pulse">Analyzing keywords and formatting...</p>
+                        </div>
+                    ) : (atsResult && (
+                        <div className="space-y-6">
+                            {/* Score Display */}
+                            <div className="flex flex-col items-center justify-center p-6 bg-zinc-50 dark:bg-zinc-900 rounded-xl border border-zinc-200 dark:border-zinc-800">
+                                <div className="relative flex items-center justify-center w-32 h-32">
+                                    <svg className="w-full h-full transform -rotate-90">
+                                        <circle cx="64" cy="64" r="60" stroke="currentColor" strokeWidth="8" fill="transparent" className="text-zinc-200 dark:text-zinc-800" />
+                                        <circle
+                                            cx="64" cy="64" r="60"
+                                            stroke="currentColor" strokeWidth="8" fill="transparent"
+                                            strokeDasharray={2 * Math.PI * 60}
+                                            strokeDashoffset={2 * Math.PI * 60 * (1 - atsResult.score / 100)}
+                                            className={`transition-all duration-1000 ease-out ${atsResult.score >= 80 ? 'text-green-500' : atsResult.score >= 60 ? 'text-yellow-500' : 'text-red-500'}`}
+                                        />
+                                    </svg>
+                                    <div className="absolute flex flex-col items-center">
+                                        <span className="text-4xl font-bold">{atsResult.score}</span>
+                                        <span className="text-xs uppercase font-medium text-zinc-500">Score</span>
+                                    </div>
+                                </div>
+                                <h3 className={`mt-4 text-lg font-bold ${atsResult.score >= 80 ? 'text-green-600' : atsResult.score >= 60 ? 'text-yellow-600' : 'text-red-600'}`}>
+                                    {atsResult.verdict}
+                                </h3>
+                                <p className="text-center text-sm text-zinc-500 mt-2 px-4">
+                                    {atsResult.summary}
+                                </p>
+                            </div>
+
+                            {/* Improvements */}
+                            <div className="space-y-3">
+                                <h4 className="font-semibold flex items-center gap-2">
+                                    <AlertCircle className="w-4 h-4 text-blue-500" />
+                                    Recommended Improvements
+                                </h4>
+                                <ul className="space-y-2">
+                                    {atsResult.improvements?.map((imp: string, i: number) => (
+                                        <li key={i} className="text-sm bg-blue-50 dark:bg-blue-900/20 p-3 rounded-md flex gap-3 text-blue-700 dark:text-blue-300">
+                                            <span className="font-bold shrink-0">{i + 1}.</span>
+                                            {imp}
+                                        </li>
+                                    ))}
+                                </ul>
+                            </div>
+
+                            {/* Missing Keywords (Only if JD exist) */}
+                            {atsResult.missingKeywords?.length > 0 && (
+                                <div className="space-y-3">
+                                    <h4 className="font-semibold flex items-center gap-2">
+                                        <CheckCircle2 className="w-4 h-4 text-red-500" />
+                                        Missing Keywords
+                                    </h4>
+                                    <div className="flex flex-wrap gap-2">
+                                        {atsResult.missingKeywords.map((kw: string, i: number) => (
+                                            <Badge key={i} variant="outline" className="border-red-200 text-red-600 bg-red-50 hover:bg-red-100">
+                                                {kw}
+                                            </Badge>
+                                        ))}
+                                    </div>
+                                </div>
+                            )}
+                        </div>
+                    ))}
+                </DialogContent>
+            </Dialog>
+
         </div>
     )
 }
