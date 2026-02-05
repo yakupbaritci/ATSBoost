@@ -7,8 +7,9 @@ import { Label } from '@/components/ui/label'
 import { Textarea } from '@/components/ui/textarea'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { Button } from '@/components/ui/button'
-import { Plus, Trash2, Calendar as CalendarIcon } from 'lucide-react'
-import { useEffect } from 'react'
+import { Plus, Trash2, Calendar as CalendarIcon, X } from 'lucide-react'
+import { useEffect, useState, KeyboardEvent } from 'react'
+import { Badge } from '@/components/ui/badge'
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { cn } from '@/lib/utils'
@@ -271,8 +272,17 @@ export function ResumeForm({ initialContent, onUpdate }: ResumeFormProps) {
         onUpdate(newContent)
     }
 
-    const addSkill = () => {
-        const newContent = { ...content, skills: [...(content.skills || []), ''] }
+    const addSkill = (newSkill: string) => {
+        if (!newSkill.trim() || content.skills.includes(newSkill.trim())) return
+        const newContent = { ...content, skills: [...(content.skills || []), newSkill.trim()] }
+        setContent(newContent)
+        onUpdate(newContent)
+    }
+
+    const removeSkill = (index: number) => {
+        const newSkills = [...(content.skills || [])]
+        newSkills.splice(index, 1)
+        const newContent = { ...content, skills: newSkills }
         setContent(newContent)
         onUpdate(newContent)
     }
@@ -521,25 +531,39 @@ export function ResumeForm({ initialContent, onUpdate }: ResumeFormProps) {
                                 <CardTitle>Skills & Technologies</CardTitle>
                             </CardHeader>
                             <CardContent className="space-y-3">
-                                {content.skills?.map((skill, index) => (
-                                    <div key={index} className="flex gap-2">
-                                        <Input
-                                            value={skill}
-                                            onChange={(e) => handleChange('skills', '', e.target.value, index)}
-                                        />
-                                        <Button
-                                            variant="ghost"
-                                            size="icon"
-                                            className="text-red-500 hover:bg-red-50"
-                                            onClick={() => removeItem('skills', index)}
-                                        >
-                                            <Trash2 className="w-4 h-4" />
-                                        </Button>
-                                    </div>
-                                ))}
-                                <Button onClick={addSkill} variant="outline" className="w-full border-dashed">
-                                    <Plus className="w-4 h-4 mr-2" /> Add Skill
-                                </Button>
+                                <div className="space-y-2">
+                                    <Label>Add Skills (Type and press Enter or Comma)</Label>
+                                    <Input
+                                        placeholder="e.g. React, Node.js, Typescript..."
+                                        onKeyDown={(e) => {
+                                            if (e.key === 'Enter' || e.key === ',') {
+                                                e.preventDefault()
+                                                const val = e.currentTarget.value
+                                                if (val) {
+                                                    addSkill(val)
+                                                    e.currentTarget.value = ''
+                                                }
+                                            }
+                                        }}
+                                    />
+                                </div>
+
+                                <div className="flex flex-wrap gap-2 mt-4">
+                                    {content.skills?.map((skill, index) => (
+                                        <Badge key={index} variant="secondary" className="pl-3 pr-1 py-1 text-sm flex items-center gap-1">
+                                            {skill}
+                                            <button
+                                                onClick={() => removeSkill(index)}
+                                                className="hover:bg-red-200 dark:hover:bg-red-900 rounded-full p-0.5 transition-colors text-red-500"
+                                            >
+                                                <X className="w-3 h-3" />
+                                            </button>
+                                        </Badge>
+                                    ))}
+                                    {(!content.skills || content.skills.length === 0) && (
+                                        <p className="text-sm text-muted-foreground italic">No skills added yet.</p>
+                                    )}
+                                </div>
                             </CardContent>
                         </Card>
                     </TabsContent>
