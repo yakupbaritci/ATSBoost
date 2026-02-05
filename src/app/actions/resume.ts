@@ -42,7 +42,8 @@ export async function createResumeFromPdf(formData: FormData) {
     // 1. Extract raw text...
     const rawText = await extractTextFromPdf(buffer)
 
-    // 2. Structure with AI...    let structuredData = await parseResumeWithAI(rawText)
+    // 2. Structure with AI
+    let structuredData = await parseResumeWithAI(rawText)
 
     // Fallback if AI fails
     if (!structuredData) {
@@ -53,11 +54,6 @@ export async function createResumeFromPdf(formData: FormData) {
             experience: [],
             skills: []
         }
-    }
-
-    const initialContent = {
-        ...structuredData,
-        raw_text_dump: rawText
     }
 
     const initialContent = {
