@@ -23,26 +23,19 @@ export default async function DashboardPage() {
 
     return (
         <div className="space-y-8">
-            <div className="flex items-center justify-between">
                 <div>
                     <h1 className="text-3xl font-bold tracking-tight">Dashboard</h1>
                     <p className="text-zinc-500 dark:text-zinc-400">
                         Welcome back, {user.user_metadata.full_name || user.email?.split('@')[0]}
                     </p>
                 </div>
-                <div className="flex gap-4">
-                    <Button asChild variant="outline">
-                        <Link href="/dashboard/upload">
-                            <Upload className="mr-2 h-4 w-4" />
-                            Upload PDF
-                        </Link>
-                    </Button>
-                    <Button asChild>
-                        <Link href="/dashboard/builder/new">
+                <div>
+                    <CreateResumeDialog>
+                         <Button className="bg-[#00C853] text-white hover:bg-green-600 border-none">
                             <Plus className="mr-2 h-4 w-4" />
-                            Create New
-                        </Link>
-                    </Button>
+                            Create New Resume
+                        </Button>
+                    </CreateResumeDialog>
                 </div>
             </div>
 
@@ -78,9 +71,9 @@ export default async function DashboardPage() {
                         <p className="mb-4 text-sm text-zinc-500 max-w-sm">
                             Upload an existing PDF or create a new one from scratch to get started.
                         </p>
-                        <Button asChild>
-                            <Link href="/dashboard/builder/new">Create your first Resume</Link>
-                        </Button>
+                        <CreateResumeDialog>
+                             <Button>Create your first Resume</Button>
+                        </CreateResumeDialog>
                     </div>
                 ) : (
                     <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
@@ -124,6 +117,6 @@ export default async function DashboardPage() {
                         ))}      </div>
                 )}
             </div>
-        </div>
+        </div >
     )
 }

@@ -6,59 +6,71 @@ import { parseResumeWithAI } from '@/app/actions/ai'
 import { redirect } from 'next/navigation'
 import { revalidatePath } from 'next/cache'
 
-export async function createResumeFromPdf(formData: FormData) {
-    const file = formData.get('file') as File
-
-    if (!file) {
-        throw new Error('No file uploaded')
-    }
-
-    const arrayBuffer = await file.arrayBuffer()
-    const buffer = Buffer.from(arrayBuffer)
-
+export async function createNewResume(formData: FormData) {
     const supabase = await createClient()
     const { data: { user } } = await supabase.auth.getUser()
 
     if (!user) throw new Error('Unauthorized')
 
-    // 0. Upload PDF to Storage
-    const fileName = `${user.id}/${Date.now()}-${file.name}`
-    const { data: storageData, error: storageError } = await supabase.storage
-        .from('resumes')
-        .upload(fileName, file, {
-            upsert: true,
-            contentType: 'application/pdf'
-        })
+    const title = formData.get('title') as string || 'Untitled Resume'
+    const experienceLevel = formData.get('experienceLevel') as string
+    const file = formData.get('file') as File
 
-    if (storageError) {
-        console.error('Storage Error:', storageError)
-        // We continue even if upload fails, but original_pdf_url will be empty
-    }
-
-    const publicUrl = storageData?.path
-        ? `${process.env.NEXT_PUBLIC_SUPABASE_URL}/storage/v1/object/public/resumes/${storageData.path}`
-        : ''
-
-    // 1. Extract raw text...
-    const rawText = await extractTextFromPdf(buffer)
-
-    // 2. Structure with AI
-    let structuredData = await parseResumeWithAI(rawText)
-
-    // Fallback if AI fails
-    if (!structuredData) {
-        structuredData = {
-            contact: {},
-            summary: rawText.slice(0, 500) + '...',
-            education: [],
-            experience: [],
-            skills: []
+    let initialContent: any = {
+        contact: {},
+        summary: '',
+        education: [],
+        experience: [],
+        skills: [],
+        meta: {
+            experienceLevel
         }
     }
+    let publicUrl = ''
 
-    const initialContent = {
-        ...structuredData,
-        raw_text_dump: rawText
+    // If file uploaded, process PDF
+    if (file && file.size > 0) {
+        // 0. Upload PDF to Storage
+        const fileName = `${user.id}/${Date.now()}-${file.name}`
+        const { data: storageData, error: storageError } = await supabase.storage
+            .from('resumes')
+            .upload(fileName, file, {
+                upsert: true,
+                contentType: 'application/pdf'
+            })
+
+        if (storageError) {
+            console.error('Storage Error:', storageError)
+        }
+
+        publicUrl = storageData?.path
+            ? `${process.env.NEXT_PUBLIC_SUPABASE_URL}/storage/v1/object/public/resumes/${storageData.path}`
+            : ''
+
+        // 1. Extract raw text...
+        const arrayBuffer = await file.arrayBuffer()
+        const buffer = Buffer.from(arrayBuffer)
+        const rawText = await extractTextFromPdf(buffer)
+
+        // 2. Structure with AI
+        let structuredData = await parseResumeWithAI(rawText)
+
+        // Fallback if AI fails
+        if (!structuredData) {
+            structuredData = {
+                contact: {},
+                summary: rawText.slice(0, 500) + '...',
+                education: [],
+                experience: [],
+                skills: []
+            }
+        }
+
+        initialContent = {
+            ...initialContent,
+            ...structuredData,
+            raw_text_dump: rawText
+        }
     }
 
     // 3. Save to DB
@@ -66,7 +78,7 @@ export async function createResumeFromPdf(formData: FormData) {
         .from('resumes')
         .insert({
             user_id: user.id,
-            title: file.name.replace('.pdf', ''),
+            title: title,
             content: initialContent,
             original_pdf_url: publicUrl,
             is_optimized: false
@@ -76,40 +88,11 @@ export async function createResumeFromPdf(formData: FormData) {
 
     if (error) {
         console.error('Supabase Error:', error)
-        throw new Error(`Failed to create resume record: ${error.message} (${error.code})`)
+        throw new Error(`Failed to create resume record: ${error.message}`)
     }
 
     revalidatePath('/dashboard')
-    revalidatePath('/dashboard')
-    redirect(`/dashboard/builder/${data.id}?wizard=true`)
-}
-
-export async function createEmptyResume() {
-    // Actually we can just redirect to 'new' route which we handled in the previous step
-    // But to be consistent with the backend action way:
-    const supabase = await createClient()
-    const { data: { user } } = await supabase.auth.getUser()
-
-    if (!user) throw new Error('Unauthorized')
-
-    const { data, error } = await supabase
-        .from('resumes')
-        .insert({
-            user_id: user.id,
-            title: 'Untitled Resume',
-            content: {
-                contact: {},
-                summary: '',
-                education: [],
-                experience: [],
-                skills: []
-            }
-        })
-        .select()
-        .single()
-
-    if (error) throw new Error('Failed to create resume')
-
-    revalidatePath('/dashboard')
+    // If file was imported, stick to wizard. 
+    // If empty create, maybe wizard too? Yes, let's keep wizard for all new creates.
     redirect(`/dashboard/builder/${data.id}?wizard=true`)
 }
