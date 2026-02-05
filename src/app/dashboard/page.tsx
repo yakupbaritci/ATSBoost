@@ -3,7 +3,8 @@ import { Button } from '@/components/ui/button'
 import Link from 'next/link'
 import { createClient } from '@/lib/supabase/server'
 import { redirect } from 'next/navigation'
-import { deleteResume } from '@/app/actions/resume-actions' // You'll create this next
+import { deleteResume } from '@/app/actions/resume-actions'
+import { CreateResumeDialog } from '@/components/dashboard/CreateResumeDialog'
 
 export default async function DashboardPage() {
     const supabase = await createClient()
@@ -23,6 +24,7 @@ export default async function DashboardPage() {
 
     return (
         <div className="space-y-8">
+            <div className="flex items-center justify-between">
                 <div>
                     <h1 className="text-3xl font-bold tracking-tight">Dashboard</h1>
                     <p className="text-zinc-500 dark:text-zinc-400">
@@ -31,7 +33,7 @@ export default async function DashboardPage() {
                 </div>
                 <div>
                     <CreateResumeDialog>
-                         <Button className="bg-[#00C853] text-white hover:bg-green-600 border-none">
+                        <Button className="bg-[#00C853] text-white hover:bg-green-600 border-none">
                             <Plus className="mr-2 h-4 w-4" />
                             Create New Resume
                         </Button>
@@ -72,7 +74,7 @@ export default async function DashboardPage() {
                             Upload an existing PDF or create a new one from scratch to get started.
                         </p>
                         <CreateResumeDialog>
-                             <Button>Create your first Resume</Button>
+                            <Button>Create your first Resume</Button>
                         </CreateResumeDialog>
                     </div>
                 ) : (
