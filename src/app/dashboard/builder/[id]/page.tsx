@@ -166,15 +166,8 @@ export default function BuilderPage() {
                     <div>
                         <input
                             className="font-semibold bg-transparent focus:outline-none focus:ring-1 focus:ring-primary rounded px-1"
-                            defaultValue={resume.title}
-                            onBlur={async (e) => {
-                                if (params.id !== 'new') {
-                                    await supabase.from('resumes').update({ title: e.target.value }).eq('id', resume.id)
-                                } else {
-                                    // For new resumes, just update local state title (not saving yet)
-                                    setResume({ ...resume, title: e.target.value })
-                                }
-                            }}
+                            value={resume.title}
+                            onChange={(e) => setResume({ ...resume, title: e.target.value })}
                         />
                         <span className="text-xs text-zinc-400 ml-2">
                             {resume.is_optimized ? 'Optimized' : 'Draft'}
