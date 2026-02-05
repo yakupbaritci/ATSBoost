@@ -130,7 +130,11 @@ export function CreateResumeDialog({ children }: { children?: React.ReactNode })
                             </svg>
                             {/* Percentage in center */}
                             <div className="absolute inset-0 flex items-center justify-center font-bold text-lg text-zinc-700 dark:text-zinc-300">
-                                {Math.round(progress)}%
+                                {progress === 100 ? (
+                                    <Check className="w-8 h-8 text-green-500 animate-in zoom-in duration-300" />
+                                ) : (
+                                    <span>{Math.round(progress)}%</span>
+                                )}
                             </div>
                         </div>
 
