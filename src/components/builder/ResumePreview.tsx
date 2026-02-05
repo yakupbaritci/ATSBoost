@@ -4,24 +4,24 @@ import { Document, Page, Text, View, StyleSheet, PDFViewer, Font } from '@react-
 import { useEffect, useState } from 'react'
 
 // Register Open Sans font which has excellent unicode support including Turkish
-// Register fonts with Turkish character support
+// Register fonts from Google Fonts Static CDN (reliable TTF)
 Font.register({
     family: 'Roboto',
     fonts: [
-        { src: 'https://cdnjs.cloudflare.com/ajax/libs/ink/3.1.10/fonts/Roboto/roboto-regular-webfont.ttf' },
-        { src: 'https://cdnjs.cloudflare.com/ajax/libs/ink/3.1.10/fonts/Roboto/roboto-bold-webfont.ttf', fontWeight: 'bold' },
-        { src: 'https://cdnjs.cloudflare.com/ajax/libs/ink/3.1.10/fonts/Roboto/roboto-italic-webfont.ttf', fontStyle: 'italic' },
-        { src: 'https://cdnjs.cloudflare.com/ajax/libs/ink/3.1.10/fonts/Roboto/roboto-bolditalic-webfont.ttf', fontWeight: 'bold', fontStyle: 'italic' }
+        { src: 'https://fonts.gstatic.com/s/roboto/v32/KFOmCnqEu92Fr1Mu4mxK.ttf' }, // Regular
+        { src: 'https://fonts.gstatic.com/s/roboto/v32/KFOlCnqEu92Fr1MmWUlfBBc4.ttf', fontWeight: 'bold' },
+        { src: 'https://fonts.gstatic.com/s/roboto/v32/KFOkCnqEu92Fr1Mu51xIIzIXKMny.ttf', fontStyle: 'italic' },
+        { src: 'https://fonts.gstatic.com/s/roboto/v32/KFOjCnqEu92Fr1Mu51TzBhc4CsE.ttf', fontWeight: 'bold', fontStyle: 'italic' }
     ]
 });
 
 Font.register({
     family: 'Merriweather',
     fonts: [
-        { src: 'https://cdnjs.cloudflare.com/ajax/libs/merriweather/2.0.0/Merriweather-Regular.ttf' },
-        { src: 'https://cdnjs.cloudflare.com/ajax/libs/merriweather/2.0.0/Merriweather-Bold.ttf', fontWeight: 'bold' },
-        { src: 'https://cdnjs.cloudflare.com/ajax/libs/merriweather/2.0.0/Merriweather-Italic.ttf', fontStyle: 'italic' },
-        { src: 'https://cdnjs.cloudflare.com/ajax/libs/merriweather/2.0.0/Merriweather-BoldItalic.ttf', fontWeight: 'bold', fontStyle: 'italic' }
+        { src: 'https://fonts.gstatic.com/s/merriweather/v30/u8y7gqDvlWzRn0g2Y71bGTtX.ttf' }, // Regular
+        { src: 'https://fonts.gstatic.com/s/merriweather/v30/u8yznqDvlWzRn0g2Y71bHqsuPWIr.ttf', fontWeight: 'bold' },
+        { src: 'https://fonts.gstatic.com/s/merriweather/v30/u8yzmqDvlWzRn0g2Y71bDq8sPZwrYg.ttf', fontStyle: 'italic' }, // Italic
+        // Bold Italic skipped to save requests, usually bold+italic synthetic works or add if needed
     ]
 });
 
