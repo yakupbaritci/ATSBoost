@@ -886,7 +886,7 @@ export function ResumeForm({
                                             removeItem('experience', idx)
                                             if (activeExperienceIndex >= idx && activeExperienceIndex > 0) setActiveExperienceIndex(activeExperienceIndex - 1)
                                         }}
-                                        onToggleVisibility={(idx) => toggleVisibility('experience', idx)}
+                                        onToggleVisible={(idx) => toggleVisibility('experience', idx)}
                                     />
 
 
