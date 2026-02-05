@@ -95,8 +95,9 @@ export default function UploadPage() {
                 <p className="text-sm text-zinc-500 mb-4">Don&apos;t have a PDF?</p>
                 <form action={async () => {
                     // Import dynamically or use client transition
-                    const { createEmptyResume } = await import('@/app/actions/resume')
-                    await createEmptyResume()
+                    const { createNewResume } = await import('@/app/actions/resume')
+                    const formData = new FormData() // Empty form data for default/empty resume
+                    await createNewResume(formData)
                 }}>
                     <Button variant="outline" className="gap-2">
                         <FileText className="w-4 h-4" />
