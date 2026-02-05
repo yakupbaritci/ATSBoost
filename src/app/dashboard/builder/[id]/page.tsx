@@ -282,6 +282,7 @@ export default function BuilderPage() {
                     onCheckScore={() => handleCheckScore()}
                     isOptimizing={optimizing}
                     onGenerateBullet={handleGenerateBullet}
+                    onGenerateSummary={handleGenerateSummary}
                     onAutoOptimize={handleOptimize}
                     currentTemplate={currentTemplate}
                     onTemplateChange={setCurrentTemplate}
