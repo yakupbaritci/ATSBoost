@@ -11,7 +11,6 @@ import { Plus, Trash2, Calendar as CalendarIcon, X, ChevronDown, ChevronUp } fro
 import { useEffect, KeyboardEvent } from 'react'
 import { Badge } from '@/components/ui/badge'
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover'
-import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { cn } from '@/lib/utils'
 
