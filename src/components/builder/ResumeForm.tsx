@@ -147,9 +147,9 @@ const DateSelector = ({ value, onChange, placeholder }: { value?: string, onChan
     }
 
     return (
-        <div className="flex gap-2">
+        <div className="flex gap-2 w-full">
             <Select value={selectedMonth} onValueChange={(v: string) => handleUpdate(v, selectedYear)}>
-                <SelectTrigger className="w-[140px]">
+                <SelectTrigger className="flex-1">
                     <SelectValue placeholder="Month" />
                 </SelectTrigger>
                 <SelectContent>
@@ -158,7 +158,7 @@ const DateSelector = ({ value, onChange, placeholder }: { value?: string, onChan
                 </SelectContent>
             </Select>
             <Select value={selectedYear} onValueChange={(v: string) => handleUpdate(selectedMonth, v)}>
-                <SelectTrigger className="w-[120px]">
+                <SelectTrigger className="flex-1">
                     <SelectValue placeholder="Year" />
                 </SelectTrigger>
                 <SelectContent>
@@ -903,7 +903,9 @@ export function ResumeForm({
                                                             </div>
                                                         </div>
                                                         <div className="space-y-1.5">
-                                                            <Label className="text-xs uppercase font-bold text-zinc-500">Where was located?</Label>
+                                                            <Label className="text-xs uppercase font-bold text-zinc-500">
+                                                                Where was <span className="text-black dark:text-white">{content.experience[activeExperienceIndex].company || 'Company'}</span> located?
+                                                            </Label>
                                                             <Input
                                                                 value={content.experience[activeExperienceIndex].location || ''}
                                                                 onChange={(e) => handleChange('experience', 'location', e.target.value, activeExperienceIndex)}
