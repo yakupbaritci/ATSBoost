@@ -241,6 +241,7 @@ export default function BuilderPage() {
                                     <SelectContent>
                                         <SelectItem value="classic">Global Standard</SelectItem>
                                         <SelectItem value="modern">Modern Clean</SelectItem>
+                                        <SelectItem value="bold">Bold Professional</SelectItem>
                                     </SelectContent>
                                 </Select>
                             </div>
