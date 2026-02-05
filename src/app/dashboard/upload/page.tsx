@@ -35,6 +35,21 @@ export default function UploadPage() {
                     className="space-y-6"
                 >
                     <div className="border-2 border-dashed border-zinc-300 rounded-lg p-12 text-center hover:bg-zinc-50 transition-colors dark:border-zinc-700 dark:hover:bg-zinc-800/50 relative">
+                        {/* Always keep the input present but hidden so it submits with the form */}
+                        <input
+                            id="file-upload"
+                            name="file"
+                            type="file"
+                            accept=".pdf"
+                            className="sr-only"
+                            required
+                            onChange={handleFileChange}
+                            ref={(input) => {
+                                // If file name is null (removed), reset input value
+                                if (input && !fileName) input.value = '';
+                            }}
+                        />
+
                         {fileName ? (
                             <div className="flex flex-col items-center justify-center animate-in fade-in zoom-in duration-300">
                                 <FileText className="h-12 w-12 text-blue-500 mb-2" />
@@ -48,9 +63,6 @@ export default function UploadPage() {
                                     onClick={(e) => {
                                         e.preventDefault();
                                         setFileName(null);
-                                        // Reset the input value if needed via ref, but for now state controls visibility
-                                        const input = document.getElementById('file-upload') as HTMLInputElement;
-                                        if (input) input.value = '';
                                     }}
                                 >
                                     Remove
@@ -65,15 +77,6 @@ export default function UploadPage() {
                                         className="relative cursor-pointer rounded-md font-semibold text-primary hover:text-primary/80 focus-within:outline-none focus-within:ring-2 focus-within:ring-primary focus-within:ring-offset-2"
                                     >
                                         <span>Upload a file</span>
-                                        <input
-                                            id="file-upload"
-                                            name="file"
-                                            type="file"
-                                            accept=".pdf"
-                                            className="sr-only"
-                                            required
-                                            onChange={handleFileChange}
-                                        />
                                     </label>
                                     <p className="pl-1">or drag and drop</p>
                                 </div>
