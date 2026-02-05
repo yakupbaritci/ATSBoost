@@ -9,7 +9,6 @@
     "lint": "eslint"
   },
   "dependencies": {
-    "@google/generative-ai": "^0.24.1",
     "@react-pdf/renderer": "^4.3.2",
     "@supabase/ssr": "^0.8.0",
     "@supabase/supabase-js": "^2.94.0",
@@ -20,6 +19,7 @@
     "lucide-react": "^0.563.0",
     "mini-svg-data-uri": "^1.4.4",
     "next": "16.1.6",
+    "openai": "^6.17.0",
     "pdf2json": "^4.0.2",
     "radix-ui": "^1.4.3",
     "react": "19.2.3",
