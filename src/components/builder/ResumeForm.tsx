@@ -24,7 +24,7 @@ import {
     DropdownMenuSubTrigger,
     DropdownMenuSubContent
 } from "@/components/ui/dropdown-menu"
-import { MoreVertical, FileText as FileIcon, Copy, Eye, Download as DownloadIcon, Settings as SettingsIcon, Check, Sparkles, Lightbulb, Lock, AlertCircle, Loader2 } from 'lucide-react'
+import { MoreVertical, FileText as FileIcon, Copy, Eye, Download as DownloadIcon, Settings as SettingsIcon, Check, Sparkles, Lightbulb, Lock, AlertCircle, Loader2, Share2, AlignLeft, AlignCenter, AlignRight, Type, ChevronRight, X } from 'lucide-react'
 import { SidebarList } from './SidebarList'
 
 import { toast } from 'sonner'
@@ -1513,77 +1513,189 @@ export function ResumeForm({
                         </TabsContent>
 
                         {/* Finish Up Tab */}
-                        <TabsContent value="finish" className="mt-0 space-y-6">
-                            <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-                                {/* Left Col: Actions */}
-                                <div className="lg:col-span-1 space-y-6">
-                                    <Card>
-                                        <CardHeader>
-                                            <CardTitle>Final Review</CardTitle>
-                                        </CardHeader>
-                                        <CardContent className="space-y-4">
-                                            <div className="space-y-4">
-                                                <Label>Resume Template</Label>
-                                                <Select value={currentTemplate} onValueChange={onTemplateChange}>
-                                                    <SelectTrigger>
-                                                        <SelectValue placeholder="Select Template" />
-                                                    </SelectTrigger>
-                                                    <SelectContent>
-                                                        <SelectItem value="classic">Global Standard</SelectItem>
-                                                        <SelectItem value="modern">Modern Professional</SelectItem>
-                                                        <SelectItem value="bold">Bold Executive</SelectItem>
-                                                        <SelectItem value="minimalist">Minimalist Mono</SelectItem>
-                                                        <SelectItem value="tech">Tech / Developer</SelectItem>
-                                                    </SelectContent>
-                                                </Select>
-                                            </div>
+                        <TabsContent value="finish" className="mt-0 h-[calc(100vh-140px)] flex relative -mx-4 lg:-mx-8">
+                            {/* Main Content: Toolbar + Canvas */}
+                            <div className="flex-1 flex flex-col min-w-0 bg-zinc-100 dark:bg-zinc-950/50">
+                                {/* Toolbar */}
+                                <div className="bg-white dark:bg-zinc-900 border-b border-zinc-200 dark:border-zinc-800 p-2 space-y-2 shrink-0 z-10 shadow-sm">
+                                    {/* Top Row: Actions */}
+                                    <div className="flex items-center gap-2 overflow-x-auto no-scrollbar">
+                                        <Button variant="outline" size="sm" onClick={onAutoOptimize} disabled={isOptimizing} className="gap-2 h-9">
+                                            {isOptimizing ? <Loader2 className="w-4 h-4 animate-spin" /> : <Sparkles className="w-4 h-4 text-purple-600" />}
+                                            <span className="hidden sm:inline">Auto-Adjust</span>
+                                        </Button>
+                                        <div className="h-6 w-px bg-zinc-200 dark:bg-zinc-700 mx-1" />
+                                        <Button variant="ghost" size="sm" className="gap-2 h-9">
+                                            <SettingsIcon className="w-4 h-4" /> <span className="hidden sm:inline">Adjustments</span>
+                                        </Button>
+                                        <Button variant="ghost" size="sm" className="gap-2 h-9" onClick={() => setIsTemplateGalleryOpen(true)}>
+                                            <FileIcon className="w-4 h-4" /> Template
+                                        </Button>
 
-                                            <div className="pt-4 border-t border-zinc-100 dark:border-zinc-800 space-y-3">
-                                                <Button
-                                                    className="w-full justify-between"
-                                                    variant="outline"
-                                                    onClick={onCheckScore}
-                                                >
-                                                    <span>Check ATS Score</span>
-                                                    {/* Show dynamic score badge if available */}
-                                                    {atsScore?.score !== undefined ? (
-                                                        <Badge variant={atsScore.score >= 80 ? 'default' : atsScore.score >= 60 ? 'secondary' : 'destructive'}>
-                                                            {atsScore.score} / 100
-                                                        </Badge>
-                                                    ) : (
-                                                        <Badge variant="outline">Not Checked</Badge>
-                                                    )}
-                                                </Button>
+                                        <div className="flex-1" />
 
-                                                <Button
-                                                    className="w-full bg-gradient-to-r from-indigo-500 to-purple-600 hover:from-indigo-600 hover:to-purple-700 text-white border-0"
-                                                    onClick={onAutoOptimize}
-                                                    disabled={isOptimizing}
-                                                >
-                                                    {isOptimizing ? 'Optimizing...' : '✨ AI Auto-Optimize'}
-                                                </Button>
-                                            </div>
+                                        <Button variant="ghost" size="sm" className="gap-2 h-9">
+                                            <Share2 className="w-4 h-4" /> <span className="hidden sm:inline">Share</span>
+                                        </Button>
+                                        <div className="min-w-[140px]">
+                                            {onDownload && onDownload()}
+                                        </div>
+                                    </div>
 
-                                            <div className="pt-4 border-t border-zinc-100 dark:border-zinc-800">
-                                                {onDownload && onDownload()}
-                                            </div>
-                                        </CardContent>
-                                    </Card>
+                                    {/* Bottom Row: Design Settings */}
+                                    <div className="flex items-center gap-4 text-sm overflow-x-auto no-scrollbar pt-1 border-t border-zinc-100 dark:border-zinc-800">
+                                        <div className="flex items-center gap-2">
+                                            <Type className="w-4 h-4 text-zinc-400" />
+                                            <Select value={designSettings.font} onValueChange={(v) => setDesignSettings(s => ({ ...s, font: v }))}>
+                                                <SelectTrigger className="h-8 w-32 border-none bg-transparent hover:bg-zinc-100 p-0 px-2 focus:ring-0">
+                                                    <SelectValue placeholder="Font" />
+                                                </SelectTrigger>
+                                                <SelectContent>
+                                                    <SelectItem value="Merriweather">Merriweather</SelectItem>
+                                                    <SelectItem value="Open Sans">Open Sans</SelectItem>
+                                                    <SelectItem value="Roboto">Roboto</SelectItem>
+                                                </SelectContent>
+                                            </Select>
+                                        </div>
+                                        <div className="h-4 w-px bg-zinc-200 dark:bg-zinc-700" />
+
+                                        <div className="flex items-center gap-1">
+                                            <Button variant="ghost" size="icon" className="h-7 w-7 rounded-full" onClick={() => {
+                                                const size = parseInt(designSettings.fontSize) - 1;
+                                                setDesignSettings(s => ({ ...s, fontSize: size.toString() }))
+                                            }}>-</Button>
+                                            <span className="w-6 text-center text-xs font-medium">{designSettings.fontSize}</span>
+                                            <Button variant="ghost" size="icon" className="h-7 w-7 rounded-full" onClick={() => {
+                                                const size = parseInt(designSettings.fontSize) + 1;
+                                                setDesignSettings(s => ({ ...s, fontSize: size.toString() }))
+                                            }}>+</Button>
+                                        </div>
+                                        <div className="h-4 w-px bg-zinc-200 dark:bg-zinc-700" />
+
+                                        <div className="flex items-center gap-2">
+                                            <span className="text-zinc-400 text-xs">Line:</span>
+                                            <Select value={designSettings.lineSpacing} onValueChange={(v) => setDesignSettings(s => ({ ...s, lineSpacing: v }))}>
+                                                <SelectTrigger className="h-8 w-16 border-none bg-transparent hover:bg-zinc-100 p-0 px-2 focus:ring-0"><SelectValue /></SelectTrigger>
+                                                <SelectContent>
+                                                    <SelectItem value="1.0">1.0</SelectItem>
+                                                    <SelectItem value="1.15">1.15</SelectItem>
+                                                    <SelectItem value="1.5">1.5</SelectItem>
+                                                </SelectContent>
+                                            </Select>
+                                        </div>
+
+                                        <div className="flex-1" />
+
+                                        <div className="flex items-center gap-1 bg-zinc-100 dark:bg-zinc-800 p-0.5 rounded-md">
+                                            <Button variant="ghost" size="icon" className="h-6 w-6 rounded-sm bg-white dark:bg-zinc-700 shadow-sm"><AlignLeft className="w-3 h-3" /></Button>
+                                            <Button variant="ghost" size="icon" className="h-6 w-6 rounded-sm text-zinc-400"><AlignCenter className="w-3 h-3" /></Button>
+                                            <Button variant="ghost" size="icon" className="h-6 w-6 rounded-sm text-zinc-400"><AlignRight className="w-3 h-3" /></Button>
+                                        </div>
+                                    </div>
                                 </div>
 
-                                {/* Right Col: Preview */}
-                                <div className="lg:col-span-2 min-h-[600px] bg-white dark:bg-zinc-900 shadow-sm rounded-xl border border-zinc-200 dark:border-zinc-800 overflow-hidden flex flex-col">
-                                    <div className="p-4 border-b border-zinc-100 dark:border-zinc-800 bg-zinc-50 dark:bg-zinc-950 flex justify-between items-center">
-                                        <span className="font-semibold text-sm">Resume Preview</span>
-                                    </div>
-                                    <div className="flex-1 bg-zinc-50 dark:bg-zinc-950/50 p-4 lg:p-6 overflow-hidden">
-                                        <div className="w-full h-full max-w-4xl mx-auto">
-                                            {/* Render the preview component passed from parent */}
+                                {/* Preview Canvas */}
+                                <div className="flex-1 overflow-auto p-8 flex justify-center custom-scrollbar">
+                                    <div className="w-full max-w-[210mm] transition-all duration-300 ease-in-out">
+                                        {/* Resume Preview */}
+                                        <div className="shadow-2xl">
                                             {previewComponent}
                                         </div>
                                     </div>
                                 </div>
                             </div>
+
+                            {/* Right Sidebar: Tools */}
+                            <div className="w-96 shrink-0 border-l border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-900 flex flex-col hidden lg:flex">
+                                <div className="p-4 overflow-y-auto space-y-6">
+                                    {/* Score Card */}
+                                    <div onClick={onCheckScore} className="cursor-pointer">
+                                        <Card className="border-0 shadow-none ring-1 ring-zinc-200 dark:ring-zinc-800">
+                                            <CardContent className="p-4 flex items-center justify-between">
+                                                <div className="space-y-1">
+                                                    <div className="text-4xl font-bold text-zinc-900 dark:text-zinc-100 relative inline-flex items-center">
+                                                        {atsScore?.score !== undefined ? atsScore.score : 0}
+                                                        <div className={`w-3 h-3 rounded-full absolute -top-1 -right-4 ${!atsScore ? 'bg-zinc-300' : atsScore.score >= 80 ? 'bg-green-500' : atsScore.score >= 60 ? 'bg-yellow-500' : 'bg-red-500'
+                                                            }`} />
+                                                    </div>
+                                                    <p className="text-xs text-zinc-500 font-medium uppercase tracking-wider">
+                                                        {atsScore?.verdict || "No Score"}
+                                                    </p>
+                                                </div>
+                                                {/* Simple Gauge Visual */}
+                                                <div className="w-16 h-16 rounded-full border-4 border-zinc-100 dark:border-zinc-800 border-t-purple-600 transform rotate-45" />
+                                            </CardContent>
+                                            <div className="p-2 border-t border-zinc-100 dark:border-zinc-800 bg-zinc-50 dark:bg-zinc-950/50 text-center">
+                                                <span className="text-xs font-bold text-zinc-600 flex items-center justify-center gap-1">
+                                                    <Sparkles className="w-3 h-3" /> EXPLORE MY SCORE
+                                                </span>
+                                            </div>
+                                        </Card>
+                                    </div>
+
+                                    {/* AI Keyword Targeting */}
+                                    <Card className="border-0 shadow-none ring-1 ring-zinc-200 dark:ring-zinc-800">
+                                        <CardHeader className="p-4 pb-2">
+                                            <CardTitle className="text-sm font-bold flex items-center gap-2">
+                                                AI Keyword Targeting
+                                            </CardTitle>
+                                        </CardHeader>
+                                        <CardContent className="p-4 space-y-4">
+                                            <p className="text-xs text-zinc-500">
+                                                Optimize your resume with important keywords from the job description.
+                                            </p>
+                                            <div className="space-y-1.5">
+                                                <Label className="text-xs font-bold uppercase text-zinc-400">Job Title</Label>
+                                                <Input placeholder="e.g. Senior UI Designer" className="h-9 bg-zinc-50" />
+                                            </div>
+                                            <div className="space-y-1.5">
+                                                <Label className="text-xs font-bold uppercase text-zinc-400">Job Description</Label>
+                                                <Textarea placeholder="Paste job description here..." className="h-24 bg-zinc-50 resize-none text-xs" />
+                                            </div>
+                                            <Button className="w-full bg-blue-600 hover:bg-blue-700 text-white">
+                                                Save Job Description
+                                            </Button>
+                                        </CardContent>
+                                    </Card>
+                                </div>
+                            </div>
+
+                            {/* Template Gallery Overlay */}
+                            {isTemplateGalleryOpen && (
+                                <div className="absolute inset-0 z-50 bg-black/50 backdrop-blur-sm flex justify-end">
+                                    <div className="w-[450px] bg-white dark:bg-zinc-900 h-full shadow-2xl animate-in slide-in-from-right duration-300 flex flex-col">
+                                        <div className="p-4 border-b border-zinc-200 dark:border-zinc-800 flex items-center justify-between">
+                                            <h2 className="font-bold text-lg">Resume Template Gallery</h2>
+                                            <Button variant="ghost" size="icon" onClick={() => setIsTemplateGalleryOpen(false)}>
+                                                <X className="w-5 h-5" />
+                                            </Button>
+                                        </div>
+                                        <div className="flex-1 overflow-y-auto p-4 space-y-4 bg-zinc-50 dark:bg-zinc-950/50">
+                                            {/* Template List */}
+                                            {['classic', 'modern', 'bold', 'minimalist', 'tech'].map((t) => (
+                                                <div
+                                                    key={t}
+                                                    onClick={() => { onTemplateChange(t); setIsTemplateGalleryOpen(false); }}
+                                                    className={cn(
+                                                        "group relative aspect-[210/297] bg-white rounded-lg shadow-sm border-2 cursor-pointer transition-all hover:scale-[1.02]",
+                                                        currentTemplate === t ? "border-blue-600 ring-2 ring-blue-100" : "border-transparent hover:border-zinc-300"
+                                                    )}
+                                                >
+                                                    <div className="absolute inset-0 flex items-center justify-center bg-zinc-100 text-zinc-400 text-sm uppercase tracking-widest font-bold">
+                                                        {t} Preview
+                                                    </div>
+                                                    {currentTemplate === t && (
+                                                        <Badge className="absolute top-2 right-2 bg-blue-600">Selected</Badge>
+                                                    )}
+                                                    <div className="absolute bottom-0 inset-x-0 p-3 bg-white/90 backdrop-blur border-t border-zinc-100">
+                                                        <p className="text-sm font-bold capitalize text-zinc-900">{t} Template</p>
+                                                    </div>
+                                                </div>
+                                            ))}
+                                        </div>
+                                    </div>
+                                </div>
+                            )}
                         </TabsContent>
                     </div> {/* End Centered Container */}
                 </div>
