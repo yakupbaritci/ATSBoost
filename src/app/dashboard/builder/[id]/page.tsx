@@ -5,7 +5,8 @@ import { useEffect, useState } from 'react'
 import { ResumeForm } from '@/components/builder/ResumeForm'
 import { ResumePreview } from '@/components/builder/ResumePreview'
 import { Button } from '@/components/ui/button'
-import { Save, Loader2, ArrowLeft } from 'lucide-react'
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
+import { Save, Loader2, ArrowLeft, FileText, Eye } from 'lucide-react'
 import Link from 'next/link'
 import { useParams } from 'next/navigation'
 import { toast } from 'sonner'
@@ -149,10 +150,34 @@ export default function BuilderPage() {
                 </div>
 
                 {/* Right: Live Preview */}
-                <div className="w-1/2 bg-zinc-100 p-8 dark:bg-zinc-950 flex justify-center overflow-hidden">
-                    <div className="w-full max-w-[210mm] shadow-2xl h-full">
-                        <ResumePreview content={resume.content} />
-                    </div>
+                <div className="w-1/2 bg-zinc-100 p-8 dark:bg-zinc-950 flex flex-col overflow-hidden">
+                    <Tabs defaultValue="preview" className="w-full h-full flex flex-col">
+                        <div className="flex justify-center mb-4">
+                            <TabsList>
+                                <TabsTrigger value="preview"><Eye className="w-4 h-4 mr-2" /> ATS Preview</TabsTrigger>
+                                <TabsTrigger value="original" disabled={!resume.original_pdf_url}><FileText className="w-4 h-4 mr-2" /> Original PDF</TabsTrigger>
+                            </TabsList>
+                        </div>
+
+                        <TabsContent value="preview" className="flex-1 flex justify-center overflow-hidden data-[state=inactive]:hidden">
+                            <div className="w-full max-w-[210mm] shadow-2xl h-full overflow-y-auto">
+                                <ResumePreview content={resume.content} />
+                            </div>
+                        </TabsContent>
+
+                        <TabsContent value="original" className="flex-1 h-full data-[state=inactive]:hidden">
+                            {resume.original_pdf_url ? (
+                                <iframe
+                                    src={resume.original_pdf_url}
+                                    className="w-full h-full rounded-lg border border-zinc-200 dark:border-zinc-800"
+                                />
+                            ) : (
+                                <div className="flex items-center justify-center h-full text-zinc-500">
+                                    No original PDF found
+                                </div>
+                            )}
+                        </TabsContent>
+                    </Tabs>
                 </div>
             </div>
         </div>
