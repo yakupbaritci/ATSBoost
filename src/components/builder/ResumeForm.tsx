@@ -1109,11 +1109,7 @@ export function ResumeForm({
                                             addEducation()
                                             setActiveEducationIndex((content.education?.length || 0))
                                         }}
-                                        onToggleVisible={(index) => {
-                                            if (!content.education) return;
-                                            const current = content.education[index];
-                                            handleChange('education', 'visible', current.visible === false ? true : false, index);
-                                        }}
+                                        onToggleVisible={(index) => toggleVisibility('education', index)}
                                         titleKey="school"
                                         subtitleKey="degree"
                                     />
