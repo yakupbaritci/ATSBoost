@@ -1598,7 +1598,7 @@ export function ResumeForm({
                                 onClick={() => {
                                     // Navigate to the editor (same ID) but remove query params
                                     if (params?.id) {
-                                        router.push(`/dashboard/builder/${params.id}`)
+                                        window.location.href = `/dashboard/builder/${params.id}`
                                     }
                                 }}
                                 className="bg-green-600 hover:bg-green-700 text-white"
