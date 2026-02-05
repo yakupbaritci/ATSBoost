@@ -789,7 +789,7 @@ export function ResumeForm({
                                     <div className="space-y-2">
                                         {content.experience?.map((exp, index) => (
                                             <div
-                                                key={exp.id}
+                                                key={exp.id ? `${exp.id}-${index}` : index}
                                                 onClick={() => setActiveExperienceIndex(index)}
                                                 className={cn(
                                                     "group relative p-3 rounded-lg cursor-pointer border transition-all hover:shadow-md",
@@ -985,7 +985,7 @@ export function ResumeForm({
                                     <div className="space-y-2">
                                         {content.education?.map((edu, index) => (
                                             <div
-                                                key={edu.id}
+                                                key={edu.id ? `${edu.id}-${index}` : index}
                                                 onClick={() => setActiveEducationIndex(index)}
                                                 className={cn(
                                                     "group relative p-3 rounded-lg cursor-pointer border transition-all hover:shadow-md",
