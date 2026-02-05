@@ -7,7 +7,58 @@ import { Label } from '@/components/ui/label'
 import { Textarea } from '@/components/ui/textarea'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { Button } from '@/components/ui/button'
-import { Plus, Trash2 } from 'lucide-react'
+import { Plus, Trash2, Calendar as CalendarIcon } from 'lucide-react'
+import { useEffect } from 'react'
+import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover'
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
+import { cn } from '@/lib/utils'
+
+// Helper for date generation
+const months = [
+    "January", "February", "March", "April", "May", "June",
+    "July", "August", "September", "October", "November", "December"
+]
+const currentYear = new Date().getFullYear()
+const years = Array.from({ length: 50 }, (_, i) => (currentYear + 5 - i).toString())
+
+// Date Selector Component
+const DateSelector = ({ value, onChange, placeholder }: { value?: string, onChange: (val: string) => void, placeholder: string }) => {
+    // Parse existing value
+    const [month, year] = value?.includes(' ') ? value.split(' ') : [undefined, value]
+
+    // If value is just a year (e.g. "2023"), treat it as year
+    const selectedYear = years.includes(value || '') ? value : year
+    const selectedMonth = months.includes(month || '') ? month : undefined
+
+    const handleUpdate = (m?: string, y?: string) => {
+        if (m && y) onChange(`${m} ${y}`)
+        else if (y) onChange(y)
+        else onChange('')
+    }
+
+    return (
+        <div className="flex gap-2">
+            <Select value={selectedMonth} onValueChange={(v) => handleUpdate(v, selectedYear)}>
+                <SelectTrigger className="w-[140px]">
+                    <SelectValue placeholder="Month (Optional)" />
+                </SelectTrigger>
+                <SelectContent>
+                    <SelectItem value=" ">None</SelectItem>
+                    {months.map(m => <SelectItem key={m} value={m}>{m}</SelectItem>)}
+                </SelectContent>
+            </Select>
+            <Select value={selectedYear} onValueChange={(v) => handleUpdate(selectedMonth, v)}>
+                <SelectTrigger className="w-[120px]">
+                    <SelectValue placeholder="Year" />
+                </SelectTrigger>
+                <SelectContent>
+                    <SelectItem value="Present">Present</SelectItem>
+                    {years.map(y => <SelectItem key={y} value={y}>{y}</SelectItem>)}
+                </SelectContent>
+            </Select>
+        </div>
+    )
+}
 
 // Define types for our Resume Content
 // (In a real app, these would be shared Zod schemas)
@@ -69,6 +120,39 @@ interface ResumeFormProps {
 
 export function ResumeForm({ initialContent, onUpdate }: ResumeFormProps) {
     const [content, setContent] = useState<ResumeContent>(initialContent)
+
+    // Fix dates on mount: If only startDate exists and looks like a single date, move it to endDate (Graduation/End date logic)
+    useEffect(() => {
+        let hasChanges = false
+        const newContent = { ...content }
+
+        const fixSectionDates = (items: any[]) => {
+            if (!items) return;
+            items.forEach(item => {
+                if (item.startDate && !item.endDate) {
+                    // Check if startDate is just a year "2023" or Month Year "May 2023" without a hyphen
+                    if (!item.startDate.includes('-') && !item.startDate.toLowerCase().includes('present')) {
+                        item.endDate = item.startDate
+                        item.startDate = ''
+                        hasChanges = true
+                    }
+                }
+            })
+        }
+
+        if (newContent.education) fixSectionDates(newContent.education)
+        // For experience, usually a single date implies start date, but user requested consistent logic. 
+        // However, for jobs, usually single date = Start Date (Started 2023...). 
+        // But the user prompt says "sadece tek tarih var ise o egitimin veya isin bitis tarihidir". So applying to both.
+        if (newContent.experience) fixSectionDates(newContent.experience)
+
+        if (hasChanges) {
+            setContent(newContent)
+            // We don't call onUpdate here to avoid infinite loops or unnecessary saves on first render
+        }
+    }, [])
+
+    const [errors, setErrors] = useState<{ [key: string]: string }>({})
 
     const [errors, setErrors] = useState<{ [key: string]: string }>({})
 
@@ -290,18 +374,18 @@ export function ResumeForm({ initialContent, onUpdate }: ResumeFormProps) {
                                         </div>
                                         <div className="space-y-2">
                                             <Label>Start Date</Label>
-                                            <Input
-                                                value={exp.startDate || ''}
-                                                onChange={(e) => handleChange('experience', 'startDate', e.target.value, index)}
-                                                placeholder="MM/YYYY"
+                                            <DateSelector
+                                                value={exp.startDate}
+                                                onChange={(val) => handleChange('experience', 'startDate', val, index)}
+                                                placeholder="Start Date"
                                             />
                                         </div>
                                         <div className="space-y-2">
                                             <Label>End Date</Label>
-                                            <Input
-                                                value={exp.endDate || ''}
-                                                onChange={(e) => handleChange('experience', 'endDate', e.target.value, index)}
-                                                placeholder="Present or MM/YYYY"
+                                            <DateSelector
+                                                value={exp.endDate}
+                                                onChange={(val) => handleChange('experience', 'endDate', val, index)}
+                                                placeholder="End Date"
                                             />
                                         </div>
                                     </div>
@@ -351,18 +435,18 @@ export function ResumeForm({ initialContent, onUpdate }: ResumeFormProps) {
                                         </div>
                                         <div className="space-y-2">
                                             <Label>Start Date</Label>
-                                            <Input
-                                                value={edu.startDate || ''}
-                                                onChange={(e) => handleChange('education', 'startDate', e.target.value, index)}
-                                                placeholder="MM/YYYY"
+                                            <DateSelector
+                                                value={edu.startDate}
+                                                onChange={(val) => handleChange('education', 'startDate', val, index)}
+                                                placeholder="Start Date"
                                             />
                                         </div>
                                         <div className="space-y-2">
-                                            <Label>End Date</Label>
-                                            <Input
-                                                value={edu.endDate || ''}
-                                                onChange={(e) => handleChange('education', 'endDate', e.target.value, index)}
-                                                placeholder="YYYY"
+                                            <Label>End Date (or Graduation)</Label>
+                                            <DateSelector
+                                                value={edu.endDate}
+                                                onChange={(val) => handleChange('education', 'endDate', val, index)}
+                                                placeholder="Graduation Year"
                                             />
                                         </div>
                                     </div>
