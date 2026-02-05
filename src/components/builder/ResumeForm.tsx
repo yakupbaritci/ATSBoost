@@ -21,14 +21,72 @@ const months = [
 const currentYear = new Date().getFullYear()
 const years = Array.from({ length: 50 }, (_, i) => (currentYear + 5 - i).toString())
 
+// Helper for date parsing and matching
+const parseDate = (val?: string) => {
+    if (!val) return { month: undefined, year: undefined }
+
+    // Handle "Present" case insensitive
+    if (val.toLowerCase().includes('present')) return { month: undefined, year: 'Present' }
+
+    // Clean and split string
+    const parts = val.trim().split(/[\s/.,-]+/) // Split by space, slash, dot, comma, hyphen
+
+    let monthFound: string | undefined = undefined
+    let yearFound: string | undefined = undefined
+
+    // Iterate parts to find month and year
+    for (const part of parts) {
+        // Check for year (4 digits)
+        if (/^\d{4}$/.test(part)) {
+            yearFound = part
+            continue
+        }
+
+        // Check for month names (Jan, January, etc.) or Numbers (01, 1, 10)
+        const lowerPart = part.toLowerCase()
+
+        // Match numeric months 1-12
+        if (/^\d{1,2}$/.test(part)) {
+            const m = parseInt(part)
+            if (m >= 1 && m <= 12) {
+                monthFound = months[m - 1] // Convert 1 -> January
+                continue
+            }
+        }
+
+        // Match string months
+        const matchedMonth = months.find(m =>
+            m.toLowerCase() === lowerPart ||
+            m.toLowerCase().startsWith(lowerPart.substring(0, 3)) // Check first 3 letters matching
+        )
+        if (matchedMonth) {
+            monthFound = matchedMonth
+        }
+    }
+
+    // Fallback logic if splitting by space failed or simple format
+    if (!yearFound && !monthFound && val.includes(' ')) {
+        const [m, y] = val.split(' ')
+        if (years.includes(y)) yearFound = y
+        if (months.includes(m)) monthFound = m
+    }
+
+    return { month: monthFound, year: yearFound }
+}
+
 // Date Selector Component
 const DateSelector = ({ value, onChange, placeholder }: { value?: string, onChange: (val: string) => void, placeholder: string }) => {
-    // Parse existing value
-    const [month, year] = value?.includes(' ') ? value.split(' ') : [undefined, value]
+    // Parse existing value using the smart parser
+    const { month, year } = parseDate(value)
 
-    // If value is just a year (e.g. "2023"), treat it as year
-    const selectedYear = years.includes(value || '') ? value : year
-    const selectedMonth = months.includes(month || '') ? month : undefined
+    // Validate parsed year against our list to ensure it shows up in UI
+    const selectedYear = (year && (years.includes(year) || year === 'Present')) ? year : undefined
+    const selectedMonth = month && months.includes(month) ? month : undefined
+
+    // If year is not in our recent list (e.g. very old), we might want to still show it or add it,
+    // but for now let's stick to the generated list or 'Present'. 
+    // If the parser found a year but it's not in the list, we can temporarily add it to options or just let it be blank.
+    // Let's trust the years list covers most. If not, the user can re-select.
 
     const handleUpdate = (m?: string, y?: string) => {
         if (m && y) onChange(`${m} ${y}`)
@@ -38,16 +96,16 @@ const DateSelector = ({ value, onChange, placeholder }: { value?: string, onChan
 
     return (
         <div className="flex gap-2">
-            <Select value={selectedMonth} onValueChange={(v) => handleUpdate(v, selectedYear)}>
+            <Select value={selectedMonth} onValueChange={(v: string) => handleUpdate(v, selectedYear)}>
                 <SelectTrigger className="w-[140px]">
-                    <SelectValue placeholder="Month (Optional)" />
+                    <SelectValue placeholder="Month" />
                 </SelectTrigger>
                 <SelectContent>
                     <SelectItem value=" ">None</SelectItem>
                     {months.map(m => <SelectItem key={m} value={m}>{m}</SelectItem>)}
                 </SelectContent>
             </Select>
-            <Select value={selectedYear} onValueChange={(v) => handleUpdate(selectedMonth, v)}>
+            <Select value={selectedYear} onValueChange={(v: string) => handleUpdate(selectedMonth, v)}>
                 <SelectTrigger className="w-[120px]">
                     <SelectValue placeholder="Year" />
                 </SelectTrigger>
@@ -151,8 +209,6 @@ export function ResumeForm({ initialContent, onUpdate }: ResumeFormProps) {
             // We don't call onUpdate here to avoid infinite loops or unnecessary saves on first render
         }
     }, [])
-
-    const [errors, setErrors] = useState<{ [key: string]: string }>({})
 
     const [errors, setErrors] = useState<{ [key: string]: string }>({})
 
