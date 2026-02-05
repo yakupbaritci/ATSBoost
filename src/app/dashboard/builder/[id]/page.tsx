@@ -241,6 +241,18 @@ const handleGenerateBullet = async (role: string, company: string, currentDesc: 
         throw error
     }
 }
+}
+
+// New AI Handler for Single Bullet Points
+const handleGenerateBullet = async (role: string, company: string, currentDesc: string) => {
+    try {
+        const bullet = await generateSingleBullet(role, company, currentDesc)
+        return bullet
+    } catch (error) {
+        console.error(error)
+        throw error
+    }
+}
 
 if (loading) {
     return (
@@ -298,6 +310,7 @@ return (
                 atsScore={atsResult}
                 onCheckScore={() => handleCheckScore()}
                 isOptimizing={optimizing}
+                onGenerateBullet={handleGenerateBullet}
                 onAutoOptimize={handleOptimize}
                 currentTemplate={currentTemplate}
                 onTemplateChange={setCurrentTemplate}
