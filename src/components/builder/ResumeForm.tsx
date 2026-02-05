@@ -24,7 +24,7 @@ import {
     DropdownMenuSubTrigger,
     DropdownMenuSubContent
 } from "@/components/ui/dropdown-menu"
-import { MoreVertical, FileText as FileIcon, Copy, Eye, Download as DownloadIcon, Settings as SettingsIcon, Check } from 'lucide-react'
+import { MoreVertical, FileText as FileIcon, Copy, Eye, Download as DownloadIcon, Settings as SettingsIcon, Check, Sparkles, Lightbulb, Lock, AlertCircle } from 'lucide-react'
 
 // Accordion Card Component for managing expandable sections
 const AccordionItem = ({
@@ -304,6 +304,7 @@ export function ResumeForm({
 }: ResumeFormProps) {
     const [content, setContent] = useState<ResumeContent>(initialContent)
     const [activeTab, setActiveTab] = useState("contact")
+    const [activeExperienceIndex, setActiveExperienceIndex] = useState(0) // Track active job for editing
 
     // Wizard Steps Configuration - Refined Order
     const steps = [
@@ -749,61 +750,215 @@ export function ResumeForm({
                             </Card>
                         </TabsContent>
 
-                        {/* Experience Tab */}
-                        <TabsContent value="experience" className="mt-0 space-y-4">
-                            {content.experience?.map((exp, index) => (
-                                <AccordionItem
-                                    key={`${exp.id}-${index}`}
-                                    title={exp.title || "Job Position"}
-                                    subtitle={exp.company}
-                                    onDelete={() => removeItem('experience', index)}
-                                    defaultOpen={index === 0} // Open first item by default
-                                >
-                                    <div className="grid grid-cols-2 gap-4 mt-4">
-                                        <div className="space-y-2">
-                                            <Label>Job Title</Label>
-                                            <Input
-                                                value={exp.title || ''}
-                                                onChange={(e) => handleChange('experience', 'title', e.target.value, index)}
-                                            />
+                        {/* Experience Tab - Rezi Style Split Layout */}
+                        <TabsContent value="experience" className="mt-0 h-[calc(100vh-140px)]">
+                            <div className="flex h-full gap-6">
+                                {/* Left Sidebar: List & Score */}
+                                <div className="w-80 shrink-0 flex flex-col gap-4 overflow-y-auto pr-2 pb-20">
+                                    {/* Score Card Mockup */}
+                                    <div className="bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-xl p-4 flex items-center gap-4 shadow-sm">
+                                        <div className="relative w-12 h-12 flex items-center justify-center">
+                                            <svg className="w-full h-full transform -rotate-90">
+                                                <circle cx="24" cy="24" r="20" stroke="currentColor" strokeWidth="4" fill="transparent" className="text-zinc-100 dark:text-zinc-800" />
+                                                <circle cx="24" cy="24" r="20" stroke="#f59e0b" strokeWidth="4" fill="transparent" strokeDasharray={125} strokeDashoffset={125 - (125 * 0.79)} className="text-amber-500" strokeLinecap="round" />
+                                            </svg>
+                                            <span className="absolute text-sm font-bold text-amber-600">79</span>
                                         </div>
-                                        <div className="space-y-2">
-                                            <Label>Company</Label>
-                                            <Input
-                                                value={exp.company || ''}
-                                                onChange={(e) => handleChange('experience', 'company', e.target.value, index)}
-                                            />
-                                        </div>
-                                        <div className="space-y-2">
-                                            <Label>Start Date</Label>
-                                            <DateSelector
-                                                value={exp.startDate}
-                                                onChange={(val) => handleChange('experience', 'startDate', val, index)}
-                                                placeholder="Start Date"
-                                            />
-                                        </div>
-                                        <div className="space-y-2">
-                                            <Label>End Date</Label>
-                                            <DateSelector
-                                                value={exp.endDate}
-                                                onChange={(val) => handleChange('experience', 'endDate', val, index)}
-                                                placeholder="End Date"
-                                            />
+                                        <div>
+                                            <h4 className="text-sm font-bold text-zinc-700 dark:text-zinc-300">Your Resume Score</h4>
+                                            <p className="text-xs text-amber-600 font-medium">Needs improvement</p>
                                         </div>
                                     </div>
-                                    <div className="space-y-2 mt-4">
-                                        <Label>Description (Bullet Points)</Label>
-                                        <Textarea
-                                            value={exp.description || ''}
-                                            onChange={(e) => handleChange('experience', 'description', e.target.value, index)}
-                                            className="min-h-[100px]"
-                                        />
+
+                                    {/* List Header */}
+                                    <div className="flex items-center justify-between px-1">
+                                        <h3 className="font-bold text-zinc-900 dark:text-zinc-100 flex items-center gap-2">
+                                            <ChevronDown className="w-4 h-4" /> Your Experience
+                                        </h3>
+                                        <Button size="icon" variant="ghost" className="h-6 w-6 bg-blue-600 text-white hover:bg-blue-700 rounded-full" onClick={() => {
+                                            addExperience()
+                                            setActiveExperienceIndex((content.experience?.length || 0))
+                                        }}>
+                                            <Plus className="w-4 h-4" />
+                                        </Button>
                                     </div>
-                                </AccordionItem>
-                            ))}
-                            <Button onClick={addExperience} variant="outline" className="w-full border-dashed">
-                                <Plus className="w-4 h-4 mr-2" /> Add Experience
-                            </Button>
+
+                                    {/* Experience List */}
+                                    <div className="space-y-2">
+                                        {content.experience?.map((exp, index) => (
+                                            <div
+                                                key={exp.id}
+                                                onClick={() => setActiveExperienceIndex(index)}
+                                                className={cn(
+                                                    "group relative p-3 rounded-lg cursor-pointer border transition-all hover:shadow-md",
+                                                    activeExperienceIndex === index
+                                                        ? "bg-blue-50 dark:bg-blue-900/20 border-blue-200 dark:border-blue-800 ring-1 ring-blue-100 dark:ring-blue-900"
+                                                        : "bg-white dark:bg-zinc-900 border-zinc-200 dark:border-zinc-800 hover:border-zinc-300"
+                                                )}
+                                            >
+                                                <div className="flex justify-between items-start">
+                                                    <div>
+                                                        <h4 className={cn("font-bold text-sm", activeExperienceIndex === index ? "text-blue-700 dark:text-blue-300" : "text-zinc-800 dark:text-zinc-200")}>
+                                                            {exp.title || "Untitled Position"}
+                                                        </h4>
+                                                        <p className="text-xs text-zinc-500 truncate mt-0.5">
+                                                            {exp.company || "No Company"} • {exp.startDate || "Date"}
+                                                        </p>
+                                                    </div>
+                                                    <Button
+                                                        variant="ghost"
+                                                        size="icon"
+                                                        className="h-6 w-6 text-zinc-400 opacity-0 group-hover:opacity-100"
+                                                        onClick={(e) => {
+                                                            e.stopPropagation()
+                                                            removeItem('experience', index)
+                                                            if (activeExperienceIndex === index && index > 0) setActiveExperienceIndex(index - 1)
+                                                        }}
+                                                    >
+                                                        <MoreVertical className="w-3 h-3" />
+                                                    </Button>
+                                                </div>
+                                            </div>
+                                        ))}
+                                    </div>
+
+                                    {/* Gamification / Analysis List Mockup */}
+                                    {/* This mimics the Rezi sidebar analysis */}
+                                    <div className="mt-4 space-y-3 px-2 opacity-80 pointer-events-none grayscale">
+                                        <div className="flex items-center gap-2 text-xs text-zinc-500">
+                                            <X className="w-3 h-3 text-red-500 rounded-full bg-red-100 p-0.5" /> Short Bullet Points
+                                        </div>
+                                        <div className="flex items-center gap-2 text-xs text-zinc-500">
+                                            <Lock className="w-3 h-3 text-zinc-400" /> Personal Pronoun <Badge variant="secondary" className="text-[9px] h-4 px-1 ml-auto">PRO</Badge>
+                                        </div>
+                                        <div className="flex items-center gap-2 text-xs text-zinc-500">
+                                            <Lock className="w-3 h-3 text-zinc-400" /> Buzzwords <Badge variant="secondary" className="text-[9px] h-4 px-1 ml-auto">PRO</Badge>
+                                        </div>
+                                        <div className="flex items-center gap-2 text-xs text-zinc-500">
+                                            <Lock className="w-3 h-3 text-zinc-400" /> Passive Voice <Badge variant="secondary" className="text-[9px] h-4 px-1 ml-auto">PRO</Badge>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                {/* Right Main: Editor */}
+                                <div className="flex-1 overflow-y-auto pb-20">
+                                    {content.experience && content.experience[activeExperienceIndex] ? (
+                                        <Card className="border-zinc-200 dark:border-zinc-800 shadow-sm">
+                                            <CardHeader className="pb-4 border-b border-zinc-100 dark:border-zinc-800/50">
+                                                <div className="flex flex-col gap-1">
+                                                    <h3 className="text-lg font-bold text-zinc-900 dark:text-zinc-100">
+                                                        {content.experience[activeExperienceIndex].title || "New Experience"}
+                                                        <span className="text-zinc-400 font-normal ml-2 text-base">
+                                                            {content.experience[activeExperienceIndex].company ? `at ${content.experience[activeExperienceIndex].company}` : ""}
+                                                        </span>
+                                                    </h3>
+                                                </div>
+                                            </CardHeader>
+                                            <CardContent className="space-y-6 pt-6">
+                                                <div className="space-y-4">
+                                                    {/* Role */}
+                                                    <div className="space-y-1.5">
+                                                        <Label className="text-xs uppercase font-bold text-zinc-500">What was your <span className="text-black dark:text-white">Role</span> at Company?</Label>
+                                                        <Input
+                                                            value={content.experience[activeExperienceIndex].title || ''}
+                                                            onChange={(e) => handleChange('experience', 'title', e.target.value, activeExperienceIndex)}
+                                                            className="h-11 bg-zinc-50 dark:bg-zinc-900 border-zinc-200 dark:border-zinc-700"
+                                                            placeholder="e.g. Senior Software Engineer"
+                                                        />
+                                                    </div>
+
+                                                    {/* Company */}
+                                                    <div className="space-y-1.5">
+                                                        <Label className="text-xs uppercase font-bold text-zinc-500">For which <span className="text-black dark:text-white">Company</span> did you work?</Label>
+                                                        <Input
+                                                            value={content.experience[activeExperienceIndex].company || ''}
+                                                            onChange={(e) => handleChange('experience', 'company', e.target.value, activeExperienceIndex)}
+                                                            className="h-11 bg-zinc-50 dark:bg-zinc-900 border-zinc-200 dark:border-zinc-700"
+                                                            placeholder="e.g. Google"
+                                                        />
+                                                    </div>
+
+                                                    {/* Date & Location */}
+                                                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                                        <div className="space-y-1.5">
+                                                            <Label className="text-xs uppercase font-bold text-zinc-500">How long were you there?</Label>
+                                                            <div className="flex gap-2 items-center">
+                                                                <div className="flex-1">
+                                                                    <DateSelector
+                                                                        value={content.experience[activeExperienceIndex].startDate}
+                                                                        onChange={(val) => handleChange('experience', 'startDate', val, activeExperienceIndex)}
+                                                                        placeholder="Start Date"
+                                                                    />
+                                                                </div>
+                                                                <span className="text-zinc-400">-</span>
+                                                                <div className="flex-1">
+                                                                    <DateSelector
+                                                                        value={content.experience[activeExperienceIndex].endDate}
+                                                                        onChange={(val) => handleChange('experience', 'endDate', val, activeExperienceIndex)}
+                                                                        placeholder="End Date"
+                                                                    />
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <div className="space-y-1.5">
+                                                            <Label className="text-xs uppercase font-bold text-zinc-500">Where was located?</Label>
+                                                            <Input
+                                                                value={content.experience[activeExperienceIndex].location || ''}
+                                                                onChange={(e) => handleChange('experience', 'location', e.target.value, activeExperienceIndex)}
+                                                                className="h-11 bg-zinc-50 dark:bg-zinc-900 border-zinc-200 dark:border-zinc-700"
+                                                                placeholder="e.g. New York, NY"
+                                                            />
+                                                        </div>
+                                                    </div>
+
+                                                    {/* Description */}
+                                                    <div className="space-y-1.5 pt-2">
+                                                        <Label className="text-xs uppercase font-bold text-zinc-500">What did you do?</Label>
+                                                        <div className="relative">
+                                                            <Textarea
+                                                                value={content.experience[activeExperienceIndex].description || ''}
+                                                                onChange={(e) => handleChange('experience', 'description', e.target.value, activeExperienceIndex)}
+                                                                className="min-h-[250px] p-4 font-mono text-sm leading-relaxed bg-white dark:bg-zinc-950 resize-none rounded-lg border-zinc-200 dark:border-zinc-700 focus:ring-blue-500/20"
+                                                                placeholder="• Lead a team of..."
+                                                            />
+                                                            <div className="absolute bottom-3 right-3 flex items-center gap-2">
+                                                                <div className="flex items-center gap-1 text-xs font-bold text-blue-600 bg-blue-50 px-2 py-1 rounded-md">
+                                                                    <Sparkles className="w-3 h-3" /> 10
+                                                                </div>
+                                                                <Button size="sm" className="h-8 gap-2 bg-gradient-to-r from-blue-600 to-indigo-600 text-white border-0 hover:from-blue-700 hover:to-indigo-700">
+                                                                    <Sparkles className="w-3.5 h-3.5" /> Generate Bullet
+                                                                </Button>
+                                                            </div>
+                                                        </div>
+                                                        <p className="text-xs text-zinc-500 flex items-center gap-1.5 mt-2">
+                                                            <Lightbulb className="w-3.5 h-3.5 text-amber-500" />
+                                                            Aim for a balanced mix of descriptive and key number bullet points.
+                                                        </p>
+                                                    </div>
+                                                </div>
+                                            </CardContent>
+                                            <div className="p-4 bg-zinc-50 dark:bg-zinc-900/50 border-t border-zinc-200 dark:border-zinc-800 flex justify-end">
+                                                <Button className="bg-blue-600 hover:bg-blue-700 text-white font-semibold">
+                                                    Save to Experience List
+                                                </Button>
+                                            </div>
+                                        </Card>
+                                    ) : (
+                                        <div className="flex flex-col items-center justify-center h-full text-zinc-400 space-y-4">
+                                            <div className="w-16 h-16 rounded-full bg-zinc-100 dark:bg-zinc-800 flex items-center justify-center">
+                                                <FileIcon className="w-8 h-8 opacity-50" />
+                                            </div>
+                                            <p>Select an experience to edit or add a new one.</p>
+                                            <Button onClick={() => {
+                                                addExperience()
+                                                setActiveExperienceIndex((content.experience?.length || 0))
+                                            }}>
+                                                <Plus className="w-4 h-4 mr-2" /> Add New Position
+                                            </Button>
+                                        </div>
+                                    )}
+                                </div>
+                            </div>
                         </TabsContent>
 
                         {/* Education Tab */}
