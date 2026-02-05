@@ -25,6 +25,7 @@ import {
     DropdownMenuSubContent
 } from "@/components/ui/dropdown-menu"
 import { MoreVertical, FileText as FileIcon, Copy, Eye, Download as DownloadIcon, Settings as SettingsIcon, Check, Sparkles, Lightbulb, Lock, AlertCircle, Loader2 } from 'lucide-react'
+import { SidebarList } from './SidebarList'
 
 import { toast } from 'sonner'
 
