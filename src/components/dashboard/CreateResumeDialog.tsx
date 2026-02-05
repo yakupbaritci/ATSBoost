@@ -37,6 +37,10 @@ export function CreateResumeDialog({ children }: { children?: React.ReactNode })
                 setOpen(false)
                 toast.success("Resume created successfully!")
             } catch (error: any) {
+                if (error.message === 'NEXT_REDIRECT' || error.message.includes('NEXT_REDIRECT')) {
+                    setOpen(false)
+                    return
+                }
                 console.error(error)
                 toast.error("Failed: " + (error.message || "Unknown error"))
             }
