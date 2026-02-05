@@ -254,33 +254,7 @@ export default function BuilderPage() {
         <div className="flex flex-col h-screen bg-zinc-50 dark:bg-zinc-950 overflow-hidden">
             {/* Top Bar */}
             {/* Top Bar - Minimalist */}
-            <header className="h-14 border-b border-zinc-200 bg-white dark:border-zinc-800 dark:bg-zinc-900 flex items-center justify-between px-4 shrink-0">
-                <div className="flex items-center gap-4">
-                    <Link href="/dashboard/resumes" className="text-zinc-500 hover:text-zinc-900 transition-colors">
-                        <ArrowLeft className="w-5 h-5" />
-                    </Link>
-                    <div className="flex items-center gap-2">
-                        <span className="text-sm text-zinc-400">
-                            {resume.is_optimized ? 'Optimized' : 'Draft'}
-                        </span>
-                    </div>
-                </div>
-                <div className="flex gap-2">
-                    <Button size="sm" variant="ghost" className="text-zinc-500" onClick={handleSave} disabled={saving}>
-                        {saving ? <Loader2 className="w-4 h-4 animate-spin mr-2" /> : <Save className="w-4 h-4 mr-2" />}
-                        {saving ? 'Saving...' : 'Save Draft'}
-                    </Button>
 
-                    <Button
-                        variant="ghost"
-                        size="sm"
-                        onClick={() => setIsWizardMode(!isWizardMode)}
-                        className="ml-2 text-zinc-400 hover:text-zinc-900"
-                    >
-                        {isWizardMode ? <LayoutDashboard className="w-4 h-4" /> : <Wand2 className="w-4 h-4" />}
-                    </Button>
-                </div>
-            </header>
 
             {/* Main Workspace - Simplified */}
             <div className="flex-1 overflow-hidden bg-[#f8f9fc] dark:bg-black">
