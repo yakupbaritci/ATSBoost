@@ -273,6 +273,7 @@ export default function BuilderPage() {
                 <ResumeForm
                     initialContent={resume.content}
                     onUpdate={handleUpdate}
+                    onSave={handleSave}
                     isWizardMode={isWizardMode}
                     key={isWizardMode ? 'wizard' : 'editor'}
                     title={resume.title}
