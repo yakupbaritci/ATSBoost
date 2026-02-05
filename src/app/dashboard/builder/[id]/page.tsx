@@ -11,7 +11,7 @@ import { Save, Loader2, ArrowLeft, FileText, Eye, Wand2, LayoutDashboard, Palett
 import Link from 'next/link'
 import { useParams, useSearchParams } from 'next/navigation'
 import { toast } from 'sonner'
-import { optimizeResumeContent, calculateATSScore, applySpecificImprovement, generateSingleBullet } from '@/app/actions/ai'
+import { optimizeResumeContent, calculateATSScore, applySpecificImprovement, generateSingleBullet, generateSummary } from '@/app/actions/ai'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger, DialogFooter } from '@/components/ui/dialog'
 import { Progress } from "@/components/ui/progress"
@@ -234,6 +234,17 @@ export default function BuilderPage() {
         try {
             const bullet = await generateSingleBullet(role, company, currentDesc)
             return bullet
+        } catch (error) {
+            console.error(error)
+            throw error
+        }
+    }
+
+    // New AI Handler for Summary Generation
+    const handleGenerateSummary = async (content: any) => {
+        try {
+            const summary = await generateSummary(content)
+            return summary
         } catch (error) {
             console.error(error)
             throw error
