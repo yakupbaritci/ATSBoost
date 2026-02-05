@@ -95,7 +95,7 @@ const TemplateClassic = ({ content }: { content: ResumeContent }) => (
     <Page size="A4" style={{ ...styles.page, fontFamily: 'Times-Roman' }}>
         {/* Header - Centered */}
         <View style={{ marginBottom: 20, borderBottomWidth: 1, borderBottomColor: '#000', paddingBottom: 10, alignItems: 'center' }}>
-            <Text style={{ fontSize: 24, fontWeight: 'bold', marginBottom: 4, textTransform: 'uppercase' }}>{content.contact?.fullName || 'YOUR NAME'}</Text>
+            <Text style={{ fontSize: 24, fontFamily: 'Times-Bold', marginBottom: 4, textTransform: 'uppercase' }}>{content.contact?.fullName || 'YOUR NAME'}</Text>
             <View style={{ flexDirection: 'row', flexWrap: 'wrap', gap: 10, fontSize: 10, justifyContent: 'center' }}>
                 {content.contact?.email && <Text>{content.contact.email}</Text>}
                 {content.contact?.phone && <Text>• {content.contact.phone}</Text>}
@@ -122,7 +122,7 @@ const TemplateClassic = ({ content }: { content: ResumeContent }) => (
                         <View style={styles.jobHeader}>
                             <View>
                                 <Text style={{ ...styles.jobTitle, fontFamily: 'Times-Bold' }}>{exp.title}</Text>
-                                <Text style={{ ...styles.jobCompany, fontFamily: 'Times-Italic' }}>{exp.company}</Text>
+                                <Text style={{ fontSize: 11, fontFamily: 'Times-Italic' }}>{exp.company}</Text>
                             </View>
                             <Text style={styles.jobDate}>{exp.startDate} - {exp.endDate}</Text>
                         </View>
@@ -226,7 +226,7 @@ const TemplateModern = ({ content }: { content: ResumeContent }) => (
             </View>
         )}
 
-        {/* Education */}
+        {/* Education - Same as Experience style */}
         {content.education?.length > 0 && (
             <View style={styles.section}>
                 <Text style={{ fontSize: 12, fontWeight: 'bold', color: '#2563eb', textTransform: 'uppercase', marginBottom: 10 }}>Education</Text>
@@ -258,9 +258,69 @@ const TemplateModern = ({ content }: { content: ResumeContent }) => (
     </Page>
 )
 
+// 3. Bold Template (Heavy Headers / High Contrast)
+const TemplateBold = ({ content }: { content: ResumeContent }) => (
+    <Page size="A4" style={{ ...styles.page, fontFamily: 'Open Sans' }}>
+        {/* Header - Heavy Block */}
+        <View style={{ backgroundColor: '#111', color: '#fff', margin: -40, marginBottom: 30, padding: 40, paddingBottom: 30 }}>
+            <Text style={{ fontSize: 32, fontWeight: 'bold', marginBottom: 5 }}>{content.contact?.fullName || 'YOUR NAME'}</Text>
+            <Text style={{ fontSize: 10, opacity: 0.8 }}>
+                {content.contact?.email} | {content.contact?.phone} | {content.contact?.location}
+            </Text>
+        </View>
+
+        {/* Content with bold dividers */}
+        {content.summary && (
+            <View style={styles.section}>
+                <Text style={{ fontSize: 14, fontWeight: 'bold', textTransform: 'uppercase', borderBottomWidth: 3, borderBottomColor: '#000', marginBottom: 8 }}>About Me</Text>
+                <Text style={styles.summary}>{content.summary}</Text>
+            </View>
+        )}
+
+        {content.experience?.length > 0 && (
+            <View style={styles.section}>
+                <Text style={{ fontSize: 14, fontWeight: 'bold', textTransform: 'uppercase', borderBottomWidth: 3, borderBottomColor: '#000', marginBottom: 12 }}>Experience</Text>
+                {content.experience.map((exp: any, i: number) => (
+                    <View key={i} style={{ marginBottom: 15 }}>
+                        <Text style={{ fontSize: 12, fontWeight: 'bold' }}>{exp.title} <Text style={{ fontWeight: 'normal' }}>at</Text> {exp.company}</Text>
+                        <Text style={{ fontSize: 9, color: '#444', marginBottom: 4 }}>{exp.startDate} - {exp.endDate}</Text>
+                        {exp.description && <Text style={{ fontSize: 10, lineHeight: 1.5 }}>{exp.description}</Text>}
+                    </View>
+                ))}
+            </View>
+        )}
+
+        {content.education?.length > 0 && (
+            <View style={styles.section}>
+                <Text style={{ fontSize: 14, fontWeight: 'bold', textTransform: 'uppercase', borderBottomWidth: 3, borderBottomColor: '#000', marginBottom: 12 }}>Education</Text>
+                {content.education.map((edu: any, i: number) => (
+                    <View key={i} style={{ marginBottom: 10 }}>
+                        <Text style={{ fontSize: 12, fontWeight: 'bold' }}>{edu.school}</Text>
+                        <Text style={{ fontSize: 10 }}>{edu.degree}</Text>
+                        <Text style={{ fontSize: 9, color: '#444' }}>{edu.startDate} - {edu.endDate}</Text>
+                    </View>
+                ))}
+            </View>
+        )}
+
+        {content.skills?.length > 0 && (
+            <View style={styles.section}>
+                <Text style={{ fontSize: 14, fontWeight: 'bold', textTransform: 'uppercase', borderBottomWidth: 3, borderBottomColor: '#000', marginBottom: 12 }}>Skills</Text>
+                <View style={{ flexDirection: 'row', flexWrap: 'wrap', gap: 5 }}>
+                    {content.skills.map((skill: string, i: number) => (
+                        <Text key={i} style={{ fontSize: 9, border: '1 solid #000', padding: '3 6' }}>{skill}</Text>
+                    ))}
+                </View>
+            </View>
+        )}
+    </Page>
+)
+
 const ResumeDocument = ({ content, template }: { content: ResumeContent, template: string }) => (
     <Document>
-        {template === 'modern' ? <TemplateModern content={content} /> : <TemplateClassic content={content} />}
+        {template === 'modern' ? <TemplateModern content={content} /> :
+            template === 'bold' ? <TemplateBold content={content} /> :
+                <TemplateClassic content={content} />}
     </Document>
 )
 
