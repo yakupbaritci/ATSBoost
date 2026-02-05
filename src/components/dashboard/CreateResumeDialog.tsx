@@ -148,20 +148,8 @@ export function CreateResumeDialog({ children }: { children?: React.ReactNode })
                                 />
                             </div>
                             <p className="text-sm text-zinc-500 dark:text-zinc-400">
-                                {progress === 100 ? "Ready to customize!" : "Please wait while we process your document."}
+                                {progress === 100 ? "Redirecting..." : "Please wait while we process your document."}
                             </p>
-
-                            {progress === 100 && createdResumeId && (
-                                <Button
-                                    onClick={() => {
-                                        setOpen(false)
-                                        router.push(`/dashboard/builder/${createdResumeId}?wizard=true`)
-                                    }}
-                                    className="mt-6 bg-green-600 hover:bg-green-700 text-white font-bold px-8 py-6 rounded-full animate-in fade-in slide-in-from-bottom-4 shadow-lg hover:shadow-xl hover:scale-105 transition-all"
-                                >
-                                    OPEN RESUME <ChevronRight className="w-5 h-5 ml-2" />
-                                </Button>
-                            )}
                         </div>
                     </div>
                 ) : (
