@@ -3,10 +3,15 @@
 import { Document, Page, Text, View, StyleSheet, PDFViewer, Font } from '@react-pdf/renderer'
 import { useEffect, useState } from 'react'
 
-// Register font with Turkish character support
+// Register font with Turkish character support and multiple styles
 Font.register({
     family: 'Roboto',
-    src: 'https://cdnjs.cloudflare.com/ajax/libs/ink/3.1.10/fonts/Roboto/roboto-medium-webfont.ttf'
+    fonts: [
+        { src: 'https://fonts.gstatic.com/s/roboto/v30/KFOmCnqEu92Fr1Mu4mxK.ttf' }, // Regular
+        { src: 'https://fonts.gstatic.com/s/roboto/v30/KFOlCnqEu92Fr1MmWUlfBBc4.ttf', fontWeight: 'bold' }, // Bold
+        { src: 'https://fonts.gstatic.com/s/roboto/v30/KFOkCnqEu92Fr1Mu51xIIzI.ttf', fontStyle: 'italic' }, // Italic
+        { src: 'https://fonts.gstatic.com/s/roboto/v30/KFOjCnqEu92Fr1Mu51TzBic6CsQ.ttf', fontWeight: 'bold', fontStyle: 'italic' } // Bold Italic
+    ]
 });
 
 const styles = StyleSheet.create({
