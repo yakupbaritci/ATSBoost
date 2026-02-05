@@ -157,12 +157,12 @@ export default function BuilderPage() {
         }
     }
 
-    const handleCheckScore = async () => {
+    const handleCheckScore = async (contentToAnalyze = resume.content) => {
         setScoring(true)
         setShowScoreModal(true)
         try {
             const jd = resume.content.targetJob?.description
-            const result = await calculateATSScore(resume.content, jd)
+            const result = await calculateATSScore(contentToAnalyze, jd)
             setAtsResult(result)
         } catch (e: any) {
             toast.error("Failed to calculate score")
@@ -185,12 +185,23 @@ export default function BuilderPage() {
         }
     }
 
-    const confirmFix = () => {
+    const confirmFix = async () => {
         if (pendingFixContent) {
+            // 1. Update the actual resume content
             handleUpdate(pendingFixContent)
-            toast.success("Improvement applied!")
+
+            // 2. Close the confirmation modal
             setShowFixConfirm(false)
+
+            // 3. Show success message
+            toast.success("Improvement applied! Re-calculating score...")
+
+            // 4. Temporarily clear pending content
+            const newContent = pendingFixContent
             setPendingFixContent(null)
+
+            // 5. Build instant urgency: Re-calculate score with the NEW content immediately
+            await handleCheckScore(newContent)
         }
     }
 
