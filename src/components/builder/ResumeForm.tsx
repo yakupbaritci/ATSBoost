@@ -278,8 +278,8 @@ export function ResumeForm({ initialContent, onUpdate, isWizardMode = false }: R
         { id: "skills", title: "Skills", description: "What are your superpowers?" },
         { id: "certifications", title: "Certifications", description: "Extra credentials." },
         { id: "projects", title: "Projects", description: "Showcase your work." },
-        { id: "languages", title: "Languages", description: "Global communication." },
-        { id: "job", title: "Target Job", description: "Tailor your resume." }
+        { id: "projects", title: "Projects", description: "Showcase your work." },
+        { id: "languages", title: "Languages", description: "Global communication." }
     ]
 
     const currentStepIndex = steps.findIndex(s => s.id === activeTab)
@@ -318,10 +318,38 @@ export function ResumeForm({ initialContent, onUpdate, isWizardMode = false }: R
         }
 
         if (newContent.education) fixSectionDates(newContent.education)
-        // For experience, usually a single date implies start date, but user requested consistent logic. 
-        // However, for jobs, usually single date = Start Date (Started 2023...). 
-        // But the user prompt says "sadece tek tarih var ise o egitimin veya isin bitis tarihidir". So applying to both.
         if (newContent.experience) fixSectionDates(newContent.experience)
+
+        // Fix huge skill blobs (e.g. "Infrastructure: Linux, AWS, Docker...")
+        // Only trigger if we find skills containing commas or colons and having a certain length
+        if (newContent.skills && newContent.skills.length > 0) {
+            let needsSkillSplit = false
+            const polishedSkills: string[] = []
+
+            newContent.skills.forEach(skill => {
+                // If skill contains comma or colon and is a bit long, try to split
+                if ((skill.includes(',') || skill.includes(':'))) {
+                    needsSkillSplit = true
+                    // Split logic:
+                    // 1. If it has ':', we can either keep the prefix or dump it. Usually users want the tools.
+                    //    "Backend: Node, Express" -> "Node", "Express" (Maybe keep Backend as a separate tag? Let's just split everything by delimiters)
+                    const parts = skill.split(/[:;,]+/) // Split by colon, semicolon, comma
+                    parts.forEach(p => {
+                        const trimmed = p.trim()
+                        if (trimmed && trimmed.length > 1) { // Filter out tiny noise
+                            polishedSkills.push(trimmed)
+                        }
+                    })
+                } else {
+                    polishedSkills.push(skill)
+                }
+            })
+
+            if (needsSkillSplit) {
+                newContent.skills = polishedSkills
+                hasChanges = true
+            }
+        }
 
         if (hasChanges) {
             setContent(newContent)
@@ -352,8 +380,7 @@ export function ResumeForm({ initialContent, onUpdate, isWizardMode = false }: R
 
         if (section === 'contact') {
             newContent.contact = { ...newContent.contact, [field]: value }
-        } else if (section === 'targetJob') {
-            newContent.targetJob = { ...newContent.targetJob, [field]: value }
+
         } else if (section === 'summary') {
             newContent.summary = value
         } else if (section === 'experience' && typeof index === 'number') {
@@ -760,40 +787,11 @@ export function ResumeForm({ initialContent, onUpdate, isWizardMode = false }: R
                         <Button onClick={() => addItem('languages')} variant="outline" className="w-full border-dashed"><Plus className="w-4 h-4 mr-2" /> Add Language</Button>
                     </TabsContent>
 
-                    {/* Target Job Tab */}
-                    <TabsContent value="job" className="mt-0 space-y-4">
-                        <Card>
-                            <CardHeader>
-                                <CardTitle>Target Job Description</CardTitle>
-                            </CardHeader>
-                            <CardContent className="space-y-4">
-                                <div className="space-y-2">
-                                    <Label>Job URL (LinkedIn/Indeed)</Label>
-                                    <Input
-                                        placeholder="https://..."
-                                        value={content.targetJob?.url || ''}
-                                        onChange={(e) => handleChange('targetJob', 'url', e.target.value)}
-                                    />
-                                    <p className="text-xs text-zinc-500">Paste a link to auto-fill (Coming soon) or paste text below.</p>
-                                </div>
-                                <div className="space-y-2">
-                                    <Label>Job Description Text</Label>
-                                    <Textarea
-                                        className="min-h-[300px]"
-                                        placeholder="Paste the full job description here..."
-                                        value={content.targetJob?.description || ''}
-                                        onChange={(e) => handleChange('targetJob', 'description', e.target.value)}
-                                    />
-                                </div>
-                            </CardContent>
-                        </Card>
-                    </TabsContent>
-
                 </div>
 
-                {/* Wizard Navigation Footer */}
+                {/* Footer Controls for Wizard */}
                 {isWizardMode && (
-                    <div className="pt-4 border-t mt-auto flex justify-between items-center bg-background sticky bottom-0 z-10 p-4">
+                    <div className="flex items-center justify-between border-t border-zinc-200 dark:border-zinc-800 p-4 shrink-0 bg-white dark:bg-zinc-900 mt-auto">
                         <Button
                             variant="outline"
                             onClick={handleBack}
