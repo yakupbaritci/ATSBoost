@@ -804,7 +804,7 @@ export function ResumeForm({
                                                             {exp.title || "Untitled Position"}
                                                         </h4>
                                                         <p className="text-xs text-zinc-500 truncate mt-0.5">
-                                                            {exp.company || "No Company"} • {exp.startDate || "Date"}
+                                                            {exp.company || "No Company"}
                                                         </p>
                                                     </div>
                                                     <Button
