@@ -1020,11 +1020,7 @@ export function ResumeForm({
                                                     </div>
                                                 </div>
                                             </CardContent>
-                                            <div className="p-4 bg-zinc-50 dark:bg-zinc-900/50 border-t border-zinc-200 dark:border-zinc-800 flex justify-end">
-                                                <Button className="bg-blue-600 hover:bg-blue-700 text-white font-semibold">
-                                                    Save to Experience List
-                                                </Button>
-                                            </div>
+
                                         </Card>
                                     ) : (
                                         <div className="flex flex-col items-center justify-center h-full text-zinc-400 space-y-4">
@@ -1192,11 +1188,7 @@ export function ResumeForm({
                                                     </div>
                                                 </div>
                                             </CardContent>
-                                            <div className="p-4 bg-zinc-50 dark:bg-zinc-900/50 border-t border-zinc-200 dark:border-zinc-800 flex justify-end">
-                                                <Button className="bg-blue-600 hover:bg-blue-700 text-white font-semibold">
-                                                    Save to Education List
-                                                </Button>
-                                            </div>
+
                                         </Card>
                                     ) : (
                                         <div className="flex flex-col items-center justify-center h-full text-zinc-400 space-y-4">
@@ -1312,11 +1304,7 @@ export function ResumeForm({
                                                     />
                                                 </div>
                                             </CardContent>
-                                            <div className="p-4 bg-zinc-50 dark:bg-zinc-900/50 border-t border-zinc-200 dark:border-zinc-800 flex justify-end">
-                                                <Button className="bg-blue-600 hover:bg-blue-700 text-white font-semibold">
-                                                    Save to Certifications List
-                                                </Button>
-                                            </div>
+
                                         </Card>
                                     ) : (
                                         <div className="flex flex-col items-center justify-center h-full text-zinc-400 space-y-4">
@@ -1389,11 +1377,7 @@ export function ResumeForm({
                                                     />
                                                 </div>
                                             </CardContent>
-                                            <div className="p-4 bg-zinc-50 dark:bg-zinc-900/50 border-t border-zinc-200 dark:border-zinc-800 flex justify-end">
-                                                <Button className="bg-blue-600 hover:bg-blue-700 text-white font-semibold">
-                                                    Save to Projects List
-                                                </Button>
-                                            </div>
+
                                         </Card>
                                     ) : (
                                         <div className="flex flex-col items-center justify-center h-full text-zinc-400 space-y-4">
@@ -1456,11 +1440,7 @@ export function ResumeForm({
                                                     />
                                                 </div>
                                             </CardContent>
-                                            <div className="p-4 bg-zinc-50 dark:bg-zinc-900/50 border-t border-zinc-200 dark:border-zinc-800 flex justify-end">
-                                                <Button className="bg-blue-600 hover:bg-blue-700 text-white font-semibold">
-                                                    Save to Languages List
-                                                </Button>
-                                            </div>
+
                                         </Card>
                                     ) : (
                                         <div className="flex flex-col items-center justify-center h-full text-zinc-400 space-y-4">
