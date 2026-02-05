@@ -1516,6 +1516,15 @@ export function ResumeForm({
                         <TabsContent value="finish" className="mt-0 h-[calc(100vh-140px)] flex relative -mx-4 lg:-mx-8">
                             {/* Main Content: Toolbar + Canvas */}
                             <div className="flex-1 flex flex-col min-w-0 bg-zinc-100 dark:bg-zinc-950/50">
+                                <style jsx global>{`
+                                    .no-scrollbar::-webkit-scrollbar {
+                                        display: none;
+                                    }
+                                    .no-scrollbar {
+                                        -ms-overflow-style: none;
+                                        scrollbar-width: none;
+                                    }
+                                `}</style>
                                 {/* Toolbar */}
                                 <div className="bg-white dark:bg-zinc-900 border-b border-zinc-200 dark:border-zinc-800 p-2 space-y-2 shrink-0 z-10 shadow-sm">
                                     {/* Top Row: Actions */}
