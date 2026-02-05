@@ -40,6 +40,20 @@ type ResumeContent = {
         description?: string
     }>
     skills: Array<string>
+    certifications?: Array<{
+        title: string
+        issuer?: string
+        date?: string
+    }>
+    projects?: Array<{
+        title: string
+        description?: string
+        link?: string
+    }>
+    languages?: Array<{
+        language: string
+        proficiency?: string
+    }>
     targetJob?: {
         title?: string
         company?: string
@@ -116,13 +130,16 @@ export function ResumeForm({ initialContent, onUpdate }: ResumeFormProps) {
     return (
         <div className="h-full flex flex-col">
             <Tabs defaultValue="contact" className="w-full h-full flex flex-col">
-                <TabsList className="grid w-full grid-cols-6 mb-4">
+                <TabsList className="grid w-full grid-cols-3 mb-2 h-auto">
                     <TabsTrigger value="contact">Contact</TabsTrigger>
                     <TabsTrigger value="summary">Summary</TabsTrigger>
                     <TabsTrigger value="experience">Exp</TabsTrigger>
                     <TabsTrigger value="education">Edu</TabsTrigger>
                     <TabsTrigger value="skills">Skills</TabsTrigger>
-                    <TabsTrigger value="job">Target Job</TabsTrigger>
+                    <TabsTrigger value="certifications">Certs</TabsTrigger>
+                    <TabsTrigger value="projects">Projects</TabsTrigger>
+                    <TabsTrigger value="languages">Langs</TabsTrigger>
+                    <TabsTrigger value="job">Job</TabsTrigger>
                 </TabsList>
 
                 <div className="flex-1 overflow-y-auto pr-2 space-y-4">
@@ -341,6 +358,54 @@ export function ResumeForm({ initialContent, onUpdate }: ResumeFormProps) {
                                 </Button>
                             </CardContent>
                         </Card>
+                    </TabsContent>
+
+                    {/* Certifications Tab */}
+                    <TabsContent value="certifications" className="mt-0 space-y-4">
+                        {content.certifications?.map((cert, index) => (
+                            <Card key={index}>
+                                <CardContent className="pt-6 space-y-4 relative">
+                                    <Button variant="ghost" size="icon" className="absolute top-2 right-2 text-red-500" onClick={() => removeItem('certifications', index)}><Trash2 className="w-4 h-4" /></Button>
+                                    <div className="grid grid-cols-2 gap-4">
+                                        <div className="space-y-2"><Label>Title</Label><Input value={cert.title} onChange={(e) => handleChange('certifications', 'title', e.target.value, index)} /></div>
+                                        <div className="space-y-2"><Label>Issuer</Label><Input value={cert.issuer} onChange={(e) => handleChange('certifications', 'issuer', e.target.value, index)} /></div>
+                                        <div className="space-y-2"><Label>Date</Label><Input value={cert.date} onChange={(e) => handleChange('certifications', 'date', e.target.value, index)} /></div>
+                                    </div>
+                                </CardContent>
+                            </Card>
+                        ))}
+                        <Button onClick={() => addItem('certifications')} variant="outline" className="w-full border-dashed"><Plus className="w-4 h-4 mr-2" /> Add Certification</Button>
+                    </TabsContent>
+
+                    {/* Projects Tab */}
+                    <TabsContent value="projects" className="mt-0 space-y-4">
+                        {content.projects?.map((proj, index) => (
+                            <Card key={index}>
+                                <CardContent className="pt-6 space-y-4 relative">
+                                    <Button variant="ghost" size="icon" className="absolute top-2 right-2 text-red-500" onClick={() => removeItem('projects', index)}><Trash2 className="w-4 h-4" /></Button>
+                                    <div className="space-y-2"><Label>Project Title</Label><Input value={proj.title} onChange={(e) => handleChange('projects', 'title', e.target.value, index)} /></div>
+                                    <div className="space-y-2"><Label>Link</Label><Input value={proj.link} onChange={(e) => handleChange('projects', 'link', e.target.value, index)} /></div>
+                                    <div className="space-y-2"><Label>Description</Label><Textarea value={proj.description} onChange={(e) => handleChange('projects', 'description', e.target.value, index)} /></div>
+                                </CardContent>
+                            </Card>
+                        ))}
+                        <Button onClick={() => addItem('projects')} variant="outline" className="w-full border-dashed"><Plus className="w-4 h-4 mr-2" /> Add Project</Button>
+                    </TabsContent>
+
+                    {/* Languages Tab */}
+                    <TabsContent value="languages" className="mt-0 space-y-4">
+                        {content.languages?.map((lang, index) => (
+                            <Card key={index}>
+                                <CardContent className="pt-6 space-y-4 relative">
+                                    <Button variant="ghost" size="icon" className="absolute top-2 right-2 text-red-500" onClick={() => removeItem('languages', index)}><Trash2 className="w-4 h-4" /></Button>
+                                    <div className="grid grid-cols-2 gap-4">
+                                        <div className="space-y-2"><Label>Language</Label><Input value={lang.language} onChange={(e) => handleChange('languages', 'language', e.target.value, index)} /></div>
+                                        <div className="space-y-2"><Label>Proficiency</Label><Input value={lang.proficiency} placeholder="e.g. Native, B2" onChange={(e) => handleChange('languages', 'proficiency', e.target.value, index)} /></div>
+                                    </div>
+                                </CardContent>
+                            </Card>
+                        ))}
+                        <Button onClick={() => addItem('languages')} variant="outline" className="w-full border-dashed"><Plus className="w-4 h-4 mr-2" /> Add Language</Button>
                     </TabsContent>
 
                     {/* Target Job Tab */}
