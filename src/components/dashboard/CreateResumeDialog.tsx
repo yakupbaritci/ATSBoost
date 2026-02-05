@@ -95,13 +95,9 @@ export function CreateResumeDialog({ children }: { children?: React.ReactNode })
                 setProgress(100)
                 setStatusMessage("Resume created successfully!")
 
-                // Small delay to show completion state
-                setTimeout(() => {
-                    setOpen(false)
-                    toast.success("Redirecting to builder...")
-                    router.push(`/dashboard/builder/${data.id}?wizard=true`)
-                }, 1500)
-
+                // No auto-redirect, let showing finish state
+                setCreatedResumeId(data.id)
+                // We keep open true to show the finish state
             } catch (error: any) {
                 console.error(error)
                 toast.error("Failed: " + (error.message || "Unknown error"))
@@ -147,7 +143,21 @@ export function CreateResumeDialog({ children }: { children?: React.ReactNode })
                                     style={{ width: `${progress}%` }}
                                 />
                             </div>
-                            <p className="text-sm text-zinc-500 dark:text-zinc-400">Please wait while we process your document.</p>
+                            <p className="text-sm text-zinc-500 dark:text-zinc-400">
+                                {progress === 100 ? "Ready to customize!" : "Please wait while we process your document."}
+                            </p>
+
+                            {progress === 100 && createdResumeId && (
+                                <Button
+                                    onClick={() => {
+                                        setOpen(false)
+                                        router.push(`/dashboard/builder/${createdResumeId}?wizard=true`)
+                                    }}
+                                    className="mt-6 bg-green-600 hover:bg-green-700 text-white font-bold px-8 py-6 rounded-full animate-in fade-in slide-in-from-bottom-4 shadow-lg hover:shadow-xl hover:scale-105 transition-all"
+                                >
+                                    OPEN RESUME <ChevronRight className="w-5 h-5 ml-2" />
+                                </Button>
+                            )}
                         </div>
                     </div>
                 ) : (
