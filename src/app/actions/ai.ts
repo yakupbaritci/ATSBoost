@@ -67,7 +67,7 @@ export async function parseResumeWithAI(rawText: string) {
                 linkedin: linkedinMatch ? `https://${linkedinMatch[0]}` : "",
                 portfolio: ""
             },
-            summary: rawText.slice(0, 500) + "...\n(Extracted via Fallback. Please edit manually.)",
+            summary: rawText.slice(0, 500) + `...\n\n⚠️ AI Parsing Failed. Error: ${error.message}\n(Using basic regex extraction. Please edit manually.)`,
             experience: [],
             education: [],
             skills: []
