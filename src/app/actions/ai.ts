@@ -30,7 +30,7 @@ export async function parseResumeWithAI(rawText: string) {
     try {
         const completion = await openai.chat.completions.create({
             messages: [{ role: "system", content: "You are a helpful assistant that outputs JSON." }, { role: "user", content: prompt }],
-            model: "gpt-4o",
+            model: "gpt-3.5-turbo",
             response_format: { type: "json_object" },
             temperature: 0,
         });
