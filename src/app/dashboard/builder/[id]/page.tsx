@@ -350,10 +350,8 @@ export default function BuilderPage() {
                                 <h3 className={`mt-4 text-lg font-bold ${atsResult.score >= 80 ? 'text-green-600' : atsResult.score >= 60 ? 'text-yellow-600' : 'text-red-600'}`}>
                                     {atsResult.verdict}
                                 </h3>
-                                <p className="text-center text-sm text-zinc-500 mt-2 px-4">
-                                    {atsResult.summary}
-                                </p>
                             </div>
+
 
                             {/* Improvements */}
                             <div className="space-y-3">
