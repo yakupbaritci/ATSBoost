@@ -36,9 +36,9 @@ export function CreateResumeDialog({ children }: { children?: React.ReactNode })
                 await createNewResume(formData)
                 setOpen(false)
                 toast.success("Resume created successfully!")
-            } catch (error) {
+            } catch (error: any) {
                 console.error(error)
-                toast.error("Failed to create resume. Please try again.")
+                toast.error("Failed: " + (error.message || "Unknown error"))
             }
         })
     }
