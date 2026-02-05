@@ -286,6 +286,7 @@ interface ResumeFormProps {
     onTemplateChange?: (template: string) => void
     previewComponent?: React.ReactNode // Pass the live preview component to render in the finish tab
     title?: string
+    onGenerateBullet?: (role: string, company: string, currentDesc: string) => Promise<string> // New prop for single bullet generation
 }
 
 export function ResumeForm({
@@ -300,12 +301,16 @@ export function ResumeForm({
     currentTemplate,
     onTemplateChange,
     previewComponent,
-    title = "Untitled Resume"
+    title = "Untitled Resume",
+    onGenerateBullet
 }: ResumeFormProps) {
     const [content, setContent] = useState<ResumeContent>(initialContent)
     const [activeTab, setActiveTab] = useState("contact")
     const [activeExperienceIndex, setActiveExperienceIndex] = useState(0)
     const [activeEducationIndex, setActiveEducationIndex] = useState(0) // New state for Education
+
+    // AI Generation State
+    const [isGeneratingBullet, setIsGeneratingBullet] = useState(false)
 
     // Wizard Steps Configuration - Refined Order
     const steps = [
@@ -956,8 +961,40 @@ export function ResumeForm({
                                                                 <div className="flex items-center gap-1 text-xs font-bold text-blue-600 bg-blue-50 px-2 py-1 rounded-md">
                                                                     <Sparkles className="w-3 h-3" /> 10
                                                                 </div>
-                                                                <Button size="sm" className="h-8 gap-2 bg-gradient-to-r from-blue-600 to-indigo-600 text-white border-0 hover:from-blue-700 hover:to-indigo-700">
-                                                                    <Sparkles className="w-3.5 h-3.5" /> Generate Bullet
+                                                                <Button
+                                                                    size="sm"
+                                                                    disabled={isGeneratingBullet}
+                                                                    onClick={async () => {
+                                                                        if (onGenerateBullet) {
+                                                                            setIsGeneratingBullet(true)
+                                                                            try {
+                                                                                const currentExp = content.experience[activeExperienceIndex];
+                                                                                const bullet = await onGenerateBullet(
+                                                                                    currentExp.title,
+                                                                                    currentExp.company,
+                                                                                    currentExp.description || ''
+                                                                                );
+
+                                                                                // Append the new bullet
+                                                                                const newDesc = currentExp.description
+                                                                                    ? currentExp.description + '\n• ' + bullet
+                                                                                    : '• ' + bullet;
+
+                                                                                handleChange('experience', 'description', newDesc, activeExperienceIndex);
+                                                                                toast.success("AI Bullet Generated!");
+                                                                            } catch (e) {
+                                                                                toast.error("Failed to generate bullet");
+                                                                            } finally {
+                                                                                setIsGeneratingBullet(false)
+                                                                            }
+                                                                        } else {
+                                                                            toast.error("AI Generation not available")
+                                                                        }
+                                                                    }}
+                                                                    className="h-8 gap-2 bg-gradient-to-r from-blue-600 to-indigo-600 text-white border-0 hover:from-blue-700 hover:to-indigo-700"
+                                                                >
+                                                                    {isGeneratingBullet ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <Sparkles className="w-3.5 h-3.5" />}
+                                                                    {isGeneratingBullet ? 'Generating...' : 'Generate Bullet'}
                                                                 </Button>
                                                             </div>
                                                         </div>
