@@ -56,12 +56,27 @@ export async function createNewResume(formData: FormData) {
         // 1. Extract raw text...
         const arrayBuffer = await file.arrayBuffer()
         const buffer = Buffer.from(arrayBuffer)
-        const rawText = await extractTextFromPdf(buffer)
+        let rawText = ''
+
+        try {
+            rawText = await extractTextFromPdf(buffer)
+        } catch (e: any) {
+            console.error("PDF Parse Error:", e)
+            // If parsing fails, we could throw or just continue empty.
+            // Continuing empty might be confusing. Throwing is better.
+            throw new Error(`Could not read PDF file: ${e.message}`)
+        }
 
         // 2. Structure with AI
-        let structuredData = await parseResumeWithAI(rawText)
+        let structuredData = null
+        try {
+            structuredData = await parseResumeWithAI(rawText)
+        } catch (e) {
+            console.error("AI Parse Warning:", e)
+            // AI failure is acceptable, fallback to raw text
+        }
 
-        // Fallback if AI fails
+        // Fallback if AI fails or returns null
         if (!structuredData) {
             structuredData = {
                 contact: {},
