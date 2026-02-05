@@ -653,8 +653,26 @@ export function ResumeForm({
                             </DropdownMenu>
                         </div>
 
+    // Helper to toggle visibility of list items
+    const toggleVisibility = (section: keyof ResumeContent, index: number) => {
+                            setContent(prev => {
+                                const newContent = { ...prev }
+                                if (Array.isArray(newContent[section])) {
+                                    const items = [...(newContent[section] as any[])]
+                                    items[index] = { ...items[index], visible: items[index].visible === undefined ? false : !items[index].visible }
+                                    newContent[section] = items
+                                }
+                                if (onUpdate) onUpdate(newContent)
+                                return newContent
+                            })
+                        }
+
                         {/* Right: Actions */}
                         <div className="flex items-center gap-2 ml-auto">
+                            <Button variant="outline" size="sm" className="h-9 gap-2 font-bold text-xs uppercase tracking-wider hidden sm:flex" onClick={() => onUpdate && onUpdate(content)}>
+                                <Save className="w-4 h-4" /> Save
+                            </Button>
+
                             {finishStep && (
                                 <Button
                                     variant="ghost"
