@@ -3,14 +3,14 @@
 import { Document, Page, Text, View, StyleSheet, PDFViewer, Font } from '@react-pdf/renderer'
 import { useEffect, useState } from 'react'
 
-// Register font with Turkish character support and multiple styles
+// Register Open Sans font which has excellent unicode support including Turkish
 Font.register({
-    family: 'Roboto',
+    family: 'Open Sans',
     fonts: [
-        { src: 'https://fonts.gstatic.com/s/roboto/v30/KFOmCnqEu92Fr1Mu4mxK.ttf' }, // Regular
-        { src: 'https://fonts.gstatic.com/s/roboto/v30/KFOlCnqEu92Fr1MmWUlfBBc4.ttf', fontWeight: 'bold' }, // Bold
-        { src: 'https://fonts.gstatic.com/s/roboto/v30/KFOkCnqEu92Fr1Mu51xIIzI.ttf', fontStyle: 'italic' }, // Italic
-        { src: 'https://fonts.gstatic.com/s/roboto/v30/KFOjCnqEu92Fr1Mu51TzBic6CsQ.ttf', fontWeight: 'bold', fontStyle: 'italic' } // Bold Italic
+        { src: 'https://cdn.jsdelivr.net/npm/open-sans-all@0.1.3/fonts/open-sans-regular.ttf' },
+        { src: 'https://cdn.jsdelivr.net/npm/open-sans-all@0.1.3/fonts/open-sans-700.ttf', fontWeight: 'bold' },
+        { src: 'https://cdn.jsdelivr.net/npm/open-sans-all@0.1.3/fonts/open-sans-italic.ttf', fontStyle: 'italic' },
+        { src: 'https://cdn.jsdelivr.net/npm/open-sans-all@0.1.3/fonts/open-sans-700italic.ttf', fontWeight: 'bold', fontStyle: 'italic' }
     ]
 });
 
