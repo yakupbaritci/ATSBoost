@@ -168,6 +168,47 @@ const ResumeDocument = ({ content }: { content: ResumeContent }) => (
                 </View>
             )}
 
+            {/* Certifications */}
+            {content.certifications?.length > 0 && (
+                <View style={styles.section}>
+                    <Text style={styles.sectionTitle}>Certifications</Text>
+                    {content.certifications.map((cert: any, i: number) => (
+                        <View key={i} style={{ marginBottom: 4 }}>
+                            <Text style={{ fontSize: 11, fontWeight: 'bold' }}>{cert.title}</Text>
+                            <Text style={{ fontSize: 10, color: '#666' }}>{cert.issuer} {cert.date ? `| ${cert.date}` : ''}</Text>
+                        </View>
+                    ))}
+                </View>
+            )}
+
+            {/* Projects */}
+            {content.projects?.length > 0 && (
+                <View style={styles.section}>
+                    <Text style={styles.sectionTitle}>Projects</Text>
+                    {content.projects.map((proj: any, i: number) => (
+                        <View key={i} style={{ marginBottom: 6 }}>
+                            <Text style={{ fontSize: 11, fontWeight: 'bold' }}>{proj.title} {proj.link ? `| ${proj.link}` : ''}</Text>
+                            {proj.description && <Text style={{ fontSize: 10, marginTop: 2 }}>{proj.description}</Text>}
+                        </View>
+                    ))}
+                </View>
+            )}
+
+            {/* Languages */}
+            {content.languages?.length > 0 && (
+                <View style={styles.section}>
+                    <Text style={styles.sectionTitle}>Languages</Text>
+                    <View style={{ flexDirection: 'row', flexWrap: 'wrap', gap: 10 }}>
+                        {content.languages.map((lang: any, i: number) => (
+                            <Text key={i} style={{ fontSize: 10 }}>
+                                <Text style={{ fontWeight: 'bold' }}>{lang.language}</Text>
+                                {lang.proficiency ? `: ${lang.proficiency}` : ''}
+                            </Text>
+                        ))}
+                    </View>
+                </View>
+            )}
+
         </Page>
     </Document>
 )
