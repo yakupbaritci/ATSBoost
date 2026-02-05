@@ -397,7 +397,7 @@ const TemplateTech = ({ content }: { content: ResumeContent }) => (
     </Page>
 )
 
-const ResumeDocument = ({ content, template }: { content: ResumeContent, template: string }) => (
+export const ResumeDocument = ({ content, template }: { content: ResumeContent, template: string }) => (
     <Document>
         {template === 'modern' ? <TemplateModern content={content} /> :
             template === 'bold' ? <TemplateBold content={content} /> :
