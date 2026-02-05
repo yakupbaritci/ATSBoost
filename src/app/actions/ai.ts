@@ -218,10 +218,11 @@ export async function generateSingleBullet(role: string, company: string, curren
     CONTEXT/EXISTING DRAFT: "${currentDescription || ''}"
 
     RULES:
-    1. Start with a strong action verb (e.g., Spearheaded, Engineered, Orchestrated).
-    2. Include a measurable result or metric if possible (e.g., "by 20%").
-    3. Keep it professional, concise, and impactful.
-    4. Return ONLY the bullet point text as a plain string. Do not wrap in quotes or JSON.
+    1. CRITICAL: Detect the language of the input (Role, Company, Context). If it is Turkish, write the bullet point in TURKISH. If English, write in ENGLISH. Match the input language exactly.
+    2. Start with a strong action verb (e.g., Spearheaded, Engineered, Orchestrated -> or Turkish equivalents like "Geliştirdi", "Yönetti", "Tasarladı").
+    3. Include a measurable result or metric if possible (e.g., "by 20%").
+    4. Keep it professional, concise, and impactful.
+    5. Return ONLY the bullet point text as a plain string. Do not wrap in quotes or JSON.
     `
 
     try {
