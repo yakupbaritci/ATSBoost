@@ -671,28 +671,17 @@ export function ResumeForm({
 
                         {/* Right: Actions */}
                         <div className="flex items-center gap-2 ml-auto">
-                            <Button variant="outline" size="sm" className="h-9 gap-2 font-bold text-xs uppercase tracking-wider hidden sm:flex" onClick={() => {
-                                if (onUpdate) onUpdate(content)
-                                if (onSave) onSave()
-                            }}>
+                            <Button
+                                variant="outline"
+                                size="sm"
+                                className="h-9 gap-2 font-bold text-xs uppercase tracking-wider hidden sm:flex border-zinc-200 hover:border-[#00C853] hover:bg-[#00C853] hover:text-white transition-all"
+                                onClick={() => {
+                                    if (onUpdate) onUpdate(content)
+                                    if (onSave) onSave()
+                                }}
+                            >
                                 <Save className="w-4 h-4" /> Save
                             </Button>
-
-                            {finishStep && (
-                                <Button
-                                    variant="ghost"
-                                    onClick={() => setActiveTab(finishStep.id)}
-                                    className={cn(
-                                        "h-9 px-4 rounded-md font-bold text-xs uppercase tracking-wider transition-all",
-                                        activeTab === finishStep.id
-                                            ? "bg-zinc-900 text-white hover:bg-zinc-800 dark:bg-zinc-100 dark:text-zinc-900 dark:hover:bg-zinc-200"
-                                            : "bg-zinc-100 text-zinc-700 hover:bg-zinc-200 dark:bg-zinc-800 dark:text-zinc-300 dark:hover:bg-zinc-700"
-                                    )}
-                                >
-                                    {finishStep.title} ✨
-                                </Button>
-                            )}
-
                         </div>
                     </div>
                 )}
