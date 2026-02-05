@@ -1,6 +1,7 @@
 "use client"
 
 import { useState, useTransition, useRef, useEffect } from "react"
+import { useRouter } from "next/navigation"
 import { Button } from "@/components/ui/button"
 import {
     Dialog,
@@ -20,12 +21,13 @@ import {
     SelectValue,
 } from "@/components/ui/select"
 import { createNewResume } from "@/app/actions/resume"
-import { Plus, Upload, Loader2, ChevronDown, ChevronRight, FileText } from "lucide-react"
+import { Plus, Upload, Loader2, ChevronDown, ChevronRight, FileText, Check } from "lucide-react"
 import { toast } from "sonner"
 import { cn } from "@/lib/utils"
 
 export function CreateResumeDialog({ children }: { children?: React.ReactNode }) {
     const [open, setOpen] = useState(false)
+    const router = useRouter()
     const [isPending, startTransition] = useTransition()
     const [importSectionOpen, setImportSectionOpen] = useState(false)
     const [fileName, setFileName] = useState<string | null>(null)
@@ -86,14 +88,20 @@ export function CreateResumeDialog({ children }: { children?: React.ReactNode })
     const handleSubmit = async (formData: FormData) => {
         startTransition(async () => {
             try {
-                await createNewResume(formData)
-                setOpen(false)
-                toast.success("Resume created successfully!")
-            } catch (error: any) {
-                if (error.message === 'NEXT_REDIRECT' || error.message.includes('NEXT_REDIRECT')) {
+                const data = await createNewResume(formData)
+
+                // Success State
+                setProgress(100)
+                setStatusMessage("Resume created successfully!")
+
+                // Small delay to show completion state
+                setTimeout(() => {
                     setOpen(false)
-                    return
-                }
+                    toast.success("Redirecting to builder...")
+                    router.push(`/dashboard/builder/${data.id}?wizard=true`)
+                }, 1500)
+
+            } catch (error: any) {
                 console.error(error)
                 toast.error("Failed: " + (error.message || "Unknown error"))
                 setProgress(0)
