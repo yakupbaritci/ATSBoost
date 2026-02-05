@@ -758,17 +758,46 @@ export function ResumeForm({
                                 {/* Left Sidebar: List & Score */}
                                 <div className="w-80 shrink-0 flex flex-col gap-4 overflow-y-auto pr-2 pb-20 [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]">
                                     {/* Score Card Mockup */}
-                                    <div className="bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-xl p-4 flex items-center gap-4 shadow-sm">
-                                        <div className="relative w-12 h-12 flex items-center justify-center">
+                                    {/* Dynamic Score Card */}
+                                    <div
+                                        onClick={onCheckScore}
+                                        className="bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-xl p-4 flex items-center gap-4 shadow-sm cursor-pointer hover:border-zinc-300 transition-colors"
+                                    >
+                                        <div className="relative w-12 h-12 flex items-center justify-center shrink-0">
                                             <svg className="w-full h-full transform -rotate-90">
                                                 <circle cx="24" cy="24" r="20" stroke="currentColor" strokeWidth="4" fill="transparent" className="text-zinc-100 dark:text-zinc-800" />
-                                                <circle cx="24" cy="24" r="20" stroke="#f59e0b" strokeWidth="4" fill="transparent" strokeDasharray={125} strokeDashoffset={125 - (125 * 0.79)} className="text-amber-500" strokeLinecap="round" />
+                                                {atsScore?.score !== undefined && (
+                                                    <circle
+                                                        cx="24" cy="24" r="20"
+                                                        stroke={atsScore.score >= 80 ? "#22c55e" : atsScore.score >= 60 ? "#eab308" : "#ef4444"}
+                                                        strokeWidth="4"
+                                                        fill="transparent"
+                                                        strokeDasharray={125}
+                                                        strokeDashoffset={125 - (125 * (atsScore.score / 100))}
+                                                        className="transition-all duration-1000 ease-out"
+                                                        strokeLinecap="round"
+                                                    />
+                                                )}
                                             </svg>
-                                            <span className="absolute text-sm font-bold text-amber-600">79</span>
+                                            <span className={cn("absolute text-sm font-bold",
+                                                atsScore?.score !== undefined
+                                                    ? (atsScore.score >= 80 ? "text-green-600" : atsScore.score >= 60 ? "text-yellow-600" : "text-red-600")
+                                                    : "text-zinc-400"
+                                            )}>
+                                                {atsScore?.score !== undefined ? atsScore.score : "?"}
+                                            </span>
                                         </div>
                                         <div>
-                                            <h4 className="text-sm font-bold text-zinc-700 dark:text-zinc-300">Your Resume Score</h4>
-                                            <p className="text-xs text-amber-600 font-medium">Needs improvement</p>
+                                            <h4 className="text-sm font-bold text-zinc-700 dark:text-zinc-300">Resume Score</h4>
+                                            <p className={cn("text-xs font-medium truncate",
+                                                atsScore?.score !== undefined
+                                                    ? (atsScore.score >= 80 ? "text-green-600" : atsScore.score >= 60 ? "text-yellow-600" : "text-red-500")
+                                                    : "text-zinc-500"
+                                            )}>
+                                                {atsScore?.score !== undefined
+                                                    ? (atsScore.score >= 80 ? "Excellent" : atsScore.score >= 60 ? "Needs Improvement" : "Critical Issues")
+                                                    : "Click to analyze"}
+                                            </p>
                                         </div>
                                     </div>
 
@@ -970,6 +999,50 @@ export function ResumeForm({
                             <div className="flex h-full gap-6">
                                 {/* Left Sidebar: List */}
                                 <div className="w-80 shrink-0 flex flex-col gap-4 overflow-y-auto pr-2 pb-20 [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]">
+
+                                    {/* Dynamic Score Card (Education Tab) */}
+                                    <div
+                                        onClick={onCheckScore}
+                                        className="bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-xl p-4 flex items-center gap-4 shadow-sm cursor-pointer hover:border-zinc-300 transition-colors"
+                                    >
+                                        <div className="relative w-12 h-12 flex items-center justify-center shrink-0">
+                                            <svg className="w-full h-full transform -rotate-90">
+                                                <circle cx="24" cy="24" r="20" stroke="currentColor" strokeWidth="4" fill="transparent" className="text-zinc-100 dark:text-zinc-800" />
+                                                {atsScore?.score !== undefined && (
+                                                    <circle
+                                                        cx="24" cy="24" r="20"
+                                                        stroke={atsScore.score >= 80 ? "#22c55e" : atsScore.score >= 60 ? "#eab308" : "#ef4444"}
+                                                        strokeWidth="4"
+                                                        fill="transparent"
+                                                        strokeDasharray={125}
+                                                        strokeDashoffset={125 - (125 * (atsScore.score / 100))}
+                                                        className="transition-all duration-1000 ease-out"
+                                                        strokeLinecap="round"
+                                                    />
+                                                )}
+                                            </svg>
+                                            <span className={cn("absolute text-sm font-bold",
+                                                atsScore?.score !== undefined
+                                                    ? (atsScore.score >= 80 ? "text-green-600" : atsScore.score >= 60 ? "text-yellow-600" : "text-red-600")
+                                                    : "text-zinc-400"
+                                            )}>
+                                                {atsScore?.score !== undefined ? atsScore.score : "?"}
+                                            </span>
+                                        </div>
+                                        <div>
+                                            <h4 className="text-sm font-bold text-zinc-700 dark:text-zinc-300">Resume Score</h4>
+                                            <p className={cn("text-xs font-medium truncate",
+                                                atsScore?.score !== undefined
+                                                    ? (atsScore.score >= 80 ? "text-green-600" : atsScore.score >= 60 ? "text-yellow-600" : "text-red-500")
+                                                    : "text-zinc-500"
+                                            )}>
+                                                {atsScore?.score !== undefined
+                                                    ? (atsScore.score >= 80 ? "Excellent" : atsScore.score >= 60 ? "Needs Improvement" : "Critical Issues")
+                                                    : "Click to analyze"}
+                                            </p>
+                                        </div>
+                                    </div>
+
                                     <div className="flex items-center justify-between px-1">
                                         <h3 className="font-bold text-zinc-900 dark:text-zinc-100 flex items-center gap-2">
                                             <ChevronDown className="w-4 h-4" /> Your Education
