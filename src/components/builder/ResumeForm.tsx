@@ -1598,7 +1598,7 @@ export function ResumeForm({
                                 <div className="flex-1 overflow-auto p-8 flex justify-center custom-scrollbar">
                                     <div className="w-full max-w-[210mm] transition-all duration-300 ease-in-out">
                                         {/* Resume Preview */}
-                                        <div className="shadow-2xl">
+                                        <div className="shadow-2xl w-full h-full min-h-[297mm]">
                                             {previewComponent}
                                         </div>
                                     </div>
