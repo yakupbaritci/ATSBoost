@@ -21,6 +21,7 @@ import { createClient } from '@/lib/supabase/client'
 import { useRouter } from 'next/navigation'
 import { useState } from 'react'
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
+import { CreateResumeDialog } from '@/components/dashboard/CreateResumeDialog'
 
 export default function DashboardLayout({
     children,
@@ -62,15 +63,14 @@ export default function DashboardLayout({
 
                 {/* Main Action Button */}
                 <div className="px-4 mb-6">
-                    <Button
-                        asChild
-                        className="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-6 shadow-md transition-all hover:scale-[1.02]"
-                    >
-                        <Link href="/dashboard/builder/new">
+                    <CreateResumeDialog>
+                        <Button
+                            className="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-6 shadow-md transition-all hover:scale-[1.02]"
+                        >
                             <Plus className="mr-2 h-5 w-5" />
                             CREATE NEW RESUME
-                        </Link>
-                    </Button>
+                        </Button>
+                    </CreateResumeDialog>
                 </div>
 
                 {/* Navigation Links */}
