@@ -122,3 +122,49 @@ export async function optimizeResumeContent(currentContent: any, jobDescription:
         throw new Error('Failed to optimize resume with AI')
     }
 }
+
+export async function calculateATSScore(resumeContent: any, jobDescription?: string) {
+    const prompt = `
+    You are a strict ATS (Applicant Tracking System) Scanner.
+    Analyze the resume below and provide a score from 0 to 100 based on ATS best practices.
+    
+    CRITERIA:
+    1. Keywords Matching (if JD provided, otherwise general industry keywords)
+    2. Formatting & Readability (Section headers, bullet points)
+    3. Measurable Results (Numbers, metrics in experience)
+    4. Contact Info Completeness
+    5. Action Verbs Usage
+
+    RESUME CONTENT:
+    ${JSON.stringify(resumeContent)}
+
+    ${jobDescription ? `TARGET JOB DESCRIPTION: \n${jobDescription}` : 'NO TARGET JOB DESCRIPTION PROVIDED. Evaluate based on general resume best practices for the implied industry.'}
+
+    Return ONLY valid JSON:
+    {
+        "score": number (0-100),
+        "verdict": string ("Excellent", "Good", "Needs Improvement", "Poor"),
+        "summary": string (Brief explanation of the score),
+        "missingKeywords": string[] (List of critical keywords missing from the resume, only if JD is provided),
+        "improvements": string[] (List of 3-5 specific actionable improvements)
+    }
+    `
+
+    try {
+        const completion = await openai.chat.completions.create({
+            messages: [{ role: "system", content: "You are a helpful assistant that outputs JSON." }, { role: "user", content: prompt }],
+            model: "gpt-4o",
+            response_format: { type: "json_object" },
+            temperature: 0.5,
+        });
+
+        const content = completion.choices[0].message.content;
+        if (!content) throw new Error("No content from OpenAI");
+
+        return JSON.parse(content);
+
+    } catch (error) {
+        console.error('ATS Score Error:', error)
+        throw new Error('Failed to calculate ATS score')
+    }
+}
