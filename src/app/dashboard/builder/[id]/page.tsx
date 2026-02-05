@@ -195,6 +195,23 @@ export default function BuilderPage() {
                             <>✨ Auto-Optimize</>
                         )}
                     </Button>
+                    {/* Download Button - Client Only */}
+                    {loading ? null : (
+                        <div className="inline-flex">
+                            <PDFDownloadLink
+                                document={<ResumeDocument content={resume.content} template={currentTemplate} />}
+                                fileName={`${resume.title || 'resume'}.pdf`}
+                            >
+                                {({ blob, url, loading: pdfLoading, error }) => (
+                                    <Button size="sm" variant="secondary" className="mr-2" disabled={pdfLoading}>
+                                        {pdfLoading ? <Loader2 className="w-4 h-4 animate-spin mr-2" /> : <Download className="w-4 h-4 mr-2" />}
+                                        Download PDF
+                                    </Button>
+                                )}
+                            </PDFDownloadLink>
+                        </div>
+                    )}
+
                     <Button
                         variant="outline"
                         size="sm"
