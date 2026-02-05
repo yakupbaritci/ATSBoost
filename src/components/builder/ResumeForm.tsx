@@ -1288,6 +1288,7 @@ export function ResumeForm({
                                         setActiveCertificationIndex((content.certifications?.length || 0))
                                     }}
                                     onToggleVisible={(index) => {
+                                        if (!content.certifications) return;
                                         const current = content.certifications[index];
                                         handleChange('certifications', 'visible', current.visible === false ? true : false, index);
                                     }}
@@ -1367,6 +1368,7 @@ export function ResumeForm({
                                         setActiveProjectIndex((content.projects?.length || 0))
                                     }}
                                     onToggleVisible={(index) => {
+                                        if (!content.projects) return;
                                         const current = content.projects[index];
                                         handleChange('projects', 'visible', current.visible === false ? true : false, index);
                                     }}
@@ -1447,6 +1449,7 @@ export function ResumeForm({
                                         setActiveLanguageIndex((content.languages?.length || 0))
                                     }}
                                     onToggleVisible={(index) => {
+                                        if (!content.languages) return;
                                         const current = content.languages[index];
                                         handleChange('languages', 'visible', current.visible === false ? true : false, index);
                                     }}
