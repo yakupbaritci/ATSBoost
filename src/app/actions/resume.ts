@@ -113,7 +113,6 @@ export async function createNewResume(formData: FormData) {
     }
 
     revalidatePath('/dashboard')
-    // If file was imported, stick to wizard. 
-    // If empty create, maybe wizard too? Yes, let's keep wizard for all new creates.
-    redirect(`/dashboard/builder/${data.id}?wizard=true`)
+    // Return the created resume data instead of redirecting
+    return data
 }
