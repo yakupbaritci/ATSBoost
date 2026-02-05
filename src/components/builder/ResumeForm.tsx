@@ -625,12 +625,18 @@ export function ResumeForm({
                         {/* Right: Actions */}
                         <div className="flex items-center gap-2 ml-auto">
                             {finishStep && (
-                                <TabsTrigger
-                                    value={finishStep.id}
-                                    className="h-9 px-4 rounded-md bg-zinc-100 dark:bg-zinc-800 hover:bg-zinc-200 dark:hover:bg-zinc-700 font-bold text-xs uppercase tracking-wider text-zinc-700 dark:text-zinc-300 data-[state=active]:bg-zinc-900 data-[state=active]:text-white dark:data-[state=active]:bg-zinc-100 dark:data-[state=active]:text-zinc-900 transition-all"
+                                <Button
+                                    variant="ghost"
+                                    onClick={() => setActiveTab(finishStep.id)}
+                                    className={cn(
+                                        "h-9 px-4 rounded-md font-bold text-xs uppercase tracking-wider transition-all",
+                                        activeTab === finishStep.id
+                                            ? "bg-zinc-900 text-white hover:bg-zinc-800 dark:bg-zinc-100 dark:text-zinc-900 dark:hover:bg-zinc-200"
+                                            : "bg-zinc-100 text-zinc-700 hover:bg-zinc-200 dark:bg-zinc-800 dark:text-zinc-300 dark:hover:bg-zinc-700"
+                                    )}
                                 >
                                     {finishStep.title} ✨
-                                </TabsTrigger>
+                                </Button>
                             )}
                             <Button variant="outline" size="sm" className="h-9 hidden xl:flex text-xs font-bold uppercase tracking-wider" disabled>
                                 AI Cover Letter
