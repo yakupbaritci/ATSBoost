@@ -95,48 +95,58 @@ export default function BuilderPage() {
 
     const handleSave = async () => {
         setSaving(true)
+        const toastId = toast.loading("Saving resume...", { duration: 10000 }) // Long duration, manually managed
 
-        if (params.id === 'new') {
-            // Create new resume
-            const { data: { user } } = await supabase.auth.getUser()
-            if (!user) {
-                setSaving(false)
-                return
+        try {
+            if (params.id === 'new') {
+                // Create new resume
+                const { data: { user } } = await supabase.auth.getUser()
+                if (!user) {
+                    toast.error("User not found", { id: toastId })
+                    return
+                }
+
+                const { data, error } = await supabase
+                    .from('resumes')
+                    .insert({
+                        user_id: user.id,
+                        title: resume.title || 'Untitled Resume',
+                        content: { ...resume.content, template: currentTemplate },
+                        updated_at: new Date().toISOString()
+                    })
+                    .select()
+                    .single()
+
+                if (error) throw error
+
+                if (data) {
+                    toast.success("CV Created!", { id: toastId })
+                    // Redirect to the new ID so URL updates
+                    window.location.href = `/dashboard/builder/${data.id}`
+                }
+            } else {
+                // Update existing
+                const { error } = await supabase
+                    .from('resumes')
+                    .update({
+                        content: { ...resume.content, template: currentTemplate },
+                        title: resume.title,
+                        updated_at: new Date().toISOString()
+                    })
+                    .eq('id', resume.id)
+
+                if (error) throw error
+
+                toast.success("CV'niz başarıyla kaydedildi! 🎉", { id: toastId })
             }
-
-            const { data, error } = await supabase
-                .from('resumes')
-                .insert({
-                    user_id: user.id,
-                    title: resume.title || 'Untitled Resume',
-                    content: { ...resume.content, template: currentTemplate },
-                    updated_at: new Date().toISOString()
-                })
-                .select()
-                .single()
-
-            if (data) {
-                // Redirect to the new ID so URL updates
-                window.location.href = `/dashboard/builder/${data.id}`
-            } else if (error) {
-                alert('Failed to create resume')
-            }
-        } else {
-            // Update existing
-            const { error } = await supabase
-                .from('resumes')
-                .update({
-                    content: { ...resume.content, template: currentTemplate },
-                    title: resume.title,
-                    updated_at: new Date().toISOString()
-                })
-                .eq('id', resume.id)
-
-            if (error) {
-                alert('Failed to save')
-            }
+        } catch (error: any) {
+            console.error(error)
+            toast.error("Failed to save: " + (error.message || "Unknown error"), { id: toastId })
+        } finally {
+            setSaving(false)
+            // Ensure dismiss if not handled
+            setTimeout(() => toast.dismiss(toastId), 2000)
         }
-        setSaving(false)
     }
 
     const handleOptimize = async () => {
