@@ -322,6 +322,15 @@ export function ResumeForm({
     const [activeCertificationIndex, setActiveCertificationIndex] = useState(0)
     const [activeLanguageIndex, setActiveLanguageIndex] = useState(0)
 
+    // Design Settings
+    const [designSettings, setDesignSettings] = useState({
+        font: 'Merriweather',
+        fontSize: '11',
+        lineSpacing: '1.15',
+        paragraphSpacing: '14',
+    })
+    const [isTemplateGalleryOpen, setIsTemplateGalleryOpen] = useState(false)
+
     // AI Generation State
     const [isGeneratingBullet, setIsGeneratingBullet] = useState(false)
     const [isGeneratingSummary, setIsGeneratingSummary] = useState(false)
