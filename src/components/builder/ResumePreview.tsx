@@ -258,61 +258,63 @@ const TemplateModern = ({ content }: { content: ResumeContent }) => (
     </Page>
 )
 
-// 3. Bold Template (Heavy Headers / High Contrast)
 const TemplateBold = ({ content }: { content: ResumeContent }) => (
-    <Page size="A4" style={{ ...styles.page, fontFamily: 'Open Sans' }}>
+    <Page size="A4" style={{ ...styles.page, fontFamily: 'Open Sans', padding: 0 }}>
         {/* Header - Heavy Block */}
-        <View style={{ backgroundColor: '#18181b', color: '#fff', margin: -40, marginBottom: 30, padding: 40, paddingBottom: 30 }}>
+        <View style={{ backgroundColor: '#18181b', color: '#fff', padding: 40, paddingBottom: 30 }}>
             <Text style={{ fontSize: 32, fontWeight: 'bold', marginBottom: 5 }}>{content.contact?.fullName || 'YOUR NAME'}</Text>
             <Text style={{ fontSize: 10, opacity: 0.8 }}>
-                {content.contact?.email} | {content.contact?.phone} | {content.contact?.location}
+                {content.contact?.email} {content.contact?.phone && `| ${content.contact.phone}`} {content.contact?.location && `| ${content.contact.location}`}
             </Text>
         </View>
 
-        {/* Content with bold dividers */}
-        {content.summary && (
-            <View style={styles.section}>
-                <Text style={{ fontSize: 14, fontWeight: 'bold', textTransform: 'uppercase', borderBottomWidth: 3, borderBottomColor: '#000', marginBottom: 8 }}>About Me</Text>
-                <Text style={styles.summary}>{content.summary}</Text>
-            </View>
-        )}
+        {/* Content Wrapper with Padding */}
+        <View style={{ padding: 40, paddingTop: 30 }}>
+            {/* Content with bold dividers */}
+            {content.summary && (
+                <View style={styles.section}>
+                    <Text style={{ fontSize: 14, fontWeight: 'bold', textTransform: 'uppercase', borderBottomWidth: 3, borderBottomColor: '#000', marginBottom: 8 }}>About Me</Text>
+                    <Text style={styles.summary}>{content.summary}</Text>
+                </View>
+            )}
 
-        {content.experience?.length > 0 && (
-            <View style={styles.section}>
-                <Text style={{ fontSize: 14, fontWeight: 'bold', textTransform: 'uppercase', borderBottomWidth: 3, borderBottomColor: '#000', marginBottom: 12 }}>Experience</Text>
-                {content.experience.map((exp: any, i: number) => (
-                    <View key={i} style={{ marginBottom: 15 }}>
-                        <Text style={{ fontSize: 12, fontWeight: 'bold' }}>{exp.title} <Text style={{ fontWeight: 'normal' }}>at</Text> {exp.company}</Text>
-                        <Text style={{ fontSize: 9, color: '#444', marginBottom: 4 }}>{exp.startDate} - {exp.endDate}</Text>
-                        {exp.description && <Text style={{ fontSize: 10, lineHeight: 1.5 }}>{exp.description}</Text>}
-                    </View>
-                ))}
-            </View>
-        )}
-
-        {content.education?.length > 0 && (
-            <View style={styles.section}>
-                <Text style={{ fontSize: 14, fontWeight: 'bold', textTransform: 'uppercase', borderBottomWidth: 3, borderBottomColor: '#000', marginBottom: 12 }}>Education</Text>
-                {content.education.map((edu: any, i: number) => (
-                    <View key={i} style={{ marginBottom: 10 }}>
-                        <Text style={{ fontSize: 12, fontWeight: 'bold' }}>{edu.school}</Text>
-                        <Text style={{ fontSize: 10 }}>{edu.degree}</Text>
-                        <Text style={{ fontSize: 9, color: '#444' }}>{edu.startDate} - {edu.endDate}</Text>
-                    </View>
-                ))}
-            </View>
-        )}
-
-        {content.skills?.length > 0 && (
-            <View style={styles.section}>
-                <Text style={{ fontSize: 14, fontWeight: 'bold', textTransform: 'uppercase', borderBottomWidth: 3, borderBottomColor: '#000', marginBottom: 12 }}>Skills</Text>
-                <View style={{ flexDirection: 'row', flexWrap: 'wrap', gap: 5 }}>
-                    {content.skills.map((skill: string, i: number) => (
-                        <Text key={i} style={{ fontSize: 9, border: '1 solid #000', padding: '3 6' }}>{skill}</Text>
+            {content.experience?.length > 0 && (
+                <View style={styles.section}>
+                    <Text style={{ fontSize: 14, fontWeight: 'bold', textTransform: 'uppercase', borderBottomWidth: 3, borderBottomColor: '#000', marginBottom: 12 }}>Experience</Text>
+                    {content.experience.map((exp: any, i: number) => (
+                        <View key={i} style={{ marginBottom: 15 }}>
+                            <Text style={{ fontSize: 12, fontWeight: 'bold' }}>{exp.title} <Text style={{ fontWeight: 'normal' }}>at</Text> {exp.company}</Text>
+                            <Text style={{ fontSize: 9, color: '#444', marginBottom: 4 }}>{exp.startDate} - {exp.endDate}</Text>
+                            {exp.description && <Text style={{ fontSize: 10, lineHeight: 1.5 }}>{exp.description}</Text>}
+                        </View>
                     ))}
                 </View>
-            </View>
-        )}
+            )}
+
+            {content.education?.length > 0 && (
+                <View style={styles.section}>
+                    <Text style={{ fontSize: 14, fontWeight: 'bold', textTransform: 'uppercase', borderBottomWidth: 3, borderBottomColor: '#000', marginBottom: 12 }}>Education</Text>
+                    {content.education.map((edu: any, i: number) => (
+                        <View key={i} style={{ marginBottom: 10 }}>
+                            <Text style={{ fontSize: 12, fontWeight: 'bold' }}>{edu.school}</Text>
+                            <Text style={{ fontSize: 10 }}>{edu.degree}</Text>
+                            <Text style={{ fontSize: 9, color: '#444' }}>{edu.startDate} - {edu.endDate}</Text>
+                        </View>
+                    ))}
+                </View>
+            )}
+
+            {content.skills?.length > 0 && (
+                <View style={styles.section}>
+                    <Text style={{ fontSize: 14, fontWeight: 'bold', textTransform: 'uppercase', borderBottomWidth: 3, borderBottomColor: '#000', marginBottom: 12 }}>Skills</Text>
+                    <View style={{ flexDirection: 'row', flexWrap: 'wrap', gap: 5 }}>
+                        {content.skills.map((skill: string, i: number) => (
+                            <Text key={i} style={{ fontSize: 9, border: '1 solid #000', padding: '3 6' }}>{skill}</Text>
+                        ))}
+                    </View>
+                </View>
+            )}
+        </View>
     </Page>
 )
 
