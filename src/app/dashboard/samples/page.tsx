@@ -8,7 +8,7 @@ import { Badge } from '@/components/ui/badge'
 import { SAMPLE_RESUMES } from '@/lib/sample-resumes'
 import { Search, MapPin, Briefcase, GraduationCap, Copy, Eye, Loader2 } from 'lucide-react'
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog'
-import { ResumePreview } from '@/components/builder/ResumePreview'
+import { SimpleResumePreview } from '@/components/builder/SimpleResumePreview'
 import { duplicateSampleResume } from '@/app/actions/sample'
 import { toast } from 'sonner'
 import { useRouter } from 'next/navigation'
@@ -178,7 +178,7 @@ export default function SampleLibraryPage() {
                         {/* We render the ResumePreview component here properly scaled/fitted */}
                         <div className="max-w-[800px] mx-auto shadow-2xl bg-white min-h-[1100px]">
                             {previewSample && (
-                                <ResumePreview content={previewSample.content} template="modern" />
+                                <SimpleResumePreview content={previewSample.content} />
                             )}
                         </div>
                     </div>
