@@ -140,25 +140,6 @@ export default function BuilderPage() {
                             <>✨ Auto-Optimize</>
                         )}
                     </Button>
-                        )}
-                </Button>
-                <Button
-                    variant="outline"
-                    size="sm"
-                    onClick={() => setIsWizardMode(!isWizardMode)}
-                    className="ml-2"
-                >
-                    {isWizardMode ? <LayoutDashboard className="w-4 h-4 mr-2" /> : <Wand2 className="w-4 h-4 mr-2" />}
-                    {isWizardMode ? 'Editor Mode' : 'Wizard Mode'}
-                </Button>
-        </div>
-            </header >
-
-        {/* Main Workspace */ }
-        < div className = "flex-1 flex overflow-hidden" >
-            {/* Left: Interactive Form */ }
-            < div className = "w-1/2 p-6 overflow-hidden border-r border-zinc-200 bg-white dark:border-zinc-800 dark:bg-zinc-900" >
-                <ResumeForm
                     initialContent={resume.content}
                     onUpdate={handleUpdate}
                     isWizardMode={isWizardMode}
@@ -166,37 +147,37 @@ export default function BuilderPage() {
                 />
                 </div >
 
-        {/* Right: Live Preview */ }
-        < div className = "w-1/2 bg-zinc-100 p-8 dark:bg-zinc-950 flex flex-col overflow-hidden" >
-            <Tabs defaultValue="preview" className="w-full h-full flex flex-col">
-                <div className="flex justify-center mb-4">
-                    <TabsList>
-                        <TabsTrigger value="preview"><Eye className="w-4 h-4 mr-2" /> ATS Preview</TabsTrigger>
-                        <TabsTrigger value="original" disabled={!resume.original_pdf_url}><FileText className="w-4 h-4 mr-2" /> Original PDF</TabsTrigger>
-                    </TabsList>
-                </div>
-
-                <TabsContent value="preview" className="flex-1 flex justify-center overflow-hidden data-[state=inactive]:hidden">
-                    <div className="w-full max-w-[210mm] shadow-2xl h-full overflow-y-auto">
-                        <ResumePreview content={resume.content} />
-                    </div>
-                </TabsContent>
-
-                <TabsContent value="original" className="flex-1 h-full data-[state=inactive]:hidden">
-                    {resume.original_pdf_url ? (
-                        <iframe
-                            src={resume.original_pdf_url}
-                            className="w-full h-full rounded-lg border border-zinc-200 dark:border-zinc-800"
-                        />
-                    ) : (
-                        <div className="flex items-center justify-center h-full text-zinc-500">
-                            No original PDF found
+                {/* Right: Live Preview */}
+                < div className="w-1/2 bg-zinc-100 p-8 dark:bg-zinc-950 flex flex-col overflow-hidden" >
+                    <Tabs defaultValue="preview" className="w-full h-full flex flex-col">
+                        <div className="flex justify-center mb-4">
+                            <TabsList>
+                                <TabsTrigger value="preview"><Eye className="w-4 h-4 mr-2" /> ATS Preview</TabsTrigger>
+                                <TabsTrigger value="original" disabled={!resume.original_pdf_url}><FileText className="w-4 h-4 mr-2" /> Original PDF</TabsTrigger>
+                            </TabsList>
                         </div>
-                    )}
-                </TabsContent>
-            </Tabs>
+
+                        <TabsContent value="preview" className="flex-1 flex justify-center overflow-hidden data-[state=inactive]:hidden">
+                            <div className="w-full max-w-[210mm] shadow-2xl h-full overflow-y-auto">
+                                <ResumePreview content={resume.content} />
+                            </div>
+                        </TabsContent>
+
+                        <TabsContent value="original" className="flex-1 h-full data-[state=inactive]:hidden">
+                            {resume.original_pdf_url ? (
+                                <iframe
+                                    src={resume.original_pdf_url}
+                                    className="w-full h-full rounded-lg border border-zinc-200 dark:border-zinc-800"
+                                />
+                            ) : (
+                                <div className="flex items-center justify-center h-full text-zinc-500">
+                                    No original PDF found
+                                </div>
+                            )}
+                        </TabsContent>
+                    </Tabs>
                 </div >
-            </div >
+        </div >
         </div >
     )
 }
