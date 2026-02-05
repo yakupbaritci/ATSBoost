@@ -144,7 +144,7 @@ export async function calculateATSScore(resumeContent: any, jobDescription?: str
     {
         "score": number (0-100),
         "verdict": string ("Excellent", "Good", "Needs Improvement", "Poor"),
-        "summary": string (Brief explanation of the score),
+        "summary": string (Brief feedback on why the score is high or low. Do NOT list the criteria used.),
         "missingKeywords": string[] (List of critical keywords missing from the resume, only if JD is provided),
         "improvements": string[] (List of 3-5 specific actionable improvements)
     }
