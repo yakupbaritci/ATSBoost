@@ -7,12 +7,52 @@ import { Label } from '@/components/ui/label'
 import { Textarea } from '@/components/ui/textarea'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { Button } from '@/components/ui/button'
-import { Plus, Trash2, Calendar as CalendarIcon, X } from 'lucide-react'
+import { Plus, Trash2, Calendar as CalendarIcon, X, ChevronDown, ChevronUp } from 'lucide-react'
 import { useEffect, KeyboardEvent } from 'react'
 import { Badge } from '@/components/ui/badge'
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover'
+import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { cn } from '@/lib/utils'
+
+// Accordion Card Component for managing expandable sections
+const AccordionItem = ({
+    title,
+    subtitle,
+    children,
+    onDelete,
+    defaultOpen = false
+}: {
+    title: string,
+    subtitle?: string,
+    children: React.ReactNode,
+    onDelete: () => void,
+    defaultOpen?: boolean
+}) => {
+    const [isOpen, setIsOpen] = useState(defaultOpen)
+
+    return (
+        <Card>
+            <CardHeader className="p-4 flex flex-row items-center justify-between space-y-0 cursor-pointer hover:bg-zinc-50 dark:hover:bg-zinc-900 transition-colors" onClick={() => setIsOpen(!isOpen)}>
+                <div className="flex flex-col">
+                    <span className="font-semibold text-sm">{title || "New Item"}</span>
+                    {subtitle && <span className="text-xs text-muted-foreground">{subtitle}</span>}
+                </div>
+                <div className="flex items-center gap-2">
+                    <Button variant="ghost" size="icon" className="h-8 w-8 text-red-500 hover:text-red-700 hover:bg-red-50" onClick={(e) => { e.stopPropagation(); onDelete(); }}>
+                        <Trash2 className="w-4 h-4" />
+                    </Button>
+                    {isOpen ? <ChevronUp className="w-4 h-4 text-muted-foreground" /> : <ChevronDown className="w-4 h-4 text-muted-foreground" />}
+                </div>
+            </CardHeader>
+            {isOpen && (
+                <CardContent className="pt-0 p-4 border-t">
+                    {children}
+                </CardContent>
+            )}
+        </Card>
+    )
+}
 
 // Helper for date generation
 const months = [
@@ -413,58 +453,54 @@ export function ResumeForm({ initialContent, onUpdate }: ResumeFormProps) {
                     {/* Experience Tab */}
                     <TabsContent value="experience" className="mt-0 space-y-4">
                         {content.experience?.map((exp, index) => (
-                            <Card key={`${exp.id}-${index}`}>
-                                <CardContent className="pt-6 space-y-4 relative">
-                                    <Button
-                                        variant="ghost"
-                                        size="icon"
-                                        className="absolute top-2 right-2 text-red-500 hover:bg-red-50 hover:text-red-600"
-                                        onClick={() => removeItem('experience', index)}
-                                    >
-                                        <Trash2 className="w-4 h-4" />
-                                    </Button>
-                                    <div className="grid grid-cols-2 gap-4">
-                                        <div className="space-y-2">
-                                            <Label>Job Title</Label>
-                                            <Input
-                                                value={exp.title || ''}
-                                                onChange={(e) => handleChange('experience', 'title', e.target.value, index)}
-                                            />
-                                        </div>
-                                        <div className="space-y-2">
-                                            <Label>Company</Label>
-                                            <Input
-                                                value={exp.company || ''}
-                                                onChange={(e) => handleChange('experience', 'company', e.target.value, index)}
-                                            />
-                                        </div>
-                                        <div className="space-y-2">
-                                            <Label>Start Date</Label>
-                                            <DateSelector
-                                                value={exp.startDate}
-                                                onChange={(val) => handleChange('experience', 'startDate', val, index)}
-                                                placeholder="Start Date"
-                                            />
-                                        </div>
-                                        <div className="space-y-2">
-                                            <Label>End Date</Label>
-                                            <DateSelector
-                                                value={exp.endDate}
-                                                onChange={(val) => handleChange('experience', 'endDate', val, index)}
-                                                placeholder="End Date"
-                                            />
-                                        </div>
-                                    </div>
+                            <AccordionItem
+                                key={`${exp.id}-${index}`}
+                                title={exp.title || "Job Position"}
+                                subtitle={exp.company}
+                                onDelete={() => removeItem('experience', index)}
+                                defaultOpen={index === 0} // Open first item by default
+                            >
+                                <div className="grid grid-cols-2 gap-4 mt-4">
                                     <div className="space-y-2">
-                                        <Label>Description (Bullet Points)</Label>
-                                        <Textarea
-                                            value={exp.description || ''}
-                                            onChange={(e) => handleChange('experience', 'description', e.target.value, index)}
-                                            className="min-h-[100px]"
+                                        <Label>Job Title</Label>
+                                        <Input
+                                            value={exp.title || ''}
+                                            onChange={(e) => handleChange('experience', 'title', e.target.value, index)}
                                         />
                                     </div>
-                                </CardContent>
-                            </Card>
+                                    <div className="space-y-2">
+                                        <Label>Company</Label>
+                                        <Input
+                                            value={exp.company || ''}
+                                            onChange={(e) => handleChange('experience', 'company', e.target.value, index)}
+                                        />
+                                    </div>
+                                    <div className="space-y-2">
+                                        <Label>Start Date</Label>
+                                        <DateSelector
+                                            value={exp.startDate}
+                                            onChange={(val) => handleChange('experience', 'startDate', val, index)}
+                                            placeholder="Start Date"
+                                        />
+                                    </div>
+                                    <div className="space-y-2">
+                                        <Label>End Date</Label>
+                                        <DateSelector
+                                            value={exp.endDate}
+                                            onChange={(val) => handleChange('experience', 'endDate', val, index)}
+                                            placeholder="End Date"
+                                        />
+                                    </div>
+                                </div>
+                                <div className="space-y-2 mt-4">
+                                    <Label>Description (Bullet Points)</Label>
+                                    <Textarea
+                                        value={exp.description || ''}
+                                        onChange={(e) => handleChange('experience', 'description', e.target.value, index)}
+                                        className="min-h-[100px]"
+                                    />
+                                </div>
+                            </AccordionItem>
                         ))}
                         <Button onClick={addExperience} variant="outline" className="w-full border-dashed">
                             <Plus className="w-4 h-4 mr-2" /> Add Experience
@@ -474,50 +510,46 @@ export function ResumeForm({ initialContent, onUpdate }: ResumeFormProps) {
                     {/* Education Tab */}
                     <TabsContent value="education" className="mt-0 space-y-4">
                         {content.education?.map((edu, index) => (
-                            <Card key={`${edu.id}-${index}`}>
-                                <CardContent className="pt-6 space-y-4 relative">
-                                    <Button
-                                        variant="ghost"
-                                        size="icon"
-                                        className="absolute top-2 right-2 text-red-500 hover:bg-red-50 hover:text-red-600"
-                                        onClick={() => removeItem('education', index)}
-                                    >
-                                        <Trash2 className="w-4 h-4" />
-                                    </Button>
-                                    <div className="grid grid-cols-2 gap-4">
-                                        <div className="space-y-2">
-                                            <Label>School / University</Label>
-                                            <Input
-                                                value={edu.school || ''}
-                                                onChange={(e) => handleChange('education', 'school', e.target.value, index)}
-                                            />
-                                        </div>
-                                        <div className="space-y-2">
-                                            <Label>Degree / Major</Label>
-                                            <Input
-                                                value={edu.degree || ''}
-                                                onChange={(e) => handleChange('education', 'degree', e.target.value, index)}
-                                            />
-                                        </div>
-                                        <div className="space-y-2">
-                                            <Label>Start Date</Label>
-                                            <DateSelector
-                                                value={edu.startDate}
-                                                onChange={(val) => handleChange('education', 'startDate', val, index)}
-                                                placeholder="Start Date"
-                                            />
-                                        </div>
-                                        <div className="space-y-2">
-                                            <Label>End Date (or Graduation)</Label>
-                                            <DateSelector
-                                                value={edu.endDate}
-                                                onChange={(val) => handleChange('education', 'endDate', val, index)}
-                                                placeholder="Graduation Year"
-                                            />
-                                        </div>
+                            <AccordionItem
+                                key={`${edu.id}-${index}`}
+                                title={edu.school || "School / University"}
+                                subtitle={edu.degree}
+                                onDelete={() => removeItem('education', index)}
+                                defaultOpen={index === 0}
+                            >
+                                <div className="grid grid-cols-2 gap-4 mt-4">
+                                    <div className="space-y-2">
+                                        <Label>School / University</Label>
+                                        <Input
+                                            value={edu.school || ''}
+                                            onChange={(e) => handleChange('education', 'school', e.target.value, index)}
+                                        />
                                     </div>
-                                </CardContent>
-                            </Card>
+                                    <div className="space-y-2">
+                                        <Label>Degree / Major</Label>
+                                        <Input
+                                            value={edu.degree || ''}
+                                            onChange={(e) => handleChange('education', 'degree', e.target.value, index)}
+                                        />
+                                    </div>
+                                    <div className="space-y-2">
+                                        <Label>Start Date</Label>
+                                        <DateSelector
+                                            value={edu.startDate}
+                                            onChange={(val) => handleChange('education', 'startDate', val, index)}
+                                            placeholder="Start Date"
+                                        />
+                                    </div>
+                                    <div className="space-y-2">
+                                        <Label>End Date (or Graduation)</Label>
+                                        <DateSelector
+                                            value={edu.endDate}
+                                            onChange={(val) => handleChange('education', 'endDate', val, index)}
+                                            placeholder="Graduation Year"
+                                        />
+                                    </div>
+                                </div>
+                            </AccordionItem>
                         ))}
                         <Button onClick={addEducation} variant="outline" className="w-full border-dashed">
                             <Plus className="w-4 h-4 mr-2" /> Add Education
@@ -571,16 +603,19 @@ export function ResumeForm({ initialContent, onUpdate }: ResumeFormProps) {
                     {/* Certifications Tab */}
                     <TabsContent value="certifications" className="mt-0 space-y-4">
                         {content.certifications?.map((cert, index) => (
-                            <Card key={index}>
-                                <CardContent className="pt-6 space-y-4 relative">
-                                    <Button variant="ghost" size="icon" className="absolute top-2 right-2 text-red-500" onClick={() => removeItem('certifications', index)}><Trash2 className="w-4 h-4" /></Button>
-                                    <div className="grid grid-cols-2 gap-4">
-                                        <div className="space-y-2"><Label>Title</Label><Input value={cert.title} onChange={(e) => handleChange('certifications', 'title', e.target.value, index)} /></div>
-                                        <div className="space-y-2"><Label>Issuer</Label><Input value={cert.issuer} onChange={(e) => handleChange('certifications', 'issuer', e.target.value, index)} /></div>
-                                        <div className="space-y-2"><Label>Date</Label><Input value={cert.date} onChange={(e) => handleChange('certifications', 'date', e.target.value, index)} /></div>
-                                    </div>
-                                </CardContent>
-                            </Card>
+                            <AccordionItem
+                                key={index}
+                                title={cert.title || "Certification"}
+                                subtitle={cert.issuer}
+                                onDelete={() => removeItem('certifications', index)}
+                                defaultOpen={index === 0}
+                            >
+                                <div className="grid grid-cols-2 gap-4 mt-4">
+                                    <div className="space-y-2"><Label>Title</Label><Input value={cert.title} onChange={(e) => handleChange('certifications', 'title', e.target.value, index)} /></div>
+                                    <div className="space-y-2"><Label>Issuer</Label><Input value={cert.issuer} onChange={(e) => handleChange('certifications', 'issuer', e.target.value, index)} /></div>
+                                    <div className="space-y-2"><Label>Date</Label><Input value={cert.date} onChange={(e) => handleChange('certifications', 'date', e.target.value, index)} /></div>
+                                </div>
+                            </AccordionItem>
                         ))}
                         <Button onClick={() => addItem('certifications')} variant="outline" className="w-full border-dashed"><Plus className="w-4 h-4 mr-2" /> Add Certification</Button>
                     </TabsContent>
@@ -588,14 +623,16 @@ export function ResumeForm({ initialContent, onUpdate }: ResumeFormProps) {
                     {/* Projects Tab */}
                     <TabsContent value="projects" className="mt-0 space-y-4">
                         {content.projects?.map((proj, index) => (
-                            <Card key={index}>
-                                <CardContent className="pt-6 space-y-4 relative">
-                                    <Button variant="ghost" size="icon" className="absolute top-2 right-2 text-red-500" onClick={() => removeItem('projects', index)}><Trash2 className="w-4 h-4" /></Button>
-                                    <div className="space-y-2"><Label>Project Title</Label><Input value={proj.title} onChange={(e) => handleChange('projects', 'title', e.target.value, index)} /></div>
-                                    <div className="space-y-2"><Label>Link</Label><Input value={proj.link} onChange={(e) => handleChange('projects', 'link', e.target.value, index)} /></div>
-                                    <div className="space-y-2"><Label>Description</Label><Textarea value={proj.description} onChange={(e) => handleChange('projects', 'description', e.target.value, index)} /></div>
-                                </CardContent>
-                            </Card>
+                            <AccordionItem
+                                key={index}
+                                title={proj.title || "Project"}
+                                onDelete={() => removeItem('projects', index)}
+                                defaultOpen={index === 0}
+                            >
+                                <div className="space-y-2 mt-4"><Label>Project Title</Label><Input value={proj.title} onChange={(e) => handleChange('projects', 'title', e.target.value, index)} /></div>
+                                <div className="space-y-2"><Label>Link</Label><Input value={proj.link} onChange={(e) => handleChange('projects', 'link', e.target.value, index)} /></div>
+                                <div className="space-y-2"><Label>Description</Label><Textarea value={proj.description} onChange={(e) => handleChange('projects', 'description', e.target.value, index)} /></div>
+                            </AccordionItem>
                         ))}
                         <Button onClick={() => addItem('projects')} variant="outline" className="w-full border-dashed"><Plus className="w-4 h-4 mr-2" /> Add Project</Button>
                     </TabsContent>
@@ -603,15 +640,18 @@ export function ResumeForm({ initialContent, onUpdate }: ResumeFormProps) {
                     {/* Languages Tab */}
                     <TabsContent value="languages" className="mt-0 space-y-4">
                         {content.languages?.map((lang, index) => (
-                            <Card key={index}>
-                                <CardContent className="pt-6 space-y-4 relative">
-                                    <Button variant="ghost" size="icon" className="absolute top-2 right-2 text-red-500" onClick={() => removeItem('languages', index)}><Trash2 className="w-4 h-4" /></Button>
-                                    <div className="grid grid-cols-2 gap-4">
-                                        <div className="space-y-2"><Label>Language</Label><Input value={lang.language} onChange={(e) => handleChange('languages', 'language', e.target.value, index)} /></div>
-                                        <div className="space-y-2"><Label>Proficiency</Label><Input value={lang.proficiency} placeholder="e.g. Native, B2" onChange={(e) => handleChange('languages', 'proficiency', e.target.value, index)} /></div>
-                                    </div>
-                                </CardContent>
-                            </Card>
+                            <AccordionItem
+                                key={index}
+                                title={lang.language || "Language"}
+                                subtitle={lang.proficiency}
+                                onDelete={() => removeItem('languages', index)}
+                                defaultOpen={index === 0}
+                            >
+                                <div className="grid grid-cols-2 gap-4 mt-4">
+                                    <div className="space-y-2"><Label>Language</Label><Input value={lang.language} onChange={(e) => handleChange('languages', 'language', e.target.value, index)} /></div>
+                                    <div className="space-y-2"><Label>Proficiency</Label><Input value={lang.proficiency} placeholder="e.g. Native, B2" onChange={(e) => handleChange('languages', 'proficiency', e.target.value, index)} /></div>
+                                </div>
+                            </AccordionItem>
                         ))}
                         <Button onClick={() => addItem('languages')} variant="outline" className="w-full border-dashed"><Plus className="w-4 h-4 mr-2" /> Add Language</Button>
                     </TabsContent>
