@@ -140,15 +140,23 @@ export default function BuilderPage() {
                             <>✨ Auto-Optimize</>
                         )}
                     </Button>
-                    initialContent={resume.content}
-                    onUpdate={handleUpdate}
-                    isWizardMode={isWizardMode}
-                    key={isWizardMode ? 'wizard' : 'editor'} // Force re-render on mode switch
-                />
-                </div >
+                </div>
+            </header>
+
+            {/* Main Workspace */}
+            <div className="flex-1 flex overflow-hidden">
+                {/* Left: Interactive Form */}
+                <div className="w-1/2 p-6 overflow-hidden border-r border-zinc-200 bg-white dark:border-zinc-800 dark:bg-zinc-900">
+                    <ResumeForm
+                        initialContent={resume.content}
+                        onUpdate={handleUpdate}
+                        isWizardMode={isWizardMode}
+                        key={isWizardMode ? 'wizard' : 'editor'}
+                    />
+                </div>
 
                 {/* Right: Live Preview */}
-                < div className="w-1/2 bg-zinc-100 p-8 dark:bg-zinc-950 flex flex-col overflow-hidden" >
+                <div className="w-1/2 bg-zinc-100 p-8 dark:bg-zinc-950 flex flex-col overflow-hidden">
                     <Tabs defaultValue="preview" className="w-full h-full flex flex-col">
                         <div className="flex justify-center mb-4">
                             <TabsList>
@@ -176,8 +184,8 @@ export default function BuilderPage() {
                             )}
                         </TabsContent>
                     </Tabs>
-                </div >
-        </div >
-        </div >
+                </div>
+            </div>
+        </div>
     )
 }
