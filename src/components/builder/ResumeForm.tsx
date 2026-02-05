@@ -978,9 +978,6 @@ export function ResumeForm({
                                                                 placeholder="• Lead a team of..."
                                                             />
                                                             <div className="absolute bottom-3 right-3 flex items-center gap-2">
-                                                                <div className="flex items-center gap-1 text-xs font-bold text-blue-600 bg-blue-50 px-2 py-1 rounded-md">
-                                                                    <Sparkles className="w-3 h-3" /> 10
-                                                                </div>
                                                                 <Button
                                                                     size="sm"
                                                                     disabled={isGeneratingBullet}
@@ -1018,10 +1015,6 @@ export function ResumeForm({
                                                                 </Button>
                                                             </div>
                                                         </div>
-                                                        <p className="text-xs text-zinc-500 flex items-center gap-1.5 mt-2">
-                                                            <Lightbulb className="w-3.5 h-3.5 text-amber-500" />
-                                                            Aim for a balanced mix of descriptive and key number bullet points.
-                                                        </p>
                                                     </div>
                                                 </div>
                                             </CardContent>
