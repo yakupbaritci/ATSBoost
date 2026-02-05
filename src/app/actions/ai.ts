@@ -17,7 +17,10 @@ export async function parseResumeWithAI(rawText: string) {
       "summary": "Full professional summary text...",
       "experience": [ { "id": "uuid", "title": "", "company": "", "startDate": "", "endDate": "", "description": "Bullet points..." } ],
       "education": [ { "id": "uuid", "school": "", "degree": "", "startDate": "", "endDate": "" } ],
-      "skills": ["skill1", "skill2"]
+      "skills": ["skill1", "skill2"],
+      "certifications": [ { "title": "", "issuer": "", "date": "" } ],
+      "projects": [ { "title": "", "description": "", "link": "" } ],
+      "languages": [ { "language": "", "proficiency": "" } ]
     }
     If a field is not found, leave it empty or empty array.
     Fix any formatting issues in the text (e.g. malformed emails, weird spacing).
@@ -70,7 +73,10 @@ export async function parseResumeWithAI(rawText: string) {
             summary: rawText.slice(0, 500) + `...\n\n⚠️ AI Parsing Failed. Error: ${error.message}\n(Using basic regex extraction. Please edit manually.)`,
             experience: [],
             education: [],
-            skills: []
+            skills: [],
+            certifications: [],
+            projects: [],
+            languages: []
         }
     }
 }
