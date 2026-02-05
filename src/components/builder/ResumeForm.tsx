@@ -338,16 +338,15 @@ export function ResumeForm({
 
     // Helper to toggle visibility of list items
     const toggleVisibility = (section: keyof ResumeContent, index: number) => {
-        setContent(prev => {
-            const newContent = { ...prev }
-            if (Array.isArray(newContent[section])) {
-                const items = [...(newContent[section] as any[])]
-                items[index] = { ...items[index], visible: items[index].visible === undefined ? false : !items[index].visible }
-                newContent[section] = items
-            }
-            if (onUpdate) onUpdate(newContent)
-            return newContent
-        })
+        // Create new content based on current state directly
+        // We avoid using setContent(prev => ...) for side effects to prevent React errors
+        const items = [...(content[section] as any[])]
+        items[index] = { ...items[index], visible: items[index].visible === undefined ? false : !items[index].visible }
+
+        const newContent = { ...content, [section]: items }
+
+        setContent(newContent)
+        if (onUpdate) onUpdate(newContent)
     }
 
     // Wizard Steps Configuration - Refined Order
