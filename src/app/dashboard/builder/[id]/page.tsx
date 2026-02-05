@@ -283,7 +283,7 @@ export default function BuilderPage() {
                     <Button
                         variant="outline"
                         size="sm"
-                        onClick={handleCheckScore}
+                        onClick={() => handleCheckScore()}
                         className="ml-2 gap-2"
                     >
                         <Trophy className="w-4 h-4 text-yellow-500" />
