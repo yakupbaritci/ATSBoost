@@ -11,12 +11,12 @@ import { Save, Loader2, ArrowLeft, FileText, Eye, Wand2, LayoutDashboard, Palett
 import Link from 'next/link'
 import { useParams, useSearchParams } from 'next/navigation'
 import { toast } from 'sonner'
-import { optimizeResumeContent, calculateATSScore } from '@/app/actions/ai'
+import { optimizeResumeContent, calculateATSScore, applySpecificImprovement } from '@/app/actions/ai'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger, DialogFooter } from '@/components/ui/dialog'
 import { Progress } from "@/components/ui/progress"
 import { Badge } from "@/components/ui/badge"
-import { AlertCircle, CheckCircle2, Trophy } from 'lucide-react'
+import { AlertCircle, CheckCircle2, Trophy, Wand2 as MagicWand, Check, X } from 'lucide-react'
 
 export default function BuilderPage() {
     const params = useParams()
@@ -28,6 +28,9 @@ export default function BuilderPage() {
     const [scoring, setScoring] = useState(false)
     const [atsResult, setAtsResult] = useState<any>(null)
     const [showScoreModal, setShowScoreModal] = useState(false)
+    const [fixingIndex, setFixingIndex] = useState<number | null>(null)
+    const [pendingFixContent, setPendingFixContent] = useState<any>(null)
+    const [showFixConfirm, setShowFixConfirm] = useState(false)
     // Initialize wizard mode if 'new' or if query param present
     const [isWizardMode, setIsWizardMode] = useState(params.id === 'new' || searchParams.get('wizard') === 'true')
     const [currentTemplate, setCurrentTemplate] = useState('classic')
@@ -370,9 +373,21 @@ export default function BuilderPage() {
                                 </h4>
                                 <ul className="space-y-2">
                                     {atsResult.improvements?.map((imp: string, i: number) => (
-                                        <li key={i} className="text-sm bg-blue-50 dark:bg-blue-900/20 p-3 rounded-md flex gap-3 text-blue-700 dark:text-blue-300">
-                                            <span className="font-bold shrink-0">{i + 1}.</span>
-                                            {imp}
+                                        <li key={i} className="text-sm bg-blue-50 dark:bg-blue-900/20 p-3 rounded-md flex justify-between items-center gap-3 text-blue-700 dark:text-blue-300 group">
+                                            <div className="flex gap-2">
+                                                <span className="font-bold shrink-0">{i + 1}.</span>
+                                                <span>{imp}</span>
+                                            </div>
+                                            <Button
+                                                size="sm"
+                                                variant="default"
+                                                className="h-7 text-xs bg-blue-600 hover:bg-blue-700 opacity-60 group-hover:opacity-100 transition-opacity"
+                                                onClick={() => handleApplyFix(imp, i)}
+                                                disabled={fixingIndex !== null}
+                                            >
+                                                {fixingIndex === i ? <Loader2 className="w-3 h-3 animate-spin mr-1" /> : <MagicWand className="w-3 h-3 mr-1" />}
+                                                Fix
+                                            </Button>
                                         </li>
                                     ))}
                                 </ul>
@@ -396,6 +411,29 @@ export default function BuilderPage() {
                             )}
                         </div>
                     ))}
+                </DialogContent>
+            </Dialog>
+
+            {/* Fix Confirmation Modal */}
+            <Dialog open={showFixConfirm} onOpenChange={setShowFixConfirm}>
+                <DialogContent>
+                    <DialogHeader>
+                        <DialogTitle>Apply Improvement?</DialogTitle>
+                        <DialogDescription>
+                            AI has generated a new version of your resume based on this suggestion.
+                        </DialogDescription>
+                    </DialogHeader>
+                    <div className="py-4 text-sm text-zinc-600 bg-zinc-50 p-4 rounded border">
+                        The content has been optimized. Check the main preview to see changes after applying.
+                        <br />
+                        (Undo is available via standard undo if implemented, otherwise careful!)
+                    </div>
+                    <DialogFooter>
+                        <Button variant="outline" onClick={() => setShowFixConfirm(false)}>Cancel</Button>
+                        <Button onClick={confirmFix} className="bg-green-600 hover:bg-green-700">
+                            Apply Changes
+                        </Button>
+                    </DialogFooter>
                 </DialogContent>
             </Dialog>
 
