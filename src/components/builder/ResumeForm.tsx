@@ -1527,10 +1527,22 @@ export function ResumeForm({
                                 `}</style>
                                 {/* Toolbar */}
                                 <div className="bg-white dark:bg-zinc-900 border-b border-zinc-200 dark:border-zinc-800 p-3 flex items-center justify-between shrink-0 z-10 shadow-sm">
-                                    {/* Left: Template */}
-                                    <Button variant="outline" size="sm" className="gap-2 h-9" onClick={() => setIsTemplateGalleryOpen(true)}>
-                                        <FileIcon className="w-4 h-4" /> <span>Template</span>
-                                    </Button>
+                                    {/* Left: Template Dropdown */}
+                                    <div className="flex items-center gap-2">
+                                        <FileIcon className="w-4 h-4 text-zinc-500" />
+                                        <Select value={template} onValueChange={setTemplate}>
+                                            <SelectTrigger className="w-[200px] h-9 bg-zinc-50 border-zinc-200">
+                                                <SelectValue placeholder="Select Template" />
+                                            </SelectTrigger>
+                                            <SelectContent>
+                                                <SelectItem value="modern">Modern Resume</SelectItem>
+                                                <SelectItem value="bold">Bold Executive</SelectItem>
+                                                <SelectItem value="minimalist">Minimalist</SelectItem>
+                                                <SelectItem value="tech">Tech & Startup</SelectItem>
+                                                <SelectItem value="classic">Classic Professional</SelectItem>
+                                            </SelectContent>
+                                        </Select>
+                                    </div>
 
                                     {/* Right: Actions */}
                                     <div className="flex items-center gap-2">
