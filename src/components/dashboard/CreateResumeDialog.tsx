@@ -95,9 +95,13 @@ export function CreateResumeDialog({ children }: { children?: React.ReactNode })
                 setProgress(100)
                 setStatusMessage("Resume created successfully!")
 
-                // No auto-redirect, let showing finish state
-                setCreatedResumeId(data.id)
-                // We keep open true to show the finish state
+                // Small delay to show completion state
+                setTimeout(() => {
+                    setOpen(false)
+                    toast.success("Redirecting to builder...")
+                    router.push(`/dashboard/builder/${data.id}?wizard=true`)
+                }, 1500)
+
             } catch (error: any) {
                 console.error(error)
                 toast.error("Failed: " + (error.message || "Unknown error"))
