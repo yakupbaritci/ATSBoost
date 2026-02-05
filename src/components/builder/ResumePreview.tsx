@@ -114,11 +114,12 @@ const TemplateClassic = ({ content }: { content: ResumeContent }) => (
         )}
 
         {/* Experience */}
+        {/* Experience */}
         {content.experience?.length > 0 && (
             <View style={styles.section}>
                 <Text style={{ ...styles.sectionTitle, fontFamily: 'Times-Bold' }}>Professional Experience</Text>
                 {content.experience.map((exp: any, i: number) => (
-                    <View key={i} style={styles.jobBlock}>
+                    <View key={i} style={styles.jobBlock} wrap={false}>
                         <View style={styles.jobHeader}>
                             <View>
                                 <Text style={{ ...styles.jobTitle, fontFamily: 'Times-Bold' }}>{exp.title}</Text>
@@ -137,7 +138,7 @@ const TemplateClassic = ({ content }: { content: ResumeContent }) => (
             <View style={styles.section}>
                 <Text style={{ ...styles.sectionTitle, fontFamily: 'Times-Bold' }}>Education</Text>
                 {content.education.map((edu: any, i: number) => (
-                    <View key={i} style={styles.jobBlock}>
+                    <View key={i} style={styles.jobBlock} wrap={false}>
                         <View style={styles.jobHeader}>
                             <View>
                                 <Text style={{ ...styles.jobTitle, fontFamily: 'Times-Bold' }}>{edu.school}</Text>
@@ -152,7 +153,7 @@ const TemplateClassic = ({ content }: { content: ResumeContent }) => (
 
         {/* Skills */}
         {content.skills?.length > 0 && (
-            <View style={styles.section}>
+            <View style={styles.section} wrap={false}>
                 <Text style={{ ...styles.sectionTitle, fontFamily: 'Times-Bold' }}>Skills</Text>
                 <Text style={{ fontSize: 10, lineHeight: 1.4 }}>
                     {content.skills.join(' • ')}
@@ -160,13 +161,12 @@ const TemplateClassic = ({ content }: { content: ResumeContent }) => (
             </View>
         )}
 
-        {/* Other sections reuse similar logic if needed, keeping it minimal for Classic */}
         {/* Projects */}
         {content.projects?.length > 0 && (
             <View style={styles.section}>
                 <Text style={{ ...styles.sectionTitle, fontFamily: 'Times-Bold' }}>Projects</Text>
                 {content.projects.map((proj: any, i: number) => (
-                    <View key={i} style={{ marginBottom: 6 }}>
+                    <View key={i} style={{ marginBottom: 6 }} wrap={false}>
                         <Text style={{ fontSize: 11, fontFamily: 'Times-Bold' }}>{proj.title} {proj.link ? `| ${proj.link}` : ''}</Text>
                         {proj.description && <Text style={{ fontSize: 10, marginTop: 2 }}>{proj.description}</Text>}
                     </View>
@@ -179,7 +179,7 @@ const TemplateClassic = ({ content }: { content: ResumeContent }) => (
             <View style={styles.section}>
                 <Text style={{ ...styles.sectionTitle, fontFamily: 'Times-Bold' }}>Certifications</Text>
                 {content.certifications.map((cert: any, i: number) => (
-                    <View key={i} style={{ marginBottom: 4 }}>
+                    <View key={i} style={{ marginBottom: 4 }} wrap={false}>
                         <Text style={{ fontSize: 11, fontFamily: 'Times-Bold' }}>{cert.title} {cert.issuer ? `- ${cert.issuer}` : ''}</Text>
                         {cert.date && <Text style={{ fontSize: 10, fontStyle: 'italic' }}>{cert.date}</Text>}
                     </View>
@@ -227,7 +227,7 @@ const TemplateModern = ({ content }: { content: ResumeContent }) => (
             <View style={styles.section}>
                 <Text style={{ fontSize: 12, fontWeight: 'bold', color: '#2563eb', textTransform: 'uppercase', marginBottom: 10 }}>Experience</Text>
                 {content.experience.map((exp: any, i: number) => (
-                    <View key={i} style={{ marginBottom: 12, borderLeftWidth: 2, borderLeftColor: '#e2e8f0', paddingLeft: 10 }}>
+                    <View key={i} style={{ marginBottom: 12, borderLeftWidth: 2, borderLeftColor: '#e2e8f0', paddingLeft: 10 }} wrap={false}>
                         <View style={{ flexDirection: 'row', justifyContent: 'space-between', marginBottom: 2 }}>
                             <Text style={{ fontSize: 11, fontWeight: 'bold', color: '#0f172a' }}>{exp.title}</Text>
                             <Text style={{ fontSize: 9, color: '#64748b', backgroundColor: '#f1f5f9', padding: '2 6', borderRadius: 4 }}>{exp.startDate} - {exp.endDate}</Text>
@@ -244,7 +244,7 @@ const TemplateModern = ({ content }: { content: ResumeContent }) => (
             <View style={styles.section}>
                 <Text style={{ fontSize: 12, fontWeight: 'bold', color: '#2563eb', textTransform: 'uppercase', marginBottom: 10 }}>Education</Text>
                 {content.education.map((edu: any, i: number) => (
-                    <View key={i} style={{ marginBottom: 8 }}>
+                    <View key={i} style={{ marginBottom: 8 }} wrap={false}>
                         <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
                             <Text style={{ fontSize: 11, fontWeight: 'bold' }}>{edu.school}</Text>
                             <Text style={{ fontSize: 9, color: '#64748b' }}>{edu.startDate} - {edu.endDate}</Text>
@@ -260,7 +260,7 @@ const TemplateModern = ({ content }: { content: ResumeContent }) => (
             <View style={styles.section}>
                 <Text style={{ fontSize: 12, fontWeight: 'bold', color: '#2563eb', textTransform: 'uppercase', marginBottom: 8 }}>Certifications</Text>
                 {content.certifications.map((cert: any, i: number) => (
-                    <View key={i} style={{ marginBottom: 6 }}>
+                    <View key={i} style={{ marginBottom: 6 }} wrap={false}>
                         <Text style={{ fontSize: 11, fontWeight: 'bold' }}>{cert.title}</Text>
                         <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
                             <Text style={{ fontSize: 10, color: '#64748b' }}>{cert.issuer}</Text>
@@ -311,7 +311,7 @@ const TemplateBold = ({ content }: { content: ResumeContent }) => (
                 <View style={styles.section}>
                     <Text style={{ fontSize: 14, fontWeight: 'bold', textTransform: 'uppercase', borderBottomWidth: 3, borderBottomColor: '#000', marginBottom: 12 }}>Experience</Text>
                     {content.experience.map((exp: any, i: number) => (
-                        <View key={i} style={{ marginBottom: 15 }}>
+                        <View key={i} style={{ marginBottom: 15 }} wrap={false}>
                             <Text style={{ fontSize: 12, fontWeight: 'bold' }}>{exp.title} <Text style={{ fontWeight: 'normal' }}>at</Text> {exp.company}</Text>
                             <Text style={{ fontSize: 9, color: '#444', marginBottom: 4 }}>{exp.startDate} - {exp.endDate}</Text>
                             {exp.description && <Text style={{ fontSize: 10, lineHeight: 1.5 }}>{exp.description}</Text>}
@@ -324,7 +324,7 @@ const TemplateBold = ({ content }: { content: ResumeContent }) => (
                 <View style={styles.section}>
                     <Text style={{ fontSize: 14, fontWeight: 'bold', textTransform: 'uppercase', borderBottomWidth: 3, borderBottomColor: '#000', marginBottom: 12 }}>Education</Text>
                     {content.education.map((edu: any, i: number) => (
-                        <View key={i} style={{ marginBottom: 10 }}>
+                        <View key={i} style={{ marginBottom: 10 }} wrap={false}>
                             <Text style={{ fontSize: 12, fontWeight: 'bold' }}>{edu.school}</Text>
                             <Text style={{ fontSize: 10 }}>{edu.degree}</Text>
                             <Text style={{ fontSize: 9, color: '#444' }}>{edu.startDate} - {edu.endDate}</Text>
@@ -337,7 +337,7 @@ const TemplateBold = ({ content }: { content: ResumeContent }) => (
                 <View style={styles.section}>
                     <Text style={{ fontSize: 14, fontWeight: 'bold', textTransform: 'uppercase', borderBottomWidth: 3, borderBottomColor: '#000', marginBottom: 12 }}>Certifications</Text>
                     {content.certifications.map((cert: any, i: number) => (
-                        <View key={i} style={{ marginBottom: 8 }}>
+                        <View key={i} style={{ marginBottom: 8 }} wrap={false}>
                             <Text style={{ fontSize: 12, fontWeight: 'bold' }}>{cert.title}</Text>
                             <Text style={{ fontSize: 10 }}>{cert.issuer} {cert.date ? `| ${cert.date}` : ''}</Text>
                         </View>
@@ -380,7 +380,7 @@ const TemplateMinimalist = ({ content }: { content: ResumeContent }) => (
             <View style={{ marginBottom: 20 }}>
                 <Text style={{ fontSize: 10, letterSpacing: 1, textTransform: 'uppercase', borderBottom: '1px solid #ddd', paddingBottom: 4, marginBottom: 10, color: '#666' }}>Experience</Text>
                 {content.experience.map((exp: any, i: number) => (
-                    <View key={i} style={{ marginBottom: 15 }}>
+                    <View key={i} style={{ marginBottom: 15 }} wrap={false}>
                         <View style={{ flexDirection: 'row', justifyContent: 'space-between', marginBottom: 2 }}>
                             <Text style={{ fontSize: 11, fontFamily: 'Times-Bold' }}>{exp.company}</Text>
                             <Text style={{ fontSize: 10, color: '#555' }}>{exp.startDate} - {exp.endDate}</Text>
@@ -392,11 +392,27 @@ const TemplateMinimalist = ({ content }: { content: ResumeContent }) => (
             </View>
         )}
 
+        {/* Education (Added to Minimalist) */}
+        {content.education?.length > 0 && (
+            <View style={{ marginBottom: 20 }}>
+                <Text style={{ fontSize: 10, letterSpacing: 1, textTransform: 'uppercase', borderBottom: '1px solid #ddd', paddingBottom: 4, marginBottom: 10, color: '#666' }}>Education</Text>
+                {content.education.map((edu: any, i: number) => (
+                    <View key={i} style={{ marginBottom: 12 }} wrap={false}>
+                        <View style={{ flexDirection: 'row', justifyContent: 'space-between', marginBottom: 2 }}>
+                            <Text style={{ fontSize: 11, fontFamily: 'Times-Bold' }}>{edu.school}</Text>
+                            <Text style={{ fontSize: 10, color: '#555' }}>{edu.startDate} - {edu.endDate}</Text>
+                        </View>
+                        <Text style={{ fontSize: 10 }}>{edu.degree}</Text>
+                    </View>
+                ))}
+            </View>
+        )}
+
         {content.certifications?.length > 0 && (
             <View style={{ marginBottom: 20 }}>
                 <Text style={{ fontSize: 10, letterSpacing: 1, textTransform: 'uppercase', borderBottom: '1px solid #ddd', paddingBottom: 4, marginBottom: 8, color: '#666' }}>Certifications</Text>
                 {content.certifications.map((cert: any, i: number) => (
-                    <View key={i} style={{ marginBottom: 6 }}>
+                    <View key={i} style={{ marginBottom: 6 }} wrap={false}>
                         <Text style={{ fontSize: 11 }}>{cert.title}</Text>
                         <Text style={{ fontSize: 10, color: '#555' }}>{cert.issuer} {cert.date ? `• ${cert.date}` : ''}</Text>
                     </View>
@@ -404,10 +420,32 @@ const TemplateMinimalist = ({ content }: { content: ResumeContent }) => (
             </View>
         )}
 
+        {content.projects?.length > 0 && (
+            <View style={{ marginBottom: 20 }}>
+                <Text style={{ fontSize: 10, letterSpacing: 1, textTransform: 'uppercase', borderBottom: '1px solid #ddd', paddingBottom: 4, marginBottom: 10, color: '#666' }}>Projects</Text>
+                {content.projects.map((proj: any, i: number) => (
+                    <View key={i} style={{ marginBottom: 8 }} wrap={false}>
+                        <Text style={{ fontSize: 11, fontFamily: 'Times-Bold' }}>{proj.title} {proj.link ? `| ${proj.link}` : ''}</Text>
+                        {proj.description && <Text style={{ fontSize: 10, marginTop: 2 }}>{proj.description}</Text>}
+                    </View>
+                ))}
+            </View>
+        )}
+
         {content.skills?.length > 0 && (
-            <View>
+            <View style={{ marginBottom: 20 }} wrap={false}>
                 <Text style={{ fontSize: 10, letterSpacing: 1, textTransform: 'uppercase', borderBottom: '1px solid #ddd', paddingBottom: 4, marginBottom: 8, color: '#666' }}>Skills</Text>
                 <Text style={{ fontSize: 10, lineHeight: 1.6 }}>{content.skills.join('  /  ')}</Text>
+            </View>
+        )}
+
+        {/* Languages for Minimalist */}
+        {content.languages?.length > 0 && (
+            <View style={{ marginBottom: 20 }}>
+                <Text style={{ fontSize: 10, letterSpacing: 1, textTransform: 'uppercase', borderBottom: '1px solid #ddd', paddingBottom: 4, marginBottom: 8, color: '#666' }}>Languages</Text>
+                <Text style={{ fontSize: 10, lineHeight: 1.6 }}>
+                    {content.languages.map((l: any) => `${l.language} (${l.proficiency || ''})`).join('  /  ')}
+                </Text>
             </View>
         )}
     </Page>
