@@ -881,36 +881,34 @@ export function ResumeForm({
                                                     </div>
 
                                                     {/* Date & Location */}
-                                                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                                                        <div className="space-y-1.5">
-                                                            <Label className="text-xs uppercase font-bold text-zinc-500">How long were you there?</Label>
-                                                            <div className="flex gap-2 items-center">
-                                                                <div className="flex-1">
-                                                                    <DateSelector
-                                                                        value={content.experience[activeExperienceIndex].startDate}
-                                                                        onChange={(val) => handleChange('experience', 'startDate', val, activeExperienceIndex)}
-                                                                        placeholder="Start Date"
-                                                                    />
-                                                                </div>
-                                                                <span className="text-zinc-400">-</span>
-                                                                <div className="flex-1">
-                                                                    <DateSelector
-                                                                        value={content.experience[activeExperienceIndex].endDate}
-                                                                        onChange={(val) => handleChange('experience', 'endDate', val, activeExperienceIndex)}
-                                                                        placeholder="End Date"
-                                                                    />
-                                                                </div>
+                                                    {/* Date & Location Refactored */}
+                                                    <div className="grid grid-cols-1 gap-6">
+                                                        <div className="grid grid-cols-2 gap-4">
+                                                            <div className="space-y-1.5">
+                                                                <Label className="text-xs uppercase font-bold text-zinc-500">Start Date</Label>
+                                                                <DateSelector
+                                                                    value={content.experience[activeExperienceIndex].startDate}
+                                                                    onChange={(val) => handleChange('experience', 'startDate', val, activeExperienceIndex)}
+                                                                    placeholder="Start Date"
+                                                                />
+                                                            </div>
+                                                            <div className="space-y-1.5">
+                                                                <Label className="text-xs uppercase font-bold text-zinc-500">End Date</Label>
+                                                                <DateSelector
+                                                                    value={content.experience[activeExperienceIndex].endDate}
+                                                                    onChange={(val) => handleChange('experience', 'endDate', val, activeExperienceIndex)}
+                                                                    placeholder="End Date"
+                                                                />
                                                             </div>
                                                         </div>
+
                                                         <div className="space-y-1.5">
-                                                            <Label className="text-xs uppercase font-bold text-zinc-500">
-                                                                Where was <span className="text-black dark:text-white">{content.experience[activeExperienceIndex].company || 'Company'}</span> located?
-                                                            </Label>
+                                                            <Label className="text-xs uppercase font-bold text-zinc-500">Location</Label>
                                                             <Input
                                                                 value={content.experience[activeExperienceIndex].location || ''}
                                                                 onChange={(e) => handleChange('experience', 'location', e.target.value, activeExperienceIndex)}
                                                                 className="h-11 bg-zinc-50 dark:bg-zinc-900 border-zinc-200 dark:border-zinc-700"
-                                                                placeholder="e.g. New York, NY"
+                                                                placeholder="e.g. New York, NY or Remote"
                                                             />
                                                         </div>
                                                     </div>
