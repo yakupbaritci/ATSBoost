@@ -264,22 +264,44 @@ interface ResumeFormProps {
     initialContent: ResumeContent
     onUpdate: (content: ResumeContent) => void
     isWizardMode?: boolean
+    // New props for the "Finish Up" section
+    onCheckScore?: () => void
+    atsScore?: any
+    onDownload?: () => React.ReactNode // Returns the download button/link
+    isOptimizing?: boolean
+    onAutoOptimize?: () => void
+    currentTemplate?: string
+    onTemplateChange?: (template: string) => void
+    previewComponent?: React.ReactNode // Pass the live preview component to render in the finish tab
 }
 
-export function ResumeForm({ initialContent, onUpdate, isWizardMode = false }: ResumeFormProps) {
+export function ResumeForm({
+    initialContent,
+    onUpdate,
+    isWizardMode = false,
+    onCheckScore,
+    atsScore,
+    onDownload,
+    isOptimizing,
+    onAutoOptimize,
+    currentTemplate,
+    onTemplateChange,
+    previewComponent
+}: ResumeFormProps) {
     const [content, setContent] = useState<ResumeContent>(initialContent)
     const [activeTab, setActiveTab] = useState("contact")
 
-    // Wizard Steps Configuration
+    // Wizard Steps Configuration - Refined Order
     const steps = [
-        { id: "contact", title: "Personal Info", description: "Let's start with the basics." },
-        { id: "summary", title: "Professional Summary", description: "Your elevator pitch." },
-        { id: "experience", title: "Experience", description: "Where have you worked?" },
-        { id: "education", title: "Education", description: "Your academic background." },
-        { id: "skills", title: "Skills", description: "What are your superpowers?" },
-        { id: "certifications", title: "Certifications", description: "Extra credentials." },
-        { id: "projects", title: "Projects", description: "Showcase your work." },
-        { id: "languages", title: "Languages", description: "Global communication." }
+        { id: "contact", title: "CONTACT", description: "Basics" },
+        { id: "experience", title: "EXPERIENCE", description: "Work History" },
+        { id: "education", title: "EDUCATION", description: "Academics" },
+        { id: "skills", title: "SKILLS", description: "Competencies" },
+        { id: "projects", title: "PROJECTS", description: "Portfolios" },
+        { id: "certifications", title: "CERTIFICATIONS", description: "Credentials" },
+        { id: "summary", title: "SUMMARY", description: "About You" },
+        { id: "languages", title: "LANGUAGES", description: "Languages" },
+        { id: "finish", title: "FINISH UP", description: "Review & Download" } // New Final Step
     ]
 
     const currentStepIndex = steps.findIndex(s => s.id === activeTab)
@@ -488,366 +510,435 @@ export function ResumeForm({ initialContent, onUpdate, isWizardMode = false }: R
                         </div>
                     </div>
                 ) : (
-                    <div className="w-full overflow-x-auto pb-2 mb-4 scrollbar-hide">
-                        <TabsList className="inline-flex w-auto h-auto p-1 bg-zinc-100 dark:bg-zinc-800 rounded-lg">
-                            {steps.map(step => (
-                                <TabsTrigger
-                                    key={step.id}
-                                    className="px-4 py-2 rounded-md data-[state=active]:bg-white dark:data-[state=active]:bg-zinc-950 data-[state=active]:shadow-sm transition-all"
-                                    value={step.id}
-                                >
-                                    {step.title}
-                                </TabsTrigger>
-                            ))}
-                        </TabsList>
+                    // New Top Navigation Bar
+                    <div className="w-full border-b border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-900 sticky top-0 z-10">
+                        <div className="overflow-x-auto scrollbar-hide">
+                            <TabsList className="inline-flex w-auto h-12 p-0 bg-transparent gap-6 px-4">
+                                {steps.map(step => (
+                                    <TabsTrigger
+                                        key={step.id}
+                                        className="h-full px-1 rounded-none bg-transparent border-b-2 border-transparent data-[state=active]:border-blue-600 data-[state=active]:text-blue-600 data-[state=active]:shadow-none font-bold text-xs uppercase tracking-wider text-zinc-500 hover:text-zinc-800 transition-all"
+                                        value={step.id}
+                                    >
+                                        {step.title}
+                                    </TabsTrigger>
+                                ))}
+                            </TabsList>
+                        </div>
                     </div>
                 )}
 
                 {/* Main Content Area */}
-                <div className="flex-1 overflow-y-auto pr-2 pb-10 space-y-4">
+                <div className="flex-1 overflow-y-auto bg-[#f8f9fc] dark:bg-black/20 p-4 md:p-8">
+                    <div className="max-w-4xl mx-auto space-y-6">
+                        {/* We wrap content in a centered container for better focus */}
 
-                    {/* Contact Tab */}
-                    <TabsContent value="contact" className="space-y-4 mt-0">
-                        <Card>
-                            <CardHeader>
-                                <CardTitle>Personal Information</CardTitle>
-                            </CardHeader>
-                            <CardContent className="space-y-4">
-                                {/* Document Language Selector */}
-                                <div className="p-4 bg-zinc-50 dark:bg-zinc-800/50 rounded-lg border border-zinc-200 dark:border-zinc-700 flex items-center justify-between">
-                                    <div className="space-y-1">
-                                        <Label htmlFor="doc-lang" className="text-base font-semibold">Resume Language</Label>
-                                        <p className="text-xs text-muted-foreground">Select the primary language for this resume.</p>
+                        {/* Contact Tab */}
+                        <TabsContent value="contact" className="space-y-4 mt-0">
+                            <Card>
+                                <CardHeader>
+                                    <CardTitle>Personal Information</CardTitle>
+                                </CardHeader>
+                                <CardContent className="space-y-4">
+                                    {/* Document Language Selector */}
+                                    <div className="p-4 bg-zinc-50 dark:bg-zinc-800/50 rounded-lg border border-zinc-200 dark:border-zinc-700 flex items-center justify-between">
+                                        <div className="space-y-1">
+                                            <Label htmlFor="doc-lang" className="text-base font-semibold">Resume Language</Label>
+                                            <p className="text-xs text-muted-foreground">Select the primary language for this resume.</p>
+                                        </div>
+                                        <Select
+                                            value={content.documentLanguage || 'en'}
+                                            onValueChange={(val) => handleChange('contact', 'documentLanguage', val)} // Handles update via special check or new section handler
+                                        >
+                                            <SelectTrigger className="w-[180px] bg-white dark:bg-zinc-900" id="doc-lang">
+                                                <SelectValue placeholder="Language" />
+                                            </SelectTrigger>
+                                            <SelectContent>
+                                                <SelectItem value="en">🇺🇸 English</SelectItem>
+                                                <SelectItem value="tr">🇹🇷 Türkçe</SelectItem>
+                                                <SelectItem value="de">🇩🇪 Deutsch</SelectItem>
+                                                <SelectItem value="fr">🇫🇷 Français</SelectItem>
+                                                <SelectItem value="es">🇪🇸 Español</SelectItem>
+                                                <SelectItem value="it">🇮🇹 Italiano</SelectItem>
+                                            </SelectContent>
+                                        </Select>
                                     </div>
-                                    <Select
-                                        value={content.documentLanguage || 'en'}
-                                        onValueChange={(val) => handleChange('contact', 'documentLanguage', val)} // Handles update via special check or new section handler
-                                    >
-                                        <SelectTrigger className="w-[180px] bg-white dark:bg-zinc-900" id="doc-lang">
-                                            <SelectValue placeholder="Language" />
-                                        </SelectTrigger>
-                                        <SelectContent>
-                                            <SelectItem value="en">🇺🇸 English</SelectItem>
-                                            <SelectItem value="tr">🇹🇷 Türkçe</SelectItem>
-                                            <SelectItem value="de">🇩🇪 Deutsch</SelectItem>
-                                            <SelectItem value="fr">🇫🇷 Français</SelectItem>
-                                            <SelectItem value="es">🇪🇸 Español</SelectItem>
-                                            <SelectItem value="it">🇮🇹 Italiano</SelectItem>
-                                        </SelectContent>
-                                    </Select>
-                                </div>
 
-                                <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
-                                    <div className="space-y-2">
-                                        <Label>Full Name</Label>
-                                        <Input
-                                            value={content.contact?.fullName || ''}
-                                            onChange={(e) => handleChange('contact', 'fullName', e.target.value)}
-                                        />
+                                    <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+                                        <div className="space-y-2">
+                                            <Label>Full Name</Label>
+                                            <Input
+                                                value={content.contact?.fullName || ''}
+                                                onChange={(e) => handleChange('contact', 'fullName', e.target.value)}
+                                            />
+                                        </div>
+                                        <div className="space-y-2">
+                                            <Label>Email</Label>
+                                            <Input
+                                                type="email"
+                                                value={content.contact?.email || ''}
+                                                onChange={(e) => handleChange('contact', 'email', e.target.value)}
+                                                className={errors['contact.email'] ? 'border-red-500 focus-visible:ring-red-500' : ''}
+                                            />
+                                            {errors['contact.email'] && <p className="text-xs text-red-500">{errors['contact.email']}</p>}
+                                        </div>
+                                        <div className="space-y-2">
+                                            <Label>Phone</Label>
+                                            <Input
+                                                value={content.contact?.phone || ''}
+                                                onChange={(e) => handleChange('contact', 'phone', e.target.value)}
+                                            />
+                                        </div>
+                                        <div className="space-y-2">
+                                            <Label>Location</Label>
+                                            <Input
+                                                value={content.contact?.location || ''}
+                                                onChange={(e) => handleChange('contact', 'location', e.target.value)}
+                                            />
+                                        </div>
+                                        <div className="space-y-2">
+                                            <Label>LinkedIn</Label>
+                                            <Input
+                                                value={content.contact?.linkedin || ''}
+                                                onChange={(e) => handleChange('contact', 'linkedin', e.target.value)}
+                                            />
+                                        </div>
+                                        <div className="space-y-2">
+                                            <Label>Portfolio / Website</Label>
+                                            <Input
+                                                value={content.contact?.portfolio || ''}
+                                                onChange={(e) => handleChange('contact', 'portfolio', e.target.value)}
+                                            />
+                                        </div>
                                     </div>
-                                    <div className="space-y-2">
-                                        <Label>Email</Label>
-                                        <Input
-                                            type="email"
-                                            value={content.contact?.email || ''}
-                                            onChange={(e) => handleChange('contact', 'email', e.target.value)}
-                                            className={errors['contact.email'] ? 'border-red-500 focus-visible:ring-red-500' : ''}
-                                        />
-                                        {errors['contact.email'] && <p className="text-xs text-red-500">{errors['contact.email']}</p>}
-                                    </div>
-                                    <div className="space-y-2">
-                                        <Label>Phone</Label>
-                                        <Input
-                                            value={content.contact?.phone || ''}
-                                            onChange={(e) => handleChange('contact', 'phone', e.target.value)}
-                                        />
-                                    </div>
-                                    <div className="space-y-2">
-                                        <Label>Location</Label>
-                                        <Input
-                                            value={content.contact?.location || ''}
-                                            onChange={(e) => handleChange('contact', 'location', e.target.value)}
-                                        />
-                                    </div>
-                                    <div className="space-y-2">
-                                        <Label>LinkedIn</Label>
-                                        <Input
-                                            value={content.contact?.linkedin || ''}
-                                            onChange={(e) => handleChange('contact', 'linkedin', e.target.value)}
-                                        />
-                                    </div>
-                                    <div className="space-y-2">
-                                        <Label>Portfolio / Website</Label>
-                                        <Input
-                                            value={content.contact?.portfolio || ''}
-                                            onChange={(e) => handleChange('contact', 'portfolio', e.target.value)}
-                                        />
-                                    </div>
-                                </div>
-                            </CardContent>
-                        </Card>
-                    </TabsContent>
+                                </CardContent>
+                            </Card>
+                        </TabsContent>
 
-                    {/* Summary Tab */}
-                    <TabsContent value="summary" className="mt-0">
-                        <Card>
-                            <CardHeader>
-                                <CardTitle>Professional Summary</CardTitle>
-                            </CardHeader>
-                            <CardContent>
-                                <Textarea
-                                    className="min-h-[200px]"
-                                    placeholder="Briefly describe your career highlights..."
-                                    value={content.summary || ''}
-                                    onChange={(e) => handleChange('summary', '', e.target.value)}
-                                />
-                            </CardContent>
-                        </Card>
-                    </TabsContent>
-
-                    {/* Experience Tab */}
-                    <TabsContent value="experience" className="mt-0 space-y-4">
-                        {content.experience?.map((exp, index) => (
-                            <AccordionItem
-                                key={`${exp.id}-${index}`}
-                                title={exp.title || "Job Position"}
-                                subtitle={exp.company}
-                                onDelete={() => removeItem('experience', index)}
-                                defaultOpen={index === 0} // Open first item by default
-                            >
-                                <div className="grid grid-cols-2 gap-4 mt-4">
-                                    <div className="space-y-2">
-                                        <Label>Job Title</Label>
-                                        <Input
-                                            value={exp.title || ''}
-                                            onChange={(e) => handleChange('experience', 'title', e.target.value, index)}
-                                        />
-                                    </div>
-                                    <div className="space-y-2">
-                                        <Label>Company</Label>
-                                        <Input
-                                            value={exp.company || ''}
-                                            onChange={(e) => handleChange('experience', 'company', e.target.value, index)}
-                                        />
-                                    </div>
-                                    <div className="space-y-2">
-                                        <Label>Start Date</Label>
-                                        <DateSelector
-                                            value={exp.startDate}
-                                            onChange={(val) => handleChange('experience', 'startDate', val, index)}
-                                            placeholder="Start Date"
-                                        />
-                                    </div>
-                                    <div className="space-y-2">
-                                        <Label>End Date</Label>
-                                        <DateSelector
-                                            value={exp.endDate}
-                                            onChange={(val) => handleChange('experience', 'endDate', val, index)}
-                                            placeholder="End Date"
-                                        />
-                                    </div>
-                                </div>
-                                <div className="space-y-2 mt-4">
-                                    <Label>Description (Bullet Points)</Label>
+                        {/* Summary Tab */}
+                        <TabsContent value="summary" className="mt-0">
+                            <Card>
+                                <CardHeader>
+                                    <CardTitle>Professional Summary</CardTitle>
+                                </CardHeader>
+                                <CardContent>
                                     <Textarea
-                                        value={exp.description || ''}
-                                        onChange={(e) => handleChange('experience', 'description', e.target.value, index)}
-                                        className="min-h-[100px]"
+                                        className="min-h-[200px]"
+                                        placeholder="Briefly describe your career highlights..."
+                                        value={content.summary || ''}
+                                        onChange={(e) => handleChange('summary', '', e.target.value)}
                                     />
-                                </div>
-                            </AccordionItem>
-                        ))}
-                        <Button onClick={addExperience} variant="outline" className="w-full border-dashed">
-                            <Plus className="w-4 h-4 mr-2" /> Add Experience
-                        </Button>
-                    </TabsContent>
+                                </CardContent>
+                            </Card>
+                        </TabsContent>
 
-                    {/* Education Tab */}
-                    <TabsContent value="education" className="mt-0 space-y-4">
-                        {content.education?.map((edu, index) => (
-                            <AccordionItem
-                                key={`${edu.id}-${index}`}
-                                title={edu.school || "School / University"}
-                                subtitle={edu.degree}
-                                onDelete={() => removeItem('education', index)}
-                                defaultOpen={index === 0}
-                            >
-                                <div className="grid grid-cols-2 gap-4 mt-4">
-                                    <div className="space-y-2">
-                                        <Label>School / University</Label>
-                                        <Input
-                                            value={edu.school || ''}
-                                            onChange={(e) => handleChange('education', 'school', e.target.value, index)}
+                        {/* Experience Tab */}
+                        <TabsContent value="experience" className="mt-0 space-y-4">
+                            {content.experience?.map((exp, index) => (
+                                <AccordionItem
+                                    key={`${exp.id}-${index}`}
+                                    title={exp.title || "Job Position"}
+                                    subtitle={exp.company}
+                                    onDelete={() => removeItem('experience', index)}
+                                    defaultOpen={index === 0} // Open first item by default
+                                >
+                                    <div className="grid grid-cols-2 gap-4 mt-4">
+                                        <div className="space-y-2">
+                                            <Label>Job Title</Label>
+                                            <Input
+                                                value={exp.title || ''}
+                                                onChange={(e) => handleChange('experience', 'title', e.target.value, index)}
+                                            />
+                                        </div>
+                                        <div className="space-y-2">
+                                            <Label>Company</Label>
+                                            <Input
+                                                value={exp.company || ''}
+                                                onChange={(e) => handleChange('experience', 'company', e.target.value, index)}
+                                            />
+                                        </div>
+                                        <div className="space-y-2">
+                                            <Label>Start Date</Label>
+                                            <DateSelector
+                                                value={exp.startDate}
+                                                onChange={(val) => handleChange('experience', 'startDate', val, index)}
+                                                placeholder="Start Date"
+                                            />
+                                        </div>
+                                        <div className="space-y-2">
+                                            <Label>End Date</Label>
+                                            <DateSelector
+                                                value={exp.endDate}
+                                                onChange={(val) => handleChange('experience', 'endDate', val, index)}
+                                                placeholder="End Date"
+                                            />
+                                        </div>
+                                    </div>
+                                    <div className="space-y-2 mt-4">
+                                        <Label>Description (Bullet Points)</Label>
+                                        <Textarea
+                                            value={exp.description || ''}
+                                            onChange={(e) => handleChange('experience', 'description', e.target.value, index)}
+                                            className="min-h-[100px]"
                                         />
                                     </div>
-                                    <div className="space-y-2">
-                                        <Label>Degree / Major</Label>
-                                        <Input
-                                            value={edu.degree || ''}
-                                            onChange={(e) => handleChange('education', 'degree', e.target.value, index)}
-                                        />
-                                    </div>
-                                    <div className="space-y-2">
-                                        <Label>Start Date</Label>
-                                        <DateSelector
-                                            value={edu.startDate}
-                                            onChange={(val) => handleChange('education', 'startDate', val, index)}
-                                            placeholder="Start Date"
-                                        />
-                                    </div>
-                                    <div className="space-y-2">
-                                        <Label>End Date (or Graduation)</Label>
-                                        <DateSelector
-                                            value={edu.endDate}
-                                            onChange={(val) => handleChange('education', 'endDate', val, index)}
-                                            placeholder="Graduation Year"
-                                        />
-                                    </div>
-                                </div>
-                            </AccordionItem>
-                        ))}
-                        <Button onClick={addEducation} variant="outline" className="w-full border-dashed">
-                            <Plus className="w-4 h-4 mr-2" /> Add Education
-                        </Button>
-                    </TabsContent>
+                                </AccordionItem>
+                            ))}
+                            <Button onClick={addExperience} variant="outline" className="w-full border-dashed">
+                                <Plus className="w-4 h-4 mr-2" /> Add Experience
+                            </Button>
+                        </TabsContent>
 
-                    {/* Skills Tab */}
-                    <TabsContent value="skills" className="mt-0 space-y-4">
-                        <Card>
-                            <CardHeader>
-                                <CardTitle>Skills & Technologies</CardTitle>
-                            </CardHeader>
-                            <CardContent className="space-y-3">
-                                <div className="space-y-2">
-                                    <Label>Add Skills (Type and press Enter or Comma)</Label>
-                                    <Input
-                                        placeholder="e.g. React, Node.js, Typescript..."
-                                        onKeyDown={(e) => {
-                                            if (e.key === 'Enter' || e.key === ',') {
-                                                e.preventDefault()
-                                                const val = e.currentTarget.value
-                                                if (val) {
-                                                    addSkill(val)
-                                                    e.currentTarget.value = ''
+                        {/* Education Tab */}
+                        <TabsContent value="education" className="mt-0 space-y-4">
+                            {content.education?.map((edu, index) => (
+                                <AccordionItem
+                                    key={`${edu.id}-${index}`}
+                                    title={edu.school || "School / University"}
+                                    subtitle={edu.degree}
+                                    onDelete={() => removeItem('education', index)}
+                                    defaultOpen={index === 0}
+                                >
+                                    <div className="grid grid-cols-2 gap-4 mt-4">
+                                        <div className="space-y-2">
+                                            <Label>School / University</Label>
+                                            <Input
+                                                value={edu.school || ''}
+                                                onChange={(e) => handleChange('education', 'school', e.target.value, index)}
+                                            />
+                                        </div>
+                                        <div className="space-y-2">
+                                            <Label>Degree / Major</Label>
+                                            <Input
+                                                value={edu.degree || ''}
+                                                onChange={(e) => handleChange('education', 'degree', e.target.value, index)}
+                                            />
+                                        </div>
+                                        <div className="space-y-2">
+                                            <Label>Start Date</Label>
+                                            <DateSelector
+                                                value={edu.startDate}
+                                                onChange={(val) => handleChange('education', 'startDate', val, index)}
+                                                placeholder="Start Date"
+                                            />
+                                        </div>
+                                        <div className="space-y-2">
+                                            <Label>End Date (or Graduation)</Label>
+                                            <DateSelector
+                                                value={edu.endDate}
+                                                onChange={(val) => handleChange('education', 'endDate', val, index)}
+                                                placeholder="Graduation Year"
+                                            />
+                                        </div>
+                                    </div>
+                                </AccordionItem>
+                            ))}
+                            <Button onClick={addEducation} variant="outline" className="w-full border-dashed">
+                                <Plus className="w-4 h-4 mr-2" /> Add Education
+                            </Button>
+                        </TabsContent>
+
+                        {/* Skills Tab */}
+                        <TabsContent value="skills" className="mt-0 space-y-4">
+                            <Card>
+                                <CardHeader>
+                                    <CardTitle>Skills & Technologies</CardTitle>
+                                </CardHeader>
+                                <CardContent className="space-y-3">
+                                    <div className="space-y-2">
+                                        <Label>Add Skills (Type and press Enter or Comma)</Label>
+                                        <Input
+                                            placeholder="e.g. React, Node.js, Typescript..."
+                                            onKeyDown={(e) => {
+                                                if (e.key === 'Enter' || e.key === ',') {
+                                                    e.preventDefault()
+                                                    const val = e.currentTarget.value
+                                                    if (val) {
+                                                        addSkill(val)
+                                                        e.currentTarget.value = ''
+                                                    }
                                                 }
-                                            }
-                                        }}
-                                    />
-                                </div>
-
-                                <div className="flex flex-wrap gap-2 mt-4">
-                                    {content.skills?.map((skill, index) => (
-                                        <Badge key={index} variant="secondary" className="pl-3 pr-1 py-1 text-sm flex items-center gap-1">
-                                            {skill}
-                                            <button
-                                                onClick={() => removeSkill(index)}
-                                                className="hover:bg-red-200 dark:hover:bg-red-900 rounded-full p-0.5 transition-colors text-red-500"
-                                            >
-                                                <X className="w-3 h-3" />
-                                            </button>
-                                        </Badge>
-                                    ))}
-                                    {(!content.skills || content.skills.length === 0) && (
-                                        <p className="text-sm text-muted-foreground italic">No skills added yet.</p>
-                                    )}
-                                </div>
-                            </CardContent>
-                        </Card>
-                    </TabsContent>
-
-                    {/* Certifications Tab */}
-                    <TabsContent value="certifications" className="mt-0 space-y-4">
-                        {content.certifications?.map((cert, index) => (
-                            <AccordionItem
-                                key={index}
-                                title={cert.title || "Certification"}
-                                subtitle={cert.issuer}
-                                onDelete={() => removeItem('certifications', index)}
-                                defaultOpen={index === 0}
-                            >
-                                <div className="grid grid-cols-2 gap-4 mt-4">
-                                    <div className="space-y-2"><Label>Title</Label><Input value={cert.title} onChange={(e) => handleChange('certifications', 'title', e.target.value, index)} /></div>
-                                    <div className="space-y-2"><Label>Issuer</Label><Input value={cert.issuer} onChange={(e) => handleChange('certifications', 'issuer', e.target.value, index)} /></div>
-                                    <div className="space-y-2"><Label>Date</Label><Input value={cert.date} onChange={(e) => handleChange('certifications', 'date', e.target.value, index)} /></div>
-                                </div>
-                            </AccordionItem>
-                        ))}
-                        <Button onClick={() => addItem('certifications')} variant="outline" className="w-full border-dashed"><Plus className="w-4 h-4 mr-2" /> Add Certification</Button>
-                    </TabsContent>
-
-                    {/* Projects Tab */}
-                    <TabsContent value="projects" className="mt-0 space-y-4">
-                        {content.projects?.map((proj, index) => (
-                            <AccordionItem
-                                key={index}
-                                title={proj.title || "Project"}
-                                onDelete={() => removeItem('projects', index)}
-                                defaultOpen={index === 0}
-                            >
-                                <div className="space-y-2 mt-4"><Label>Project Title</Label><Input value={proj.title} onChange={(e) => handleChange('projects', 'title', e.target.value, index)} /></div>
-                                <div className="space-y-2"><Label>Link</Label><Input value={proj.link} onChange={(e) => handleChange('projects', 'link', e.target.value, index)} /></div>
-                                <div className="space-y-2"><Label>Description</Label><Textarea value={proj.description} onChange={(e) => handleChange('projects', 'description', e.target.value, index)} /></div>
-                            </AccordionItem>
-                        ))}
-                        <Button onClick={() => addItem('projects')} variant="outline" className="w-full border-dashed"><Plus className="w-4 h-4 mr-2" /> Add Project</Button>
-                    </TabsContent>
-
-                    {/* Languages Tab */}
-                    <TabsContent value="languages" className="mt-0 space-y-4">
-                        {content.languages?.map((lang, index) => (
-                            <AccordionItem
-                                key={index}
-                                title={lang.language || "Language"}
-                                subtitle={lang.proficiency}
-                                onDelete={() => removeItem('languages', index)}
-                                defaultOpen={index === 0}
-                            >
-                                <div className="grid grid-cols-2 gap-4 mt-4">
-                                    <div className="space-y-2"><Label>Language</Label><Input value={lang.language} onChange={(e) => handleChange('languages', 'language', e.target.value, index)} /></div>
-                                    <div className="space-y-2"><Label>Proficiency</Label>
-                                        <LevelSelector
-                                            value={lang.proficiency}
-                                            onChange={(val) => handleChange('languages', 'proficiency', val, index)}
+                                            }}
                                         />
                                     </div>
+
+                                    <div className="flex flex-wrap gap-2 mt-4">
+                                        {content.skills?.map((skill, index) => (
+                                            <Badge key={index} variant="secondary" className="pl-3 pr-1 py-1 text-sm flex items-center gap-1">
+                                                {skill}
+                                                <button
+                                                    onClick={() => removeSkill(index)}
+                                                    className="hover:bg-red-200 dark:hover:bg-red-900 rounded-full p-0.5 transition-colors text-red-500"
+                                                >
+                                                    <X className="w-3 h-3" />
+                                                </button>
+                                            </Badge>
+                                        ))}
+                                        {(!content.skills || content.skills.length === 0) && (
+                                            <p className="text-sm text-muted-foreground italic">No skills added yet.</p>
+                                        )}
+                                    </div>
+                                </CardContent>
+                            </Card>
+                        </TabsContent>
+
+                        {/* Certifications Tab */}
+                        <TabsContent value="certifications" className="mt-0 space-y-4">
+                            {content.certifications?.map((cert, index) => (
+                                <AccordionItem
+                                    key={index}
+                                    title={cert.title || "Certification"}
+                                    subtitle={cert.issuer}
+                                    onDelete={() => removeItem('certifications', index)}
+                                    defaultOpen={index === 0}
+                                >
+                                    <div className="grid grid-cols-2 gap-4 mt-4">
+                                        <div className="space-y-2"><Label>Title</Label><Input value={cert.title} onChange={(e) => handleChange('certifications', 'title', e.target.value, index)} /></div>
+                                        <div className="space-y-2"><Label>Issuer</Label><Input value={cert.issuer} onChange={(e) => handleChange('certifications', 'issuer', e.target.value, index)} /></div>
+                                        <div className="space-y-2"><Label>Date</Label><Input value={cert.date} onChange={(e) => handleChange('certifications', 'date', e.target.value, index)} /></div>
+                                    </div>
+                                </AccordionItem>
+                            ))}
+                            <Button onClick={() => addItem('certifications')} variant="outline" className="w-full border-dashed"><Plus className="w-4 h-4 mr-2" /> Add Certification</Button>
+                        </TabsContent>
+
+                        {/* Projects Tab */}
+                        <TabsContent value="projects" className="mt-0 space-y-4">
+                            {content.projects?.map((proj, index) => (
+                                <AccordionItem
+                                    key={index}
+                                    title={proj.title || "Project"}
+                                    onDelete={() => removeItem('projects', index)}
+                                    defaultOpen={index === 0}
+                                >
+                                    <div className="space-y-2 mt-4"><Label>Project Title</Label><Input value={proj.title} onChange={(e) => handleChange('projects', 'title', e.target.value, index)} /></div>
+                                    <div className="space-y-2"><Label>Link</Label><Input value={proj.link} onChange={(e) => handleChange('projects', 'link', e.target.value, index)} /></div>
+                                    <div className="space-y-2"><Label>Description</Label><Textarea value={proj.description} onChange={(e) => handleChange('projects', 'description', e.target.value, index)} /></div>
+                                </AccordionItem>
+                            ))}
+                            <Button onClick={() => addItem('projects')} variant="outline" className="w-full border-dashed"><Plus className="w-4 h-4 mr-2" /> Add Project</Button>
+                        </TabsContent>
+
+                        {/* Languages Tab */}
+                        <TabsContent value="languages" className="mt-0 space-y-4">
+                            {content.languages?.map((lang, index) => (
+                                <AccordionItem
+                                    key={index}
+                                    title={lang.language || "Language"}
+                                    subtitle={lang.proficiency}
+                                    onDelete={() => removeItem('languages', index)}
+                                    defaultOpen={index === 0}
+                                >
+                                    <div className="grid grid-cols-2 gap-4 mt-4">
+                                        <div className="space-y-2"><Label>Language</Label><Input value={lang.language} onChange={(e) => handleChange('languages', 'language', e.target.value, index)} /></div>
+                                        <div className="space-y-2"><Label>Proficiency</Label>
+                                            <LevelSelector
+                                                value={lang.proficiency}
+                                                onChange={(val) => handleChange('languages', 'proficiency', val, index)}
+                                            />
+                                        </div>
+                                    </div>
+                                </AccordionItem>
+                            ))}
+                            <Button onClick={() => addItem('languages')} variant="outline" className="w-full border-dashed"><Plus className="w-4 h-4 mr-2" /> Add Language</Button>
+                        </TabsContent>
+
+                        {/* Finish Up Tab */}
+                        <TabsContent value="finish" className="mt-0 space-y-6">
+                            <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                                {/* Left Col: Actions */}
+                                <div className="lg:col-span-1 space-y-6">
+                                    <Card>
+                                        <CardHeader>
+                                            <CardTitle>Final Review</CardTitle>
+                                        </CardHeader>
+                                        <CardContent className="space-y-4">
+                                            <div className="space-y-4">
+                                                <Label>Resume Template</Label>
+                                                <Select value={currentTemplate} onValueChange={onTemplateChange}>
+                                                    <SelectTrigger>
+                                                        <SelectValue placeholder="Select Template" />
+                                                    </SelectTrigger>
+                                                    <SelectContent>
+                                                        <SelectItem value="classic">Global Standard</SelectItem>
+                                                        <SelectItem value="modern">Modern Professional</SelectItem>
+                                                        <SelectItem value="bold">Bold Executive</SelectItem>
+                                                        <SelectItem value="minimalist">Minimalist Mono</SelectItem>
+                                                        <SelectItem value="tech">Tech / Developer</SelectItem>
+                                                    </SelectContent>
+                                                </Select>
+                                            </div>
+
+                                            <div className="pt-4 border-t border-zinc-100 dark:border-zinc-800 space-y-3">
+                                                <Button
+                                                    className="w-full justify-between"
+                                                    variant="outline"
+                                                    onClick={onCheckScore}
+                                                >
+                                                    <span>Check ATS Score</span>
+                                                    {/* Show dynamic score badge if available */}
+                                                    {atsScore?.score !== undefined ? (
+                                                        <Badge variant={atsScore.score >= 80 ? 'default' : atsScore.score >= 60 ? 'secondary' : 'destructive'}>
+                                                            {atsScore.score} / 100
+                                                        </Badge>
+                                                    ) : (
+                                                        <Badge variant="outline">Not Checked</Badge>
+                                                    )}
+                                                </Button>
+
+                                                <Button
+                                                    className="w-full bg-gradient-to-r from-indigo-500 to-purple-600 hover:from-indigo-600 hover:to-purple-700 text-white border-0"
+                                                    onClick={onAutoOptimize}
+                                                    disabled={isOptimizing}
+                                                >
+                                                    {isOptimizing ? 'Optimizing...' : '✨ AI Auto-Optimize'}
+                                                </Button>
+                                            </div>
+
+                                            <div className="pt-4 border-t border-zinc-100 dark:border-zinc-800">
+                                                {onDownload && onDownload()}
+                                            </div>
+                                        </CardContent>
+                                    </Card>
                                 </div>
-                            </AccordionItem>
-                        ))}
-                        <Button onClick={() => addItem('languages')} variant="outline" className="w-full border-dashed"><Plus className="w-4 h-4 mr-2" /> Add Language</Button>
-                    </TabsContent>
 
+                                {/* Right Col: Preview */}
+                                <div className="lg:col-span-2 min-h-[600px] bg-white dark:bg-zinc-900 shadow-sm rounded-xl border border-zinc-200 dark:border-zinc-800 overflow-hidden flex flex-col">
+                                    <div className="p-4 border-b border-zinc-100 dark:border-zinc-800 bg-zinc-50 dark:bg-zinc-950 flex justify-between items-center">
+                                        <span className="font-semibold text-sm">Resume Preview</span>
+                                    </div>
+                                    <div className="flex-1 bg-zinc-50 dark:bg-zinc-950/50 p-6 overflow-y-auto">
+                                        <div className="mx-auto shadow-2xl origin-top transform scale-95" style={{ width: '210mm' }}>
+                                            {/* Render the preview component passed from parent */}
+                                            {previewComponent}
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </TabsContent>
+                    </div> {/* End Centered Container */}
                 </div>
+            </Button>
 
-                {/* Footer Controls for Wizard */}
-                {isWizardMode && (
-                    <div className="flex items-center justify-between border-t border-zinc-200 dark:border-zinc-800 p-4 shrink-0 bg-white dark:bg-zinc-900 mt-auto">
-                        <Button
-                            variant="outline"
-                            onClick={handleBack}
-                            disabled={currentStepIndex === 0}
-                            className="w-[100px]"
-                        >
-                            <ArrowLeft className="w-4 h-4 mr-2" /> Back
-                        </Button>
+            <div className="flex gap-2">
+                {/* Optional: Add a 'Skip' button here if needed */}
+            </div>
 
-                        <div className="flex gap-2">
-                            {/* Optional: Add a 'Skip' button here if needed */}
-                        </div>
-
-                        <Button
-                            onClick={handleNext}
-                            className="w-[140px]"
-                            disabled={currentStepIndex === steps.length - 1}
-                        >
-                            {currentStepIndex === steps.length - 1 ? (
-                                <span className="flex items-center">Preview <CheckCircle2 className="w-4 h-4 ml-2" /></span>
-                            ) : (
-                                <span className="flex items-center">Next Step <ArrowRight className="w-4 h-4 ml-2" /></span>
-                            )}
-                        </Button>
-                    </div>
+            <Button
+                onClick={handleNext}
+                className="w-[140px]"
+                disabled={currentStepIndex === steps.length - 1}
+            >
+                {currentStepIndex === steps.length - 1 ? (
+                    <span className="flex items-center">Preview <CheckCircle2 className="w-4 h-4 ml-2" /></span>
+                ) : (
+                    <span className="flex items-center">Next Step <ArrowRight className="w-4 h-4 ml-2" /></span>
                 )}
-            </Tabs>
+            </Button>
         </div>
+    )
+}
+            </Tabs >
+        </div >
     )
 }
