@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useTransition } from "react"
+import { useState, useTransition, useRef, useEffect } from "react"
 import { Button } from "@/components/ui/button"
 import {
     Dialog,
@@ -29,6 +29,19 @@ export function CreateResumeDialog({ children }: { children?: React.ReactNode })
     const [isPending, startTransition] = useTransition()
     const [importSectionOpen, setImportSectionOpen] = useState(false)
     const [fileName, setFileName] = useState<string | null>(null)
+
+    const formRef = useRef<HTMLFormElement>(null)
+
+    useEffect(() => {
+        if (!open) {
+            const timer = setTimeout(() => {
+                setFileName(null)
+                setImportSectionOpen(false)
+                formRef.current?.reset()
+            }, 300) // Clear after animation
+            return () => clearTimeout(timer)
+        }
+    }, [open])
 
     const handleSubmit = async (formData: FormData) => {
         startTransition(async () => {
@@ -62,7 +75,7 @@ export function CreateResumeDialog({ children }: { children?: React.ReactNode })
                     <DialogHeader className="mb-4">
                         <DialogTitle className="text-xl font-bold">Create a resume</DialogTitle>
                     </DialogHeader>
-                    <form action={handleSubmit} className="space-y-6">
+                    <form ref={formRef} action={handleSubmit} className="space-y-6">
                         <div className="space-y-2">
                             <Label htmlFor="title" className="text-xs font-bold text-zinc-500 uppercase tracking-wider">
                                 Resume Name <span className="text-red-500">*</span>
