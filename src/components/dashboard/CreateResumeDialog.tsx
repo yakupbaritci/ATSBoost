@@ -103,7 +103,7 @@ export function CreateResumeDialog({ children }: { children?: React.ReactNode })
 
     return (
         <Dialog open={open} onOpenChange={setOpen}>
-            <DialogTrigger asChild>
+            <DialogTrigger>
                 {children || (
                     <Button>
                         <Plus className="mr-2 h-4 w-4" />
