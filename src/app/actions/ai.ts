@@ -168,3 +168,42 @@ export async function calculateATSScore(resumeContent: any, jobDescription?: str
         throw new Error('Failed to calculate ATS score')
     }
 }
+
+export async function applySpecificImprovement(currentContent: any, instruction: string, description?: string) {
+    const prompt = `
+    You are an expert Resume Editor.
+    Your task is to apply a SPECIFIC improvement to the resume content based on the instruction below.
+
+    INSTRUCTION: "${instruction}"
+    CONTEXT/DESCRIPTION: "${description || ''}"
+
+    RULES:
+    1. Only modify the sections relevant to the instruction. Keep everything else EXACTLY the same.
+    2. If asked to add metrics, estimate realistic placeholders (e.g. "Increased efficiency by 20%") if real data isn't provided, but prefer using existing data better.
+    3. If asked to fix typos, fix them.
+    4. Return the COMPLETE updated resume JSON.
+
+    CURRENT RESUME:
+    ${JSON.stringify(currentContent)}
+
+    Return ONLY valid JSON.
+    `
+
+    try {
+        const completion = await openai.chat.completions.create({
+            messages: [{ role: "system", content: "You are a helpful assistant that outputs JSON." }, { role: "user", content: prompt }],
+            model: "gpt-4o",
+            response_format: { type: "json_object" },
+            temperature: 0.5,
+        });
+
+        const content = completion.choices[0].message.content;
+        if (!content) throw new Error("No content from OpenAI");
+
+        return JSON.parse(content);
+
+    } catch (error) {
+        console.error('Apply Improvement Error:', error)
+        throw new Error('Failed to apply improvement')
+    }
+}
