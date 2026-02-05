@@ -70,8 +70,26 @@ interface ResumeFormProps {
 export function ResumeForm({ initialContent, onUpdate }: ResumeFormProps) {
     const [content, setContent] = useState<ResumeContent>(initialContent)
 
+    const [errors, setErrors] = useState<{ [key: string]: string }>({})
+
+    const validateField = (section: string, field: string, value: any) => {
+        let newErrors = { ...errors }
+        if (field === 'email') {
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+            if (value && !emailRegex.test(value)) {
+                newErrors[`${section}.${field}`] = 'Invalid email address'
+            } else {
+                delete newErrors[`${section}.${field}`]
+            }
+        }
+        setErrors(newErrors)
+    }
+
     const handleChange = (section: keyof ResumeContent, field: string, value: any, index?: number) => {
         const newContent = { ...content }
+
+        // Validation Check
+        validateField(section, field, value)
 
         if (section === 'contact') {
             newContent.contact = { ...newContent.contact, [field]: value }
@@ -148,16 +166,16 @@ export function ResumeForm({ initialContent, onUpdate }: ResumeFormProps) {
     return (
         <div className="h-full flex flex-col">
             <Tabs defaultValue="contact" className="w-full h-full flex flex-col">
-                <TabsList className="grid w-full grid-cols-3 mb-2 h-auto">
-                    <TabsTrigger value="contact">Contact</TabsTrigger>
-                    <TabsTrigger value="summary">Summary</TabsTrigger>
-                    <TabsTrigger value="experience">Exp</TabsTrigger>
-                    <TabsTrigger value="education">Edu</TabsTrigger>
-                    <TabsTrigger value="skills">Skills</TabsTrigger>
-                    <TabsTrigger value="certifications">Certs</TabsTrigger>
-                    <TabsTrigger value="projects">Projects</TabsTrigger>
-                    <TabsTrigger value="languages">Langs</TabsTrigger>
-                    <TabsTrigger value="job">Job</TabsTrigger>
+                <TabsList className="justify-start w-full h-auto flex-wrap gap-1 bg-transparent p-0 mb-4">
+                    <TabsTrigger className="data-[state=active]:bg-primary data-[state=active]:text-primary-foreground border border-zinc-200 dark:border-zinc-800" value="contact">Contact</TabsTrigger>
+                    <TabsTrigger className="data-[state=active]:bg-primary data-[state=active]:text-primary-foreground border border-zinc-200 dark:border-zinc-800" value="summary">Summary</TabsTrigger>
+                    <TabsTrigger className="data-[state=active]:bg-primary data-[state=active]:text-primary-foreground border border-zinc-200 dark:border-zinc-800" value="experience">Experience</TabsTrigger>
+                    <TabsTrigger className="data-[state=active]:bg-primary data-[state=active]:text-primary-foreground border border-zinc-200 dark:border-zinc-800" value="education">Education</TabsTrigger>
+                    <TabsTrigger className="data-[state=active]:bg-primary data-[state=active]:text-primary-foreground border border-zinc-200 dark:border-zinc-800" value="skills">Skills</TabsTrigger>
+                    <TabsTrigger className="data-[state=active]:bg-primary data-[state=active]:text-primary-foreground border border-zinc-200 dark:border-zinc-800" value="certifications">Certs</TabsTrigger>
+                    <TabsTrigger className="data-[state=active]:bg-primary data-[state=active]:text-primary-foreground border border-zinc-200 dark:border-zinc-800" value="projects">Projects</TabsTrigger>
+                    <TabsTrigger className="data-[state=active]:bg-primary data-[state=active]:text-primary-foreground border border-zinc-200 dark:border-zinc-800" value="languages">Languages</TabsTrigger>
+                    <TabsTrigger className="data-[state=active]:bg-primary data-[state=active]:text-primary-foreground border border-zinc-200 dark:border-zinc-800" value="job">Target Job</TabsTrigger>
                 </TabsList>
 
                 <div className="flex-1 overflow-y-auto pr-2 space-y-4">
@@ -180,9 +198,12 @@ export function ResumeForm({ initialContent, onUpdate }: ResumeFormProps) {
                                     <div className="space-y-2">
                                         <Label>Email</Label>
                                         <Input
+                                            type="email"
                                             value={content.contact?.email || ''}
                                             onChange={(e) => handleChange('contact', 'email', e.target.value)}
+                                            className={errors['contact.email'] ? 'border-red-500 focus-visible:ring-red-500' : ''}
                                         />
+                                        {errors['contact.email'] && <p className="text-xs text-red-500">{errors['contact.email']}</p>}
                                     </div>
                                     <div className="space-y-2">
                                         <Label>Phone</Label>
