@@ -76,6 +76,13 @@ export default function BuilderPage() {
                 if (data.content.template) {
                     setCurrentTemplate(data.content.template)
                 }
+                if (data.content.template) {
+                    setCurrentTemplate(data.content.template)
+                }
+                // Load saved ATS result if exists
+                if (data.content.atsAnalysis) {
+                    setAtsResult(data.content.atsAnalysis)
+                }
             }
             setLoading(false)
         }
@@ -158,13 +165,31 @@ export default function BuilderPage() {
     }
 
     const handleCheckScore = async (contentToAnalyze = resume.content) => {
+        if (!contentToAnalyze || Object.keys(contentToAnalyze).length === 0) {
+            toast.error("Resume content is empty, cannot calculate score.")
+            return
+        }
+
         setScoring(true)
         setShowScoreModal(true)
         try {
-            const jd = resume.content.targetJob?.description
+            const jd = contentToAnalyze.targetJob?.description
             const result = await calculateATSScore(contentToAnalyze, jd)
+
             setAtsResult(result)
+
+            // Persist the score to DB immediately
+            const updatedContent = { ...contentToAnalyze, atsAnalysis: result }
+            // Update local state first to be responsive
+            setResume((prev: any) => ({ ...prev, content: updatedContent }))
+            // Save to DB
+            await supabase.from('resumes').update({
+                content: updatedContent,
+                updated_at: new Date().toISOString()
+            }).eq('id', resume.id)
+
         } catch (e: any) {
+            console.error(e)
             toast.error("Failed to calculate score")
             setShowScoreModal(false)
         } finally {
