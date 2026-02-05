@@ -1,6 +1,6 @@
 'use client'
 
-import { createResumeFromPdf } from '@/app/actions/resume'
+import { createNewResume } from '@/app/actions/resume'
 import { Button } from '@/components/ui/button'
 import { Upload, FileText } from 'lucide-react'
 import { useState } from 'react'
@@ -30,7 +30,7 @@ export default function UploadPage() {
                 <form
                     action={async (formData) => {
                         setIsLoading(true)
-                        await createResumeFromPdf(formData)
+                        await createNewResume(formData)
                     }}
                     className="space-y-6"
                 >

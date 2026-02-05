@@ -12,9 +12,15 @@ export async function createNewResume(formData: FormData) {
 
     if (!user) throw new Error('Unauthorized')
 
-    const title = formData.get('title') as string || 'Untitled Resume'
-    const experienceLevel = formData.get('experienceLevel') as string
     const file = formData.get('file') as File
+    const experienceLevel = formData.get('experienceLevel') as string
+
+    // Determine title: Use form title, or fallback to filename if file exists, or default
+    let derivedTitle = formData.get('title') as string
+    if ((!derivedTitle || derivedTitle === 'Untitled Resume') && file && file.size > 0) {
+        derivedTitle = file.name.replace(/\.[^/.]+$/, "") // Remove extension
+    }
+    if (!derivedTitle) derivedTitle = 'Untitled Resume'
 
     let initialContent: any = {
         contact: {},
@@ -78,7 +84,7 @@ export async function createNewResume(formData: FormData) {
         .from('resumes')
         .insert({
             user_id: user.id,
-            title: title,
+            title: derivedTitle,
             content: initialContent,
             original_pdf_url: publicUrl,
             is_optimized: false
