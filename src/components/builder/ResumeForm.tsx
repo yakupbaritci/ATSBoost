@@ -1530,7 +1530,7 @@ export function ResumeForm({
                                     {/* Left: Template Dropdown */}
                                     <div className="flex items-center gap-2">
                                         <FileIcon className="w-4 h-4 text-zinc-500" />
-                                        <Select value={template} onValueChange={setTemplate}>
+                                        <Select value={currentTemplate} onValueChange={onTemplateChange}>
                                             <SelectTrigger className="w-[200px] h-9 bg-zinc-50 border-zinc-200">
                                                 <SelectValue placeholder="Select Template" />
                                             </SelectTrigger>
