@@ -860,22 +860,7 @@ export function ResumeForm({
                                         ))}
                                     </div>
 
-                                    {/* Gamification / Analysis List Mockup */}
-                                    {/* This mimics the Rezi sidebar analysis */}
-                                    <div className="mt-4 space-y-3 px-2 opacity-80 pointer-events-none grayscale">
-                                        <div className="flex items-center gap-2 text-xs text-zinc-500">
-                                            <X className="w-3 h-3 text-red-500 rounded-full bg-red-100 p-0.5" /> Short Bullet Points
-                                        </div>
-                                        <div className="flex items-center gap-2 text-xs text-zinc-500">
-                                            <Lock className="w-3 h-3 text-zinc-400" /> Personal Pronoun <Badge variant="secondary" className="text-[9px] h-4 px-1 ml-auto">PRO</Badge>
-                                        </div>
-                                        <div className="flex items-center gap-2 text-xs text-zinc-500">
-                                            <Lock className="w-3 h-3 text-zinc-400" /> Buzzwords <Badge variant="secondary" className="text-[9px] h-4 px-1 ml-auto">PRO</Badge>
-                                        </div>
-                                        <div className="flex items-center gap-2 text-xs text-zinc-500">
-                                            <Lock className="w-3 h-3 text-zinc-400" /> Passive Voice <Badge variant="secondary" className="text-[9px] h-4 px-1 ml-auto">PRO</Badge>
-                                        </div>
-                                    </div>
+
                                 </div>
 
                                 {/* Right Main: Editor */}
