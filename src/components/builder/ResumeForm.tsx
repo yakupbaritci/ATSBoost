@@ -24,10 +24,28 @@ import {
     DropdownMenuSubTrigger,
     DropdownMenuSubContent
 } from "@/components/ui/dropdown-menu"
-import { MoreVertical, FileText as FileIcon, Copy, Eye, Download as DownloadIcon, Settings as SettingsIcon, Check, Sparkles, Lightbulb, Lock, AlertCircle, Loader2, Share2, AlignLeft, AlignCenter, AlignRight, Type, ChevronRight } from 'lucide-react'
+import { MoreVertical, FileText as FileIcon, Copy, Eye, Download as DownloadIcon, Settings as SettingsIcon, Check, Sparkles, Lightbulb, Lock, AlertCircle, Loader2, Share2, AlignLeft, AlignCenter, AlignRight, Type, ChevronRight, Save } from 'lucide-react'
 import { SidebarList } from './SidebarList'
 
 import { toast } from 'sonner'
+
+// AI Generation State
+const [isGeneratingBullet, setIsGeneratingBullet] = useState(false)
+const [isGeneratingSummary, setIsGeneratingSummary] = useState(false)
+
+// Helper to toggle visibility of list items
+const toggleVisibility = (section: keyof ResumeContent, index: number) => {
+    setContent(prev => {
+        const newContent = { ...prev }
+        if (Array.isArray(newContent[section])) {
+            const items = [...(newContent[section] as any[])]
+            items[index] = { ...items[index], visible: items[index].visible === undefined ? false : !items[index].visible }
+            newContent[section] = items
+        }
+        if (onUpdate) onUpdate(newContent)
+        return newContent
+    })
+}
 
 // Accordion Card Component for managing expandable sections
 const AccordionItem = ({
