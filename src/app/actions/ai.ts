@@ -242,3 +242,37 @@ export async function generateSingleBullet(role: string, company: string, curren
         throw new Error('Failed to generate bullet point')
     }
 }
+
+export async function generateSummary(currentContent: any) {
+    const prompt = `
+    You are an expert Resume Writer.
+    Write a professional, impactful "Professional Summary" (approx. 3-4 sentences) for a resume.
+    
+    RESUME CONTENT:
+    ${JSON.stringify(currentContent)}
+
+    RULES:
+    1. CRITICAL: Detect the language of the resume content. If it is mostly Turkish, write the summary in TURKISH. If English, write in ENGLISH. Match the input language exactly.
+    2. Highlight key achievements, skills, and total years of experience if inferable.
+    3. Use a professional, confident tone.
+    4. Do not use "I" or "My" excessively (implied first person is better).
+    5. Return ONLY the summary text as a plain string. Do not wrap in quotes or JSON.
+    `
+
+    try {
+        const completion = await openai.chat.completions.create({
+            messages: [{ role: "system", content: "You are a helpful resume writing assistant." }, { role: "user", content: prompt }],
+            model: "gpt-4o",
+            temperature: 0.7,
+        });
+
+        const content = completion.choices[0].message.content;
+        if (!content) throw new Error("No content from OpenAI");
+
+        return content.trim();
+
+    } catch (error) {
+        console.error('Generate Summary Error:', error)
+        throw new Error('Failed to generate summary')
+    }
+}
