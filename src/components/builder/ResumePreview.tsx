@@ -3,15 +3,18 @@
 import { Document, Page, Text, View, StyleSheet, PDFViewer, Font } from '@react-pdf/renderer'
 import { useEffect, useState } from 'react'
 
-// Register fonts (standard fonts work out of the box, but custom fonts need registration)
-// Font.register({ family: 'Inter', src: '...' });
+// Register font with Turkish character support
+Font.register({
+    family: 'Roboto',
+    src: 'https://cdnjs.cloudflare.com/ajax/libs/ink/3.1.10/fonts/Roboto/roboto-medium-webfont.ttf'
+});
 
 const styles = StyleSheet.create({
     page: {
         flexDirection: 'column',
         backgroundColor: '#ffffff',
         padding: 40,
-        fontFamily: 'Helvetica',
+        fontFamily: 'Roboto', // Use the registered font
     },
     section: {
         marginBottom: 10,
@@ -123,6 +126,40 @@ const ResumeDocument = ({ content }: { content: ResumeContent }) => (
                             )}
                         </View>
                     ))}
+                </View>
+            )}
+
+            {/* Education */}
+            {content.education?.length > 0 && (
+                <View style={styles.section}>
+                    <Text style={styles.sectionTitle}>Education</Text>
+                    {content.education.map((edu: any, i: number) => (
+                        <View key={i} style={styles.jobBlock}>
+                            <View style={styles.jobHeader}>
+                                <View style={{ flexDirection: 'column' }}>
+                                    <Text style={styles.jobTitle}>{edu.school}</Text>
+                                    <Text style={styles.jobCompany}>{edu.degree}</Text>
+                                </View>
+                                <Text style={styles.jobDate}>
+                                    {edu.startDate} - {edu.endDate}
+                                </Text>
+                            </View>
+                        </View>
+                    ))}
+                </View>
+            )}
+
+            {/* Skills */}
+            {content.skills?.length > 0 && (
+                <View style={styles.section}>
+                    <Text style={styles.sectionTitle}>Skills</Text>
+                    <View style={{ flexDirection: 'row', flexWrap: 'wrap', gap: 5 }}>
+                        {content.skills.map((skill: string, i: number) => (
+                            <Text key={i} style={{ fontSize: 10, backgroundColor: '#f3f4f6', padding: '2 6', borderRadius: 4 }}>
+                                {skill}
+                            </Text>
+                        ))}
+                    </View>
                 </View>
             )}
 
