@@ -871,57 +871,23 @@ export function ResumeForm({
                                         </div>
                                     </div>
 
-                                    {/* List Header */}
-                                    <div className="flex items-center justify-between px-1">
-                                        <h3 className="font-bold text-zinc-900 dark:text-zinc-100 flex items-center gap-2">
-                                            <ChevronDown className="w-4 h-4" /> Your Experience
-                                        </h3>
-                                        <Button size="icon" variant="ghost" className="h-6 w-6 bg-blue-600 text-white hover:bg-blue-700 rounded-full" onClick={() => {
+                                    <SidebarList
+                                        title="Your Experience"
+                                        titleField="title"
+                                        subtitleField="company"
+                                        items={content.experience || []}
+                                        activeIndex={activeExperienceIndex}
+                                        onSelect={setActiveExperienceIndex}
+                                        onAdd={() => {
                                             addExperience()
                                             setActiveExperienceIndex((content.experience?.length || 0))
-                                        }}>
-                                            <Plus className="w-4 h-4" />
-                                        </Button>
-                                    </div>
-
-                                    {/* Experience List */}
-                                    <div className="space-y-2">
-                                        {content.experience?.map((exp, index) => (
-                                            <div
-                                                key={exp.id ? `${exp.id}-${index}` : index}
-                                                onClick={() => setActiveExperienceIndex(index)}
-                                                className={cn(
-                                                    "group relative p-3 rounded-lg cursor-pointer border transition-all hover:shadow-md",
-                                                    activeExperienceIndex === index
-                                                        ? "bg-blue-50 dark:bg-blue-900/20 border-blue-200 dark:border-blue-800 ring-1 ring-blue-100 dark:ring-blue-900"
-                                                        : "bg-white dark:bg-zinc-900 border-zinc-200 dark:border-zinc-800 hover:border-zinc-300"
-                                                )}
-                                            >
-                                                <div className="flex justify-between items-start">
-                                                    <div>
-                                                        <h4 className={cn("font-bold text-sm", activeExperienceIndex === index ? "text-blue-700 dark:text-blue-300" : "text-zinc-800 dark:text-zinc-200")}>
-                                                            {exp.title || "Untitled Position"}
-                                                        </h4>
-                                                        <p className="text-xs text-zinc-500 truncate mt-0.5">
-                                                            {exp.company || "No Company"}
-                                                        </p>
-                                                    </div>
-                                                    <Button
-                                                        variant="ghost"
-                                                        size="icon"
-                                                        className="h-6 w-6 text-zinc-400 opacity-0 group-hover:opacity-100"
-                                                        onClick={(e) => {
-                                                            e.stopPropagation()
-                                                            removeItem('experience', index)
-                                                            if (activeExperienceIndex === index && index > 0) setActiveExperienceIndex(index - 1)
-                                                        }}
-                                                    >
-                                                        <MoreVertical className="w-3 h-3" />
-                                                    </Button>
-                                                </div>
-                                            </div>
-                                        ))}
-                                    </div>
+                                        }}
+                                        onDelete={(idx) => {
+                                            removeItem('experience', idx)
+                                            if (activeExperienceIndex >= idx && activeExperienceIndex > 0) setActiveExperienceIndex(activeExperienceIndex - 1)
+                                        }}
+                                        onToggleVisibility={(idx) => toggleVisibility('experience', idx)}
+                                    />
 
 
                                 </div>
