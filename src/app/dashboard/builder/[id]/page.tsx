@@ -112,43 +112,43 @@ export default function BuilderPage() {
         }
         setSaving(false)
     }
-    if (error) {
-        alert('Failed to save')
-    } else {
-        // console.log('Saved!')
+
+    const handleOptimize = async () => {
+        const jd = resume.content.targetJob?.description
+        if (!jd) {
+            alert('Please add a Job Description in the "Target Job" tab first.')
+            return
+        }
+
+        if (!confirm('This will rewrite your Summary and Experience sections. Continue?')) return
+
+        setOptimizing(true)
+        try {
+            const optimizedContent = await optimizeResumeContent(resume.content, jd)
+            handleUpdate({ ...optimizedContent, targetJob: resume.content.targetJob }) // Keep the JD
+
+            // Mark as optimized in DB
+            await supabase.from('resumes').update({ is_optimized: true }).eq('id', resume.id)
+
+            alert('Optimization Complete! Check your new Summary.')
+        } catch (e: any) {
+            alert(e.message)
+        } finally {
+            setOptimizing(false)
+        }
     }
-}
 
-const handleOptimize = async () => {
-    const jd = resume.content.targetJob?.description
-    if (!jd) {
-        alert('Please add a Job Description in the "Target Job" tab first.')
-        return
+    if (loading) {
+        return (
+            <div className="h-screen flex items-center justify-center">
+                <Loader2 className="w-8 h-8 animate-spin text-primary" />
+            </div>
+        )
     }
 
-    if (!confirm('This will rewrite your Summary and Experience sections. Continue?')) return
+    if (!resume) return <div>Resume not found</div>
 
-    setOptimizing(true)
-    try {
-        const optimizedContent = await optimizeResumeContent(resume.content, jd)
-        handleUpdate({ ...optimizedContent, targetJob: resume.content.targetJob }) // Keep the JD
-
-        // Mark as optimized in DB
-        await supabase.from('resumes').update({ is_optimized: true }).eq('id', resume.id)
-
-        alert('Optimization Complete! Check your new Summary.')
-    } catch (e: any) {
-        alert(e.message)
-    } finally {
-        setOptimizing(false)
-    }
-}
-
-if (loading) {
     return (
-        <div className="h-screen flex items-center justify-center">
-            <Loader2 className="w-8 h-8 animate-spin text-primary" />
-        </div>
     )
 }
 
