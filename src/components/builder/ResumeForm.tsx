@@ -1102,55 +1102,26 @@ export function ResumeForm({
                                         </div>
                                     </div>
 
-                                    <div className="flex items-center justify-between px-1">
-                                        <h3 className="font-bold text-zinc-900 dark:text-zinc-100 flex items-center gap-2">
-                                            <ChevronDown className="w-4 h-4" /> Your Education
-                                        </h3>
-                                        <Button size="icon" variant="ghost" className="h-6 w-6 bg-blue-600 text-white hover:bg-blue-700 rounded-full" onClick={() => {
+                                    <SidebarList
+                                        title="Your Education"
+                                        items={content.education || []}
+                                        selectedIndex={activeEducationIndex}
+                                        onSelect={setActiveEducationIndex}
+                                        onDelete={(index) => {
+                                            removeItem('education', index)
+                                            if (activeEducationIndex >= index && activeEducationIndex > 0) setActiveEducationIndex(activeEducationIndex - 1)
+                                        }}
+                                        onAdd={() => {
                                             addEducation()
                                             setActiveEducationIndex((content.education?.length || 0))
-                                        }}>
-                                            <Plus className="w-4 h-4" />
-                                        </Button>
-                                    </div>
-
-                                    <div className="space-y-2">
-                                        {content.education?.map((edu, index) => (
-                                            <div
-                                                key={edu.id ? `${edu.id}-${index}` : index}
-                                                onClick={() => setActiveEducationIndex(index)}
-                                                className={cn(
-                                                    "group relative p-3 rounded-lg cursor-pointer border transition-all hover:shadow-md",
-                                                    activeEducationIndex === index
-                                                        ? "bg-blue-50 dark:bg-blue-900/20 border-blue-200 dark:border-blue-800 ring-1 ring-blue-100 dark:ring-blue-900"
-                                                        : "bg-white dark:bg-zinc-900 border-zinc-200 dark:border-zinc-800 hover:border-zinc-300"
-                                                )}
-                                            >
-                                                <div className="flex justify-between items-start">
-                                                    <div>
-                                                        <h4 className={cn("font-bold text-sm", activeEducationIndex === index ? "text-blue-700 dark:text-blue-300" : "text-zinc-800 dark:text-zinc-200")}>
-                                                            {edu.school || "University/School"}
-                                                        </h4>
-                                                        <p className="text-xs text-zinc-500 truncate mt-0.5">
-                                                            {edu.degree || "Degree"}
-                                                        </p>
-                                                    </div>
-                                                    <Button
-                                                        variant="ghost"
-                                                        size="icon"
-                                                        className="h-6 w-6 text-zinc-400 opacity-0 group-hover:opacity-100"
-                                                        onClick={(e) => {
-                                                            e.stopPropagation()
-                                                            removeItem('education', index)
-                                                            if (activeEducationIndex === index && index > 0) setActiveEducationIndex(index - 1)
-                                                        }}
-                                                    >
-                                                        <MoreVertical className="w-3 h-3" />
-                                                    </Button>
-                                                </div>
-                                            </div>
-                                        ))}
-                                    </div>
+                                        }}
+                                        onToggleVisible={(index) => {
+                                            const current = content.education[index];
+                                            handleChange('education', 'visible', current.visible === false ? true : false, index);
+                                        }}
+                                        titleKey="school"
+                                        subtitleKey="degree"
+                                    />
                                 </div>
 
                                 {/* Right Main: Editor */}
