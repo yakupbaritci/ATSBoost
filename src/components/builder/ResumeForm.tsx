@@ -7,7 +7,7 @@ import { Label } from '@/components/ui/label'
 import { Textarea } from '@/components/ui/textarea'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { Button } from '@/components/ui/button'
-import { Plus, Trash2, Calendar as CalendarIcon, X, ChevronDown, ChevronUp } from 'lucide-react'
+import { Plus, Trash2, Calendar as CalendarIcon, X, ChevronDown, ChevronUp, ArrowRight, ArrowLeft, CheckCircle2 } from 'lucide-react'
 import { useEffect, KeyboardEvent } from 'react'
 import { Badge } from '@/components/ui/badge'
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover'
@@ -262,10 +262,41 @@ type ResumeContent = {
 interface ResumeFormProps {
     initialContent: ResumeContent
     onUpdate: (content: ResumeContent) => void
+    isWizardMode?: boolean
 }
 
-export function ResumeForm({ initialContent, onUpdate }: ResumeFormProps) {
+export function ResumeForm({ initialContent, onUpdate, isWizardMode = false }: ResumeFormProps) {
     const [content, setContent] = useState<ResumeContent>(initialContent)
+    const [activeTab, setActiveTab] = useState("contact")
+
+    // Wizard Steps Configuration
+    const steps = [
+        { id: "contact", title: "Personal Info", description: "Let's start with the basics." },
+        { id: "summary", title: "Professional Summary", description: "Your elevator pitch." },
+        { id: "experience", title: "Experience", description: "Where have you worked?" },
+        { id: "education", title: "Education", description: "Your academic background." },
+        { id: "skills", title: "Skills", description: "What are your superpowers?" },
+        { id: "certifications", title: "Certifications", description: "Extra credentials." },
+        { id: "projects", title: "Projects", description: "Showcase your work." },
+        { id: "languages", title: "Languages", description: "Global communication." },
+        { id: "job", title: "Target Job", description: "Tailor your resume." }
+    ]
+
+    const currentStepIndex = steps.findIndex(s => s.id === activeTab)
+
+    const handleNext = () => {
+        if (currentStepIndex < steps.length - 1) {
+            setActiveTab(steps[currentStepIndex + 1].id)
+            // Scroll to top
+            window.scrollTo({ top: 0, behavior: 'smooth' })
+        }
+    }
+
+    const handleBack = () => {
+        if (currentStepIndex > 0) {
+            setActiveTab(steps[currentStepIndex - 1].id)
+        }
+    }
 
     // Fix dates on mount: If only startDate exists and looks like a single date, move it to endDate (Graduation/End date logic)
     useEffect(() => {
@@ -400,24 +431,45 @@ export function ResumeForm({ initialContent, onUpdate }: ResumeFormProps) {
     }
 
 
+
     return (
         <div className="h-full flex flex-col">
-            <Tabs defaultValue="contact" className="w-full h-full flex flex-col">
+            <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full h-full flex flex-col">
 
-                {/* Horizontal Scrollable Tabs */}
-                <div className="w-full overflow-x-auto pb-2 mb-4 scrollbar-hide">
-                    <TabsList className="inline-flex w-auto h-auto p-1 bg-zinc-100 dark:bg-zinc-800 rounded-lg">
-                        <TabsTrigger className="px-4 py-2 rounded-md data-[state=active]:bg-white dark:data-[state=active]:bg-zinc-950 data-[state=active]:shadow-sm transition-all" value="contact">Contact</TabsTrigger>
-                        <TabsTrigger className="px-4 py-2 rounded-md data-[state=active]:bg-white dark:data-[state=active]:bg-zinc-950 data-[state=active]:shadow-sm transition-all" value="summary">Summary</TabsTrigger>
-                        <TabsTrigger className="px-4 py-2 rounded-md data-[state=active]:bg-white dark:data-[state=active]:bg-zinc-950 data-[state=active]:shadow-sm transition-all" value="experience">Experience</TabsTrigger>
-                        <TabsTrigger className="px-4 py-2 rounded-md data-[state=active]:bg-white dark:data-[state=active]:bg-zinc-950 data-[state=active]:shadow-sm transition-all" value="education">Education</TabsTrigger>
-                        <TabsTrigger className="px-4 py-2 rounded-md data-[state=active]:bg-white dark:data-[state=active]:bg-zinc-950 data-[state=active]:shadow-sm transition-all" value="skills">Skills</TabsTrigger>
-                        <TabsTrigger className="px-4 py-2 rounded-md data-[state=active]:bg-white dark:data-[state=active]:bg-zinc-950 data-[state=active]:shadow-sm transition-all" value="certifications">Certs</TabsTrigger>
-                        <TabsTrigger className="px-4 py-2 rounded-md data-[state=active]:bg-white dark:data-[state=active]:bg-zinc-950 data-[state=active]:shadow-sm transition-all" value="projects">Projects</TabsTrigger>
-                        <TabsTrigger className="px-4 py-2 rounded-md data-[state=active]:bg-white dark:data-[state=active]:bg-zinc-950 data-[state=active]:shadow-sm transition-all" value="languages">Languages</TabsTrigger>
-                        <TabsTrigger className="px-4 py-2 rounded-md data-[state=active]:bg-white dark:data-[state=active]:bg-zinc-950 data-[state=active]:shadow-sm transition-all" value="job">Target Job</TabsTrigger>
-                    </TabsList>
-                </div>
+                {/* Wizard Progress or Standard Tabs */}
+                {isWizardMode ? (
+                    <div className="mb-6 space-y-4">
+                        <div className="flex items-center justify-between">
+                            <div>
+                                <h2 className="text-2xl font-bold">{steps[currentStepIndex].title}</h2>
+                                <p className="text-muted-foreground">{steps[currentStepIndex].description}</p>
+                            </div>
+                            <div className="text-sm font-medium text-muted-foreground">
+                                Step {currentStepIndex + 1} of {steps.length}
+                            </div>
+                        </div>
+                        <div className="w-full bg-zinc-100 dark:bg-zinc-800 rounded-full h-2">
+                            <div
+                                className="bg-primary h-2 rounded-full transition-all duration-300 ease-in-out"
+                                style={{ width: `${((currentStepIndex + 1) / steps.length) * 100}%` }}
+                            />
+                        </div>
+                    </div>
+                ) : (
+                    <div className="w-full overflow-x-auto pb-2 mb-4 scrollbar-hide">
+                        <TabsList className="inline-flex w-auto h-auto p-1 bg-zinc-100 dark:bg-zinc-800 rounded-lg">
+                            {steps.map(step => (
+                                <TabsTrigger
+                                    key={step.id}
+                                    className="px-4 py-2 rounded-md data-[state=active]:bg-white dark:data-[state=active]:bg-zinc-950 data-[state=active]:shadow-sm transition-all"
+                                    value={step.id}
+                                >
+                                    {step.title}
+                                </TabsTrigger>
+                            ))}
+                        </TabsList>
+                    </div>
+                )}
 
                 {/* Main Content Area */}
                 <div className="flex-1 overflow-y-auto pr-2 pb-10 space-y-4">
@@ -738,6 +790,36 @@ export function ResumeForm({ initialContent, onUpdate }: ResumeFormProps) {
                     </TabsContent>
 
                 </div>
+
+                {/* Wizard Navigation Footer */}
+                {isWizardMode && (
+                    <div className="pt-4 border-t mt-auto flex justify-between items-center bg-background sticky bottom-0 z-10 p-4">
+                        <Button
+                            variant="outline"
+                            onClick={handleBack}
+                            disabled={currentStepIndex === 0}
+                            className="w-[100px]"
+                        >
+                            <ArrowLeft className="w-4 h-4 mr-2" /> Back
+                        </Button>
+
+                        <div className="flex gap-2">
+                            {/* Optional: Add a 'Skip' button here if needed */}
+                        </div>
+
+                        <Button
+                            onClick={handleNext}
+                            className="w-[140px]"
+                            disabled={currentStepIndex === steps.length - 1}
+                        >
+                            {currentStepIndex === steps.length - 1 ? (
+                                <span className="flex items-center">Preview <CheckCircle2 className="w-4 h-4 ml-2" /></span>
+                            ) : (
+                                <span className="flex items-center">Next Step <ArrowRight className="w-4 h-4 ml-2" /></span>
+                            )}
+                        </Button>
+                    </div>
+                )}
             </Tabs>
         </div>
     )
