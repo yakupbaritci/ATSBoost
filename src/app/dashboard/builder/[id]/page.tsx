@@ -149,84 +149,106 @@ export default function BuilderPage() {
     if (!resume) return <div>Resume not found</div>
 
     return (
-        className = "font-semibold bg-transparent focus:outline-none focus:ring-1 focus:ring-primary rounded px-1"
-                        defaultValue = { resume.title }
-    onBlur = { async(e) => {
-        await supabase.from('resumes').update({ title: e.target.value }).eq('id', resume.id)
-    }
-}
-                    />
-    < span className = "text-xs text-zinc-400 ml-2" >
-        { resume.is_optimized ? 'Optimized' : 'Draft' }
-                    </span >
-                </div >
-            </div >
-    <div className="flex gap-2">
-        <Button size="sm" onClick={handleSave} disabled={saving}>
-            {saving ? <Loader2 className="w-4 h-4 animate-spin mr-2" /> : <Save className="w-4 h-4 mr-2" />}
-            Save
-        </Button>
-        <Button
-            size="sm"
-            variant="default"
-            className="bg-gradient-to-r from-blue-600 to-violet-600 hover:from-blue-700 hover:to-violet-700 text-white border-0"
-            onClick={handleOptimize}
-            disabled={optimizing}
-        >
-            {optimizing ? (
-                <>
-                    <Loader2 className="w-4 h-4 animate-spin mr-2" /> Optimizing...
-                </>
-            ) : (
-                <>✨ Auto-Optimize</>
-            )}
-        </Button>
-    </div>
-        </header >
-
-    {/* Main Workspace */ }
-    < div className = "flex-1 flex overflow-hidden" >
-        {/* Left: Interactive Form */ }
-        < div className = "w-1/2 p-6 overflow-hidden border-r border-zinc-200 bg-white dark:border-zinc-800 dark:bg-zinc-900" >
-            <ResumeForm
-                initialContent={resume.content}
-                onUpdate={handleUpdate}
-                isWizardMode={isWizardMode}
-                key={isWizardMode ? 'wizard' : 'editor'}
-            />
-            </div >
-
-    {/* Right: Live Preview */ }
-    < div className = "w-1/2 bg-zinc-100 p-8 dark:bg-zinc-950 flex flex-col overflow-hidden" >
-        <Tabs defaultValue="preview" className="w-full h-full flex flex-col">
-            <div className="flex justify-center mb-4">
-                <TabsList>
-                    <TabsTrigger value="preview"><Eye className="w-4 h-4 mr-2" /> ATS Preview</TabsTrigger>
-                    <TabsTrigger value="original" disabled={!resume.original_pdf_url}><FileText className="w-4 h-4 mr-2" /> Original PDF</TabsTrigger>
-                </TabsList>
-            </div>
-
-            <TabsContent value="preview" className="flex-1 flex justify-center overflow-hidden data-[state=inactive]:hidden">
-                <div className="w-full max-w-[210mm] shadow-2xl h-full overflow-y-auto">
-                    <ResumePreview content={resume.content} />
-                </div>
-            </TabsContent>
-
-            <TabsContent value="original" className="flex-1 h-full data-[state=inactive]:hidden">
-                {resume.original_pdf_url ? (
-                    <iframe
-                        src={resume.original_pdf_url}
-                        className="w-full h-full rounded-lg border border-zinc-200 dark:border-zinc-800"
-                    />
-                ) : (
-                    <div className="flex items-center justify-center h-full text-zinc-500">
-                        No original PDF found
+        <div className="flex flex-col h-screen bg-zinc-50 dark:bg-zinc-950 overflow-hidden">
+            {/* Top Bar */}
+            <header className="h-14 border-b border-zinc-200 bg-white dark:border-zinc-800 dark:bg-zinc-900 flex items-center justify-between px-4 shrink-0">
+                <div className="flex items-center gap-4">
+                    <Link href="/dashboard" className="text-zinc-500 hover:text-zinc-900">
+                        <ArrowLeft className="w-4 h-4" />
+                    </Link>
+                    <div>
+                        <input
+                            className="font-semibold bg-transparent focus:outline-none focus:ring-1 focus:ring-primary rounded px-1"
+                            defaultValue={resume.title}
+                            onBlur={async (e) => {
+                                if (params.id !== 'new') {
+                                    await supabase.from('resumes').update({ title: e.target.value }).eq('id', resume.id)
+                                } else {
+                                    // For new resumes, just update local state title (not saving yet)
+                                    setResume({ ...resume, title: e.target.value })
+                                }
+                            }}
+                        />
+                        <span className="text-xs text-zinc-400 ml-2">
+                            {resume.is_optimized ? 'Optimized' : 'Draft'}
+                        </span>
                     </div>
-                )}
-            </TabsContent>
-        </Tabs>
-            </div >
-        </div >
-    </div >
-)
+                </div>
+                <div className="flex gap-2">
+                    <Button size="sm" onClick={handleSave} disabled={saving}>
+                        {saving ? <Loader2 className="w-4 h-4 animate-spin mr-2" /> : <Save className="w-4 h-4 mr-2" />}
+                        Save
+                    </Button>
+                    <Button
+                        size="sm"
+                        variant="default"
+                        className="bg-gradient-to-r from-blue-600 to-violet-600 hover:from-blue-700 hover:to-violet-700 text-white border-0"
+                        onClick={handleOptimize}
+                        disabled={optimizing}
+                    >
+                        {optimizing ? (
+                            <>
+                                <Loader2 className="w-4 h-4 animate-spin mr-2" /> Optimizing...
+                            </>
+                        ) : (
+                            <>✨ Auto-Optimize</>
+                        )}
+                    </Button>
+                    <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={() => setIsWizardMode(!isWizardMode)}
+                        className="ml-2"
+                    >
+                        {isWizardMode ? <LayoutDashboard className="w-4 h-4 mr-2" /> : <Wand2 className="w-4 h-4 mr-2" />}
+                        {isWizardMode ? 'Editor Mode' : 'Wizard Mode'}
+                    </Button>
+                </div>
+            </header>
+
+            {/* Main Workspace */}
+            <div className="flex-1 flex overflow-hidden">
+                {/* Left: Interactive Form */}
+                <div className="w-1/2 p-6 overflow-hidden border-r border-zinc-200 bg-white dark:border-zinc-800 dark:bg-zinc-900">
+                    <ResumeForm
+                        initialContent={resume.content}
+                        onUpdate={handleUpdate}
+                        isWizardMode={isWizardMode}
+                        key={isWizardMode ? 'wizard' : 'editor'}
+                    />
+                </div>
+
+                {/* Right: Live Preview */}
+                <div className="w-1/2 bg-zinc-100 p-8 dark:bg-zinc-950 flex flex-col overflow-hidden">
+                    <Tabs defaultValue="preview" className="w-full h-full flex flex-col">
+                        <div className="flex justify-center mb-4">
+                            <TabsList>
+                                <TabsTrigger value="preview"><Eye className="w-4 h-4 mr-2" /> ATS Preview</TabsTrigger>
+                                <TabsTrigger value="original" disabled={!resume.original_pdf_url}><FileText className="w-4 h-4 mr-2" /> Original PDF</TabsTrigger>
+                            </TabsList>
+                        </div>
+
+                        <TabsContent value="preview" className="flex-1 flex justify-center overflow-hidden data-[state=inactive]:hidden">
+                            <div className="w-full max-w-[210mm] shadow-2xl h-full overflow-y-auto">
+                                <ResumePreview content={resume.content} />
+                            </div>
+                        </TabsContent>
+
+                        <TabsContent value="original" className="flex-1 h-full data-[state=inactive]:hidden">
+                            {resume.original_pdf_url ? (
+                                <iframe
+                                    src={resume.original_pdf_url}
+                                    className="w-full h-full rounded-lg border border-zinc-200 dark:border-zinc-800"
+                                />
+                            ) : (
+                                <div className="flex items-center justify-center h-full text-zinc-500">
+                                    No original PDF found
+                                </div>
+                            )}
+                        </TabsContent>
+                    </Tabs>
+                </div>
+            </div>
+        </div>
+    )
 }
