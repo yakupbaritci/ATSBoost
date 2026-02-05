@@ -13,6 +13,18 @@ import { Badge } from '@/components/ui/badge'
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { cn } from '@/lib/utils'
+import {
+    DropdownMenu,
+    DropdownMenuContent,
+    DropdownMenuItem,
+    DropdownMenuLabel,
+    DropdownMenuSeparator,
+    DropdownMenuTrigger,
+    DropdownMenuSub,
+    DropdownMenuSubTrigger,
+    DropdownMenuSubContent
+} from "@/components/ui/dropdown-menu"
+import { MoreVertical, FileText as FileIcon, Copy, Eye, Download as DownloadIcon, Settings as SettingsIcon } from 'lucide-react'
 
 // Accordion Card Component for managing expandable sections
 const AccordionItem = ({
@@ -510,10 +522,65 @@ export function ResumeForm({
                         </div>
                     </div>
                 ) : (
-                    // New Top Navigation Bar
-                    <div className="w-full border-b border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-900 sticky top-0 z-10">
-                        <div className="overflow-x-auto scrollbar-hide">
-                            <TabsList className="inline-flex w-auto h-12 p-0 bg-transparent gap-6 px-4">
+                    // New Top Navigation Bar with Rezi-style Dropdown
+                    <div className="w-full border-b border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-900 sticky top-0 z-10 flex items-center px-4 h-14">
+
+                        {/* Left: Document Menu */}
+                        <div className="mr-6 shrink-0">
+                            <DropdownMenu>
+                                <DropdownMenuTrigger asChild>
+                                    <Button variant="ghost" className="h-8 px-2 gap-2 text-zinc-700 dark:text-zinc-200 font-semibold text-lg hover:bg-zinc-100 dark:hover:bg-zinc-800">
+                                        {title}
+                                        <ChevronDown className="w-4 h-4 text-zinc-400" />
+                                    </Button>
+                                </DropdownMenuTrigger>
+                                <DropdownMenuContent align="start" className="w-56">
+                                    <DropdownMenuItem onClick={() => setActiveTab('contact')}>
+                                        <SettingsIcon className="w-4 h-4 mr-2" />
+                                        Edit
+                                    </DropdownMenuItem>
+                                    <DropdownMenuItem disabled>
+                                        <Copy className="w-4 h-4 mr-2" />
+                                        Duplicate
+                                    </DropdownMenuItem>
+                                    <DropdownMenuItem onClick={() => setActiveTab('finish')}>
+                                        <Eye className="w-4 h-4 mr-2" />
+                                        Review
+                                    </DropdownMenuItem>
+
+                                    <DropdownMenuSub>
+                                        <DropdownMenuSubTrigger>
+                                            <DownloadIcon className="w-4 h-4 mr-2" />
+                                            Download
+                                        </DropdownMenuSubTrigger>
+                                        <DropdownMenuSubContent>
+                                            {onDownload ? (
+                                                <div className="p-1" onClick={(e) => e.stopPropagation()}>
+                                                    {/* We wrap the download button to prevent menu close logic from interfering if needed, though react-pdf usually works fine */}
+                                                    {onDownload()}
+                                                </div>
+                                            ) : (
+                                                <DropdownMenuItem disabled>PDF not available</DropdownMenuItem>
+                                            )}
+                                            <DropdownMenuItem disabled>
+                                                <FileIcon className="w-4 h-4 mr-2" />
+                                                Download .DOCX
+                                            </DropdownMenuItem>
+                                        </DropdownMenuSubContent>
+                                    </DropdownMenuSub>
+
+                                    <DropdownMenuSeparator />
+                                    <DropdownMenuItem className="text-red-600 focus:text-red-600 focus:bg-red-50 dark:focus:bg-red-900/10">
+                                        <Trash2 className="w-4 h-4 mr-2" />
+                                        Delete
+                                    </DropdownMenuItem>
+                                </DropdownMenuContent>
+                            </DropdownMenu>
+                        </div>
+
+                        {/* Center/Right: Tabs */}
+                        <div className="overflow-x-auto scrollbar-hide flex-1">
+                            <TabsList className="inline-flex w-auto h-12 p-0 bg-transparent gap-4 lg:gap-8">
                                 {steps.map(step => (
                                     <TabsTrigger
                                         key={step.id}
