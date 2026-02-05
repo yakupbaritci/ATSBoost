@@ -5,7 +5,7 @@ import { GoogleGenerativeAI } from '@google/generative-ai'
 const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY!)
 
 export async function parseResumeWithAI(rawText: string) {
-    const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" })
+    const model = genAI.getGenerativeModel({ model: "gemini-pro" })
 
     const prompt = `
     You are an expert Resume Parser. 
@@ -53,7 +53,7 @@ export async function optimizeResumeContent(currentContent: any, jobDescription:
         throw new Error('Please provide a valid Job Description first.')
     }
 
-    const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" })
+    const model = genAI.getGenerativeModel({ model: "gemini-pro" })
 
     const prompt = `
     You are an expert CV Optimizer and ATS Specialist.
