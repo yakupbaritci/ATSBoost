@@ -330,5 +330,408 @@ export const SAMPLE_RESUMES = [
                 { title: 'CFA Level I Passed', date: '2020' }
             ]
         }
+    },
+    {
+        id: 'sample-cs-student',
+        title: 'Computer Science Student',
+        category: 'Student',
+        description: 'Motivated CS student seeking internship opportunities in software development.',
+        content: {
+            contact: {
+                fullName: 'David Park',
+                email: 'david.park@university.edu',
+                phone: '+1 (555) 111-2222',
+                location: 'Boston, MA',
+                linkedin: 'linkedin.com/in/davidpark-cs',
+                portfolio: 'github.com/davidpark'
+            },
+            summary: 'Third-year Computer Science student with a passion for building innovative software solutions. Strong foundation in algorithms, data structures, and web development. Seeking summer internship to apply classroom knowledge in real-world projects.',
+            experience: [
+                {
+                    id: 'exp1',
+                    title: 'Software Development Intern',
+                    company: 'StartupHub Inc.',
+                    location: 'Boston, MA',
+                    startDate: '2024-06',
+                    endDate: '2024-08',
+                    description: '• Built a customer feedback dashboard using React and Firebase.\n• Collaborated with senior developers to implement new features.\n• Participated in daily stand-ups and code reviews.'
+                }
+            ],
+            education: [
+                {
+                    id: 'edu1',
+                    school: 'Massachusetts Institute of Technology',
+                    degree: 'B.S. Computer Science',
+                    location: 'Cambridge, MA',
+                    startDate: '2022-09',
+                    endDate: '2026-05',
+                    description: 'GPA: 3.8/4.0. Relevant Coursework: Data Structures, Algorithms, Web Development, Database Systems.'
+                }
+            ],
+            skills: ['Python', 'Java', 'JavaScript', 'React', 'Git', 'HTML/CSS', 'SQL'],
+            projects: [
+                { title: 'Task Manager App', description: 'Full-stack todo app with user authentication built with MERN stack.' },
+                { title: 'Weather Dashboard', description: 'Real-time weather app using OpenWeather API and React.' }
+            ]
+        }
+    },
+    {
+        id: 'sample-marketing-intern',
+        title: 'Marketing Intern',
+        category: 'Student',
+        description: 'Enthusiastic marketing student with social media and content creation experience.',
+        content: {
+            contact: {
+                fullName: 'Sophia Lee',
+                email: 'sophia.lee@college.edu',
+                phone: '+1 (555) 333-4444',
+                location: 'Los Angeles, CA'
+            },
+            summary: 'Creative marketing student with hands-on experience in social media management and content creation. Proficient in Canva, Adobe Creative Suite, and Google Analytics. Eager to contribute fresh ideas to a dynamic marketing team.',
+            experience: [
+                {
+                    id: 'exp1',
+                    title: 'Social Media Intern',
+                    company: 'Local Coffee Shop',
+                    location: 'Los Angeles, CA',
+                    startDate: '2024-01',
+                    endDate: 'Present',
+                    description: '• Managed Instagram and Facebook accounts, growing followers by 30%.\n• Created engaging visual content using Canva.\n• Analyzed post performance and adjusted strategy accordingly.'
+                }
+            ],
+            education: [
+                {
+                    id: 'edu1',
+                    school: 'University of Southern California',
+                    degree: 'B.A. Marketing',
+                    location: 'Los Angeles, CA',
+                    startDate: '2022-08',
+                    endDate: '2026-05',
+                    description: 'Dean\'s List. Member of Marketing Club.'
+                }
+            ],
+            skills: ['Social Media Marketing', 'Content Creation', 'Canva', 'Google Analytics', 'Copywriting']
+        }
+    },
+    {
+        id: 'sample-nurse',
+        title: 'Registered Nurse',
+        category: 'Medical',
+        description: 'Compassionate RN with 3 years of experience in emergency and critical care.',
+        content: {
+            contact: {
+                fullName: 'Maria Rodriguez',
+                email: 'maria.rn@example.com',
+                phone: '+1 (555) 777-6666',
+                location: 'Houston, TX'
+            },
+            summary: 'Dedicated Registered Nurse with 3+ years of experience in fast-paced emergency departments. Skilled in patient assessment, IV therapy, and emergency response. Committed to providing compassionate, evidence-based care.',
+            experience: [
+                {
+                    id: 'exp1',
+                    title: 'Emergency Department RN',
+                    company: 'Houston Medical Center',
+                    location: 'Houston, TX',
+                    startDate: '2021-06',
+                    endDate: 'Present',
+                    description: '• Provide critical care to patients in high-acuity emergency settings.\n• Administer medications and treatments per physician orders.\n• Collaborate with interdisciplinary teams to ensure optimal patient outcomes.\n• Train and mentor new nursing staff.'
+                }
+            ],
+            education: [
+                {
+                    id: 'edu1',
+                    school: 'University of Texas Health Science Center',
+                    degree: 'B.S.N. Nursing',
+                    location: 'Houston, TX',
+                    startDate: '2017-08',
+                    endDate: '2021-05',
+                    description: ''
+                }
+            ],
+            skills: ['Patient Assessment', 'IV Therapy', 'Emergency Care', 'Electronic Health Records (EHR)', 'CPR/BLS'],
+            certifications: [
+                { title: 'Registered Nurse (RN) License', date: '2021' },
+                { title: 'ACLS Certification', date: '2022' }
+            ]
+        }
+    },
+    {
+        id: 'sample-teacher',
+        title: 'Elementary School Teacher',
+        category: 'Education',
+        description: 'Passionate educator with 5 years of experience teaching grades K-5.',
+        content: {
+            contact: {
+                fullName: 'Amanda Green',
+                email: 'amanda.green@school.edu',
+                phone: '+1 (555) 888-9999',
+                location: 'Portland, OR'
+            },
+            summary: 'Enthusiastic and dedicated elementary school teacher with 5 years of classroom experience. Skilled in differentiated instruction, classroom management, and fostering a positive learning environment. Committed to student success and lifelong learning.',
+            experience: [
+                {
+                    id: 'exp1',
+                    title: '3rd Grade Teacher',
+                    company: 'Riverside Elementary School',
+                    location: 'Portland, OR',
+                    startDate: '2019-08',
+                    endDate: 'Present',
+                    description: '• Plan and deliver engaging lessons aligned with state standards.\n• Differentiate instruction to meet diverse learning needs.\n• Communicate regularly with parents about student progress.\n• Organize classroom activities and field trips to enhance learning.'
+                }
+            ],
+            education: [
+                {
+                    id: 'edu1',
+                    school: 'Portland State University',
+                    degree: 'B.A. Elementary Education',
+                    location: 'Portland, OR',
+                    startDate: '2015-09',
+                    endDate: '2019-05',
+                    description: ''
+                }
+            ],
+            skills: ['Classroom Management', 'Lesson Planning', 'Differentiated Instruction', 'Google Classroom', 'Parent Communication'],
+            certifications: [
+                { title: 'Oregon Teaching License', date: '2019' }
+            ]
+        }
+    },
+    {
+        id: 'sample-hr-specialist',
+        title: 'HR Specialist',
+        category: 'Business',
+        description: 'HR professional with expertise in recruitment, onboarding, and employee relations.',
+        content: {
+            contact: {
+                fullName: 'Jessica Brown',
+                email: 'jessica.hr@example.com',
+                phone: '+1 (555) 222-1111',
+                location: 'Atlanta, GA'
+            },
+            summary: 'Results-driven HR Specialist with 4 years of experience in talent acquisition and employee engagement. Proficient in HRIS systems, recruitment strategies, and compliance. Passionate about creating positive workplace cultures.',
+            experience: [
+                {
+                    id: 'exp1',
+                    title: 'HR Specialist',
+                    company: 'TechCorp Solutions',
+                    location: 'Atlanta, GA',
+                    startDate: '2020-03',
+                    endDate: 'Present',
+                    description: '• Manage full-cycle recruitment for technical and non-technical roles.\n• Conduct new hire onboarding and orientation sessions.\n• Maintain HRIS database and ensure data accuracy.\n• Assist with employee relations issues and conflict resolution.'
+                }
+            ],
+            education: [
+                {
+                    id: 'edu1',
+                    school: 'Georgia State University',
+                    degree: 'B.A. Human Resources Management',
+                    location: 'Atlanta, GA',
+                    startDate: '2016-08',
+                    endDate: '2020-05',
+                    description: ''
+                }
+            ],
+            skills: ['Recruitment', 'Onboarding', 'HRIS (Workday, BambooHR)', 'Employee Relations', 'Compliance'],
+            certifications: [
+                { title: 'SHRM-CP', date: '2021' }
+            ]
+        }
+    },
+    {
+        id: 'sample-sales-rep',
+        title: 'Sales Representative',
+        category: 'Business',
+        description: 'High-performing sales professional with a track record of exceeding quotas.',
+        content: {
+            contact: {
+                fullName: 'Ryan Mitchell',
+                email: 'ryan.sales@example.com',
+                phone: '+1 (555) 444-5555',
+                location: 'Dallas, TX'
+            },
+            summary: 'Dynamic Sales Representative with 3+ years of experience in B2B sales. Proven ability to build relationships, close deals, and exceed sales targets. Skilled in CRM tools and consultative selling techniques.',
+            experience: [
+                {
+                    id: 'exp1',
+                    title: 'Sales Representative',
+                    company: 'CloudSoft Inc.',
+                    location: 'Dallas, TX',
+                    startDate: '2021-01',
+                    endDate: 'Present',
+                    description: '• Consistently exceeded monthly sales quotas by 20%.\n• Managed a pipeline of 50+ active leads using Salesforce.\n• Conducted product demos and presentations to prospective clients.\n• Negotiated contracts and closed deals worth $500k+ annually.'
+                }
+            ],
+            education: [
+                {
+                    id: 'edu1',
+                    school: 'University of Texas at Dallas',
+                    degree: 'B.B.A. Marketing',
+                    location: 'Dallas, TX',
+                    startDate: '2017-08',
+                    endDate: '2021-05',
+                    description: ''
+                }
+            ],
+            skills: ['B2B Sales', 'Salesforce CRM', 'Lead Generation', 'Negotiation', 'Product Demos']
+        }
+    },
+    {
+        id: 'sample-ux-designer',
+        title: 'UX/UI Designer',
+        category: 'Design',
+        description: 'User-centered designer passionate about creating intuitive digital experiences.',
+        content: {
+            contact: {
+                fullName: 'Olivia Chen',
+                email: 'olivia.ux@example.com',
+                phone: '+1 (555) 666-7777',
+                location: 'San Francisco, CA',
+                portfolio: 'dribbble.com/oliviachen'
+            },
+            summary: 'Creative UX/UI Designer with 3 years of experience designing web and mobile applications. Proficient in Figma, Sketch, and user research methodologies. Dedicated to solving user problems through thoughtful design.',
+            experience: [
+                {
+                    id: 'exp1',
+                    title: 'UX/UI Designer',
+                    company: 'DesignLab Studio',
+                    location: 'San Francisco, CA',
+                    startDate: '2021-07',
+                    endDate: 'Present',
+                    description: '• Designed user interfaces for 10+ web and mobile applications.\n• Conducted user research and usability testing to inform design decisions.\n• Created wireframes, prototypes, and high-fidelity mockups in Figma.\n• Collaborated with developers to ensure design implementation accuracy.'
+                }
+            ],
+            education: [
+                {
+                    id: 'edu1',
+                    school: 'California College of the Arts',
+                    degree: 'B.F.A. Interaction Design',
+                    location: 'San Francisco, CA',
+                    startDate: '2017-09',
+                    endDate: '2021-05',
+                    description: ''
+                }
+            ],
+            skills: ['Figma', 'Sketch', 'Adobe XD', 'User Research', 'Wireframing', 'Prototyping', 'Usability Testing']
+        }
+    },
+    {
+        id: 'sample-accountant',
+        title: 'Staff Accountant',
+        category: 'Finance',
+        description: 'Detail-oriented accountant with expertise in bookkeeping and financial reporting.',
+        content: {
+            contact: {
+                fullName: 'Thomas Anderson',
+                email: 'thomas.acct@example.com',
+                phone: '+1 (555) 999-8888',
+                location: 'Denver, CO'
+            },
+            summary: 'Meticulous Staff Accountant with 4 years of experience in general ledger accounting, reconciliations, and financial reporting. Proficient in QuickBooks and Excel. CPA candidate committed to accuracy and compliance.',
+            experience: [
+                {
+                    id: 'exp1',
+                    title: 'Staff Accountant',
+                    company: 'Mountain Finance Group',
+                    location: 'Denver, CO',
+                    startDate: '2020-06',
+                    endDate: 'Present',
+                    description: '• Prepare monthly journal entries and account reconciliations.\n• Assist with month-end and year-end close processes.\n• Maintain general ledger and ensure accuracy of financial records.\n• Prepare financial statements and reports for management review.'
+                }
+            ],
+            education: [
+                {
+                    id: 'edu1',
+                    school: 'University of Colorado',
+                    degree: 'B.S. Accounting',
+                    location: 'Boulder, CO',
+                    startDate: '2016-08',
+                    endDate: '2020-05',
+                    description: ''
+                }
+            ],
+            skills: ['General Ledger', 'Account Reconciliation', 'QuickBooks', 'Excel', 'Financial Reporting', 'GAAP'],
+            certifications: [
+                { title: 'CPA Candidate', date: '2024' }
+            ]
+        }
+    },
+    {
+        id: 'sample-customer-service',
+        title: 'Customer Service Representative',
+        category: 'Business',
+        description: 'Friendly and efficient customer service professional with strong communication skills.',
+        content: {
+            contact: {
+                fullName: 'Emma Wilson',
+                email: 'emma.cs@example.com',
+                phone: '+1 (555) 123-9999',
+                location: 'Phoenix, AZ'
+            },
+            summary: 'Customer-focused professional with 2+ years of experience in high-volume call center environments. Skilled in problem-solving, conflict resolution, and maintaining customer satisfaction. Proficient in CRM software and multitasking.',
+            experience: [
+                {
+                    id: 'exp1',
+                    title: 'Customer Service Representative',
+                    company: 'SupportNow Inc.',
+                    location: 'Phoenix, AZ',
+                    startDate: '2022-03',
+                    endDate: 'Present',
+                    description: '• Handle 50+ customer inquiries daily via phone, email, and chat.\n• Resolve customer complaints and issues with professionalism and empathy.\n• Maintain detailed records of customer interactions in CRM system.\n• Consistently achieve 95%+ customer satisfaction ratings.'
+                }
+            ],
+            education: [
+                {
+                    id: 'edu1',
+                    school: 'Arizona State University',
+                    degree: 'B.A. Communication',
+                    location: 'Tempe, AZ',
+                    startDate: '2018-08',
+                    endDate: '2022-05',
+                    description: ''
+                }
+            ],
+            skills: ['Customer Service', 'Conflict Resolution', 'CRM Software', 'Communication', 'Multitasking']
+        }
+    },
+    {
+        id: 'sample-mechanical-engineer',
+        title: 'Mechanical Engineer',
+        category: 'Engineering',
+        description: 'Innovative mechanical engineer with CAD expertise and product development experience.',
+        content: {
+            contact: {
+                fullName: 'James Carter',
+                email: 'james.eng@example.com',
+                phone: '+1 (555) 777-3333',
+                location: 'Detroit, MI'
+            },
+            summary: 'Results-oriented Mechanical Engineer with 5 years of experience in product design and development. Proficient in SolidWorks, AutoCAD, and FEA analysis. Strong background in manufacturing processes and quality control.',
+            experience: [
+                {
+                    id: 'exp1',
+                    title: 'Mechanical Engineer',
+                    company: 'AutoTech Manufacturing',
+                    location: 'Detroit, MI',
+                    startDate: '2019-06',
+                    endDate: 'Present',
+                    description: '• Design and develop mechanical components for automotive applications using SolidWorks.\n• Conduct FEA simulations to validate design integrity and performance.\n• Collaborate with cross-functional teams to bring products from concept to production.\n• Manage engineering change orders and technical documentation.'
+                }
+            ],
+            education: [
+                {
+                    id: 'edu1',
+                    school: 'University of Michigan',
+                    degree: 'B.S. Mechanical Engineering',
+                    location: 'Ann Arbor, MI',
+                    startDate: '2015-09',
+                    endDate: '2019-05',
+                    description: ''
+                }
+            ],
+            skills: ['SolidWorks', 'AutoCAD', 'FEA Analysis', 'Product Development', 'Manufacturing Processes', 'GD&T'],
+            certifications: [
+                { title: 'Professional Engineer (PE)', date: '2021' }
+            ]
+        }
     }
 ];
