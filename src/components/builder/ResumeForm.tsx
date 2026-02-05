@@ -602,23 +602,24 @@ export function ResumeForm({
                                     </TabsTrigger>
                                 ))}
 
-                                {/* More Dropdown */}
-                                <DropdownMenu>
-                                    <DropdownMenuTrigger asChild>
-                                        <Button variant="ghost" size="sm" className={cn("h-full px-2 rounded-md hover:bg-zinc-100 data-[state=open]:bg-zinc-100", moreStepIds.includes(activeTab) && "text-blue-600 bg-zinc-50")}>
-                                            <MoreVertical className="w-4 h-4" />
-                                        </Button>
-                                    </DropdownMenuTrigger>
-                                    <DropdownMenuContent align="start">
-                                        {moreSteps.map(step => (
-                                            <DropdownMenuItem key={step.id} onClick={() => setActiveTab(step.id)} className="flex justify-between">
-                                                {step.title}
-                                                {activeTab === step.id && <Check className="w-4 h-4 ml-2 text-blue-600" />}
-                                            </DropdownMenuItem>
-                                        ))}
-                                    </DropdownMenuContent>
-                                </DropdownMenu>
                             </TabsList>
+
+                            {/* More Dropdown */}
+                            <DropdownMenu>
+                                <DropdownMenuTrigger asChild>
+                                    <Button variant="ghost" size="sm" className={cn("h-12 px-2 rounded-md hover:bg-zinc-100 data-[state=open]:bg-zinc-100 mt-[1px]", moreStepIds.includes(activeTab) && "text-blue-600 bg-zinc-50")}>
+                                        <MoreVertical className="w-4 h-4" />
+                                    </Button>
+                                </DropdownMenuTrigger>
+                                <DropdownMenuContent align="start">
+                                    {moreSteps.map(step => (
+                                        <DropdownMenuItem key={step.id} onClick={() => setActiveTab(step.id)} className="flex justify-between">
+                                            {step.title}
+                                            {activeTab === step.id && <Check className="w-4 h-4 ml-2 text-blue-600" />}
+                                        </DropdownMenuItem>
+                                    ))}
+                                </DropdownMenuContent>
+                            </DropdownMenu>
                         </div>
 
                         {/* Right: Actions */}
