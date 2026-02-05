@@ -160,11 +160,11 @@ const DateSelector = ({ value, onChange, placeholder }: { value?: string, onChan
 
 // Language Levels
 const languageLevels = [
-    "Native",
-    "Fluent",
-    "Advanced (C1-C2)",
-    "Intermediate (B1-B2)",
-    "Beginner (A1-A2)"
+    "Elementary Proficiency",
+    "Limited Working Proficiency",
+    "Professional Working Proficiency",
+    "Full Professional Proficiency",
+    "Native or Bilingual Proficiency"
 ]
 
 // Level Selector Component
@@ -173,11 +173,22 @@ const LevelSelector = ({ value, onChange }: { value?: string, onChange: (val: st
     const mapLevel = (val?: string) => {
         if (!val) return undefined;
         const v = val.toLowerCase();
-        if (v.includes('native') || v.includes('mother') || v.includes('ana')) return "Native";
-        if (v.includes('fluent') || v.includes('akıcı')) return "Fluent";
-        if (v.includes('advanced') || v.includes('ileri') || v.includes('c1') || v.includes('c2')) return "Advanced (C1-C2)";
-        if (v.includes('intermediate') || v.includes('orta') || v.includes('b1') || v.includes('b2')) return "Intermediate (B1-B2)";
-        if (v.includes('beginner') || v.includes('başlangıç') || v.includes('a1') || v.includes('a2')) return "Beginner (A1-A2)";
+
+        // Native / Bilingual
+        if (v.includes('native') || v.includes('mother') || v.includes('ana') || v.includes('bilingual')) return "Native or Bilingual Proficiency";
+
+        // Full Professional / Advanced / C1-C2
+        if (v.includes('full') || v.includes('advanced') || v.includes('ileri') || v.includes('c1') || v.includes('c2') || v.includes('fluent')) return "Full Professional Proficiency";
+
+        // Professional Working / B2
+        if (v.includes('professional') || v.includes('business') || v.includes('b2')) return "Professional Working Proficiency";
+
+        // Limited Working / Intermediate / B1
+        if (v.includes('limited') || v.includes('intermediate') || v.includes('orta') || v.includes('b1')) return "Limited Working Proficiency";
+
+        // Elementary / Beginner / A1-A2
+        if (v.includes('elementary') || v.includes('beginner') || v.includes('temel') || v.includes('a1') || v.includes('a2')) return "Elementary Proficiency";
+
         return undefined; // If no match, we might show a custom input or just let them pick
     }
 
