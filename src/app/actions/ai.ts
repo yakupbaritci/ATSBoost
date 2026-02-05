@@ -207,3 +207,37 @@ export async function applySpecificImprovement(currentContent: any, instruction:
         throw new Error('Failed to apply improvement')
     }
 }
+
+export async function generateSingleBullet(role: string, company: string, currentDescription?: string) {
+    const prompt = `
+    You are an expert Resume Writer.
+    Write ONE single, high-impact bullet point for a resume experience section.
+    
+    ROLE: ${role}
+    COMPANY: ${company}
+    CONTEXT/EXISTING DRAFT: "${currentDescription || ''}"
+
+    RULES:
+    1. Start with a strong action verb (e.g., Spearheaded, Engineered, Orchestrated).
+    2. Include a measurable result or metric if possible (e.g., "by 20%").
+    3. Keep it professional, concise, and impactful.
+    4. Return ONLY the bullet point text as a plain string. Do not wrap in quotes or JSON.
+    `
+
+    try {
+        const completion = await openai.chat.completions.create({
+            messages: [{ role: "system", content: "You are a helpful resume writing assistant." }, { role: "user", content: prompt }],
+            model: "gpt-4o",
+            temperature: 0.7,
+        });
+
+        const content = completion.choices[0].message.content;
+        if (!content) throw new Error("No content from OpenAI");
+
+        return content.replace(/^•\s*/, '').replace(/^-\s*/, '').trim(); // Remove leading bullets if AI adds them
+
+    } catch (error) {
+        console.error('Generate Bullet Error:', error)
+        throw new Error('Failed to generate bullet point')
+    }
+}
