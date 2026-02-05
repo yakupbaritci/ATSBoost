@@ -285,6 +285,7 @@ interface ResumeFormProps {
     currentTemplate?: string
     onTemplateChange?: (template: string) => void
     previewComponent?: React.ReactNode // Pass the live preview component to render in the finish tab
+    title?: string
 }
 
 export function ResumeForm({
@@ -298,7 +299,8 @@ export function ResumeForm({
     onAutoOptimize,
     currentTemplate,
     onTemplateChange,
-    previewComponent
+    previewComponent,
+    title = "Untitled Resume"    previewComponent
 }: ResumeFormProps) {
     const [content, setContent] = useState<ResumeContent>(initialContent)
     const [activeTab, setActiveTab] = useState("contact")
