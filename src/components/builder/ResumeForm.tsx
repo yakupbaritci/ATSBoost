@@ -241,6 +241,7 @@ type ResumeContent = {
         startDate?: string
         endDate?: string
         description?: string
+        visible?: boolean
     }>
     education: Array<{
         id: string
@@ -250,21 +251,25 @@ type ResumeContent = {
         startDate?: string
         endDate?: string
         description?: string
+        visible?: boolean
     }>
-    skills: Array<string>
+    skills: Array<string> // Skills are strings, might need object conversion for visibility later or handle differently
     certifications?: Array<{
         title: string
         issuer?: string
         date?: string
+        visible?: boolean
     }>
     projects?: Array<{
         title: string
         description?: string
         link?: string
+        visible?: boolean
     }>
     languages?: Array<{
         language: string
         proficiency?: string
+        visible?: boolean
     }>
     targetJob?: {
         title?: string
